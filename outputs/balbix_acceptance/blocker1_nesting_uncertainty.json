@@ -1,0 +1,153 @@
+{
+  "runs_are_nested": false,
+  "nesting_experiment_first_100_years_equal": false,
+  "nesting_mechanism": "IT _simulate draws rng.poisson(rate, size=n) per cell before severity normals. Different n changes RNG consumption, so same-seed runs at different N do not share year-level losses.",
+  "standalone_prudent": {
+    "25000": {
+      "aal": 2451544.1567003657,
+      "var95": 9474206.653155869,
+      "tvar95": 43118041.29956654,
+      "var99": 40482446.25267004,
+      "tvar99": 141649830.3689162,
+      "p_any": 0.12304,
+      "aal_se": 200536.88310455834
+    },
+    "100000": {
+      "aal": 2581666.848504075,
+      "var95": 9311505.660353214,
+      "tvar95": 45607048.85245639,
+      "var99": 40116832.48574226,
+      "tvar99": 154240113.05399445,
+      "p_any": 0.12481,
+      "aal_se": 193847.4380300092
+    },
+    "250000": {
+      "aal": 2383988.066911843,
+      "var95": 9625445.725306155,
+      "tvar95": 41287023.51159662,
+      "var99": 41883178.841699325,
+      "tvar99": 129602564.15451008,
+      "p_any": 0.127944,
+      "aal_se": 65087.161784716365
+    },
+    "500000": {
+      "aal": 2581309.265729608,
+      "var95": 9571863.200322205,
+      "tvar95": 45250159.238061875,
+      "var99": 41519840.433974914,
+      "tvar99": 149582084.37123415,
+      "p_any": 0.127606,
+      "aal_se": 100569.87661716214
+    }
+  },
+  "nested_prefix_from_master_500k": {
+    "25000": {
+      "aal": 3907520.585622732,
+      "var95": 9223236.481035205,
+      "tvar95": 72197327.52345626,
+      "var99": 42432046.04989011,
+      "tvar99": 286383966.50323135,
+      "p_any": 0.12528,
+      "aal_se": 1418393.800596225
+    },
+    "100000": {
+      "aal": 3088795.962629642,
+      "var95": 9684965.966184882,
+      "tvar95": 55322398.89818554,
+      "var99": 41846198.21860405,
+      "tvar99": 199454239.38190332,
+      "p_any": 0.128,
+      "aal_se": 426197.68943068065
+    },
+    "250000": {
+      "aal": 2643490.431642709,
+      "var95": 9538178.221457364,
+      "tvar95": 46510770.95468504,
+      "var99": 41547427.73691136,
+      "tvar99": 155784700.67389408,
+      "p_any": 0.127264,
+      "aal_se": 174990.8654079181
+    },
+    "500000": {
+      "aal": 2581309.265729608,
+      "var95": 9571863.200322205,
+      "tvar95": 45250159.238061875,
+      "var99": 41519840.433974914,
+      "tvar99": 149582084.37123415,
+      "p_any": 0.127606,
+      "aal_se": 100569.87661716214
+    }
+  },
+  "uncertainty_500k": {
+    "aal": {
+      "estimate_500k": 2581309.265729608,
+      "mc_se_bootstrap": 107384.61284582307,
+      "mc_se_batch_means": 100569.87661716214,
+      "ci95_bootstrap": [
+        2407410.4439050234,
+        2795081.048909896
+      ],
+      "reporting_precision_usd": 1000.0,
+      "stable_at_reporting_precision": false
+    },
+    "var95": {
+      "estimate_500k": 9571863.200322205,
+      "mc_se_bootstrap": 68464.60681683497,
+      "mc_se_batch_means": 65072.23102021968,
+      "ci95_bootstrap": [
+        9448341.702820903,
+        9695044.281648232
+      ],
+      "reporting_precision_usd": 10000.0,
+      "stable_at_reporting_precision": false
+    },
+    "tvar95": {
+      "estimate_500k": 45250159.238061875,
+      "mc_se_bootstrap": 2135576.2509182314,
+      "mc_se_batch_means": 2530987.0578686143,
+      "ci95_bootstrap": [
+        41826390.115112245,
+        49549535.249337725
+      ],
+      "reporting_precision_usd": 10000.0,
+      "stable_at_reporting_precision": false
+    },
+    "var99": {
+      "estimate_500k": 41519840.433974914,
+      "mc_se_bootstrap": 395298.8727117461,
+      "mc_se_batch_means": 299801.450586248,
+      "ci95_bootstrap": [
+        40748800.14527457,
+        42253352.03938403
+      ],
+      "reporting_precision_usd": 10000.0,
+      "stable_at_reporting_precision": false
+    },
+    "tvar99": {
+      "estimate_500k": 149582084.37123415,
+      "mc_se_bootstrap": 10582762.8326825,
+      "mc_se_batch_means": 12632349.139427712,
+      "ci95_bootstrap": [
+        132305291.61444288,
+        171538582.74870488
+      ],
+      "reporting_precision_usd": 10000.0,
+      "stable_at_reporting_precision": false
+    }
+  },
+  "outlier_250k": {
+    "standalone_aal_vs_500k_pct": -0.07644229284629789,
+    "nested_aal_vs_500k_pct": 0.024089002716040416,
+    "standalone_tvar99_vs_500k_pct": -0.13356893842406098,
+    "nested_tvar99_vs_500k_pct": 0.041466304796677525,
+    "explanation": "The prior 250k 'outlier' compared independent same-seed runs that are not nested prefixes. It is not failure of a single nested path. Production stability is judged from Monte Carlo SE / bootstrap CIs on the 500k run."
+  },
+  "rho": 0.5,
+  "prudence_frequency_factor": 1.25,
+  "dependency_model": {
+    "id": "channel_comonotonic_gaussian",
+    "within_channel": "comonotonic",
+    "across_channel": "equicorrelated_gaussian",
+    "rho_parameter": "LOSS_BLOCK_RHO"
+  }
+}

@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "guided-it-ot-crq"
+version = "1.2.0"
+description = "Combined IT/OT Cyber Risk Quantification router and engines"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy==2.5.2",
+    "openpyxl==3.1.5",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.1.1",
+    "ruff==0.16.4",
+    "bandit==1.9.4",
+    "pip-audit==2.10.1",
+]
+
+[project.scripts]
+crq = "it_ot_crq.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "."]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+markers = [
+    "integration: uses workbooks and engines",
+    "production: 500,000-year goldens and production-N invariance",
+]
+
+[tool.ruff]
+line-length = 120
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+ignore = ["E501", "E701", "E702", "E731"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/ot_crq/engine.py" = ["F841"]
+"src/it_crq/engine.py" = ["F841"]

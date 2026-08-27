@@ -1,0 +1,64 @@
+# Python
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Tests, lint, coverage, audit cache
+.pytest_cache/
+.ruff_cache/
+.cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.tox/
+pip-audit-cache/
+
+# Environment and logs
+.env
+.env.*
+!.env.example
+*.log
+*.tmp
+
+# OS and editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# Generated CRQ outputs and freeze workspaces (keep acceptance JSON evidence trackable)
+outputs/*
+!outputs/.gitkeep
+!outputs/balbix_acceptance/
+outputs/balbix_acceptance/**
+!outputs/balbix_acceptance/*.json
+!outputs/balbix_acceptance/pytest_blockers_final.txt
+!outputs/RAKBANK_results_pre_balbix_unified.xlsx
+!outputs/RAKBANK_results.xlsx
+
+_work/*
+!_work/.gitkeep
+
+*.__writing__.xlsx
+
+# Live assessment copies (keep assessments/.gitkeep; do not track user workbooks)
+assessments/*
+!assessments/.gitkeep
+
+# Disposable underscore verify staging if recreated locally
+outputs/_balbix_pack_smoke/
+outputs/_balbix_verify_*.xlsx
+outputs/_pg_verify.xlsx
+assessments/_pg_verify.xlsx

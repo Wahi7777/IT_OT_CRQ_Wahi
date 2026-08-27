@@ -1,0 +1,53 @@
+{
+  "schema_version": "CRQ-PACK-REGISTRY-1.0",
+  "packs": [
+    {
+      "domain": "IT",
+      "sector": "Financial Services",
+      "pack_id": "FS-v1.1.1",
+      "pack_version": "1.1.1",
+      "relative_file_path": "sector_packs/IT/IT_CRQ_Sector_Pack_Financial_Services_v1_1_1.xlsx",
+      "schema_version": "CRQ-PACK-1.1",
+      "pack_status": "Development — working priors; calibration required",
+      "minimum_engine_version": "1.1.1",
+      "unit_of_analysis": "Organisation",
+      "description": "Financial Services organisation-level IT-CRQ reference calibration."
+    },
+    {
+      "domain": "OT",
+      "sector": "Power Generation",
+      "pack_id": "PG-v1.6",
+      "pack_version": "1.6",
+      "relative_file_path": "sector_packs/OT/OT_CRQ_Sector_Pack_Power_Generation_v1_6.xlsx",
+      "schema_version": "CRQ-OT-PACK-1.0",
+      "pack_status": "Reference pack / working calibration",
+      "minimum_engine_version": "1.7.1",
+      "unit_of_analysis": "Facility",
+      "description": "Power Generation facility OT-CRQ sector pack, extracted from governed v1.6 calibration."
+    },
+    {
+      "domain": "OT",
+      "sector": "Energy Assets",
+      "pack_id": "EA-v1.0",
+      "pack_version": "1.0",
+      "relative_file_path": "sector_packs/OT/OT_CRQ_Sector_Pack_Energy_Assets_v1_0.xlsx",
+      "schema_version": "CRQ-OT-PACK-1.0",
+      "pack_status": "Working pack — controlled calibration",
+      "minimum_engine_version": "1.7.1",
+      "unit_of_analysis": "Facility",
+      "description": "Energy Assets facility OT-CRQ sector pack."
+    },
+    {
+      "domain": "OT",
+      "sector": "Manufacturing",
+      "pack_id": "MF-v1.0",
+      "pack_version": "1.0",
+      "relative_file_path": "sector_packs/OT/OT_CRQ_Sector_Pack_Manufacturing_v1_0.xlsx",
+      "schema_version": "CRQ-OT-PACK-1.0",
+      "pack_status": "Working pack — controlled calibration",
+      "minimum_engine_version": "1.7.1",
+      "unit_of_analysis": "Facility",
+      "description": "Manufacturing facility OT-CRQ sector pack."
+    }
+  ]
+}

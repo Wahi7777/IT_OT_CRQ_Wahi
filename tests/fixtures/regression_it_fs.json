@@ -1,0 +1,45 @@
+{
+  "sector": "Financial Services",
+  "engine_version": "1.1.1",
+  "pack_id": "FS-v1.1.1",
+  "pack_version": "1.1.1",
+  "seed": 20260821,
+  "n": 50000,
+  "outside_in": "No",
+  "use_exposure_model": "No",
+  "best_aal": 893443.1254074546,
+  "prudent_aal": 1104387.3943513038,
+  "best_var95": 4403295.083498585,
+  "prudent_var95": 5643615.85193804,
+  "best_tvar95": 15699167.34480605,
+  "prudent_tvar95": 18295610.72679122,
+  "best_var99": 19667179.326875787,
+  "prudent_var99": 23504729.794988923,
+  "best_tvar99": 41479268.449532695,
+  "prudent_tvar99": 46920207.05707026,
+  "best_event_frequency": 0.10842822954804153,
+  "prudent_event_frequency": 0.1355352869350519,
+  "event_frequency": 0.1355352869350519,
+  "actor_aal": {
+    "Nation-state": 96484.0044328979,
+    "Cybercriminal": 731832.0430206103,
+    "Malicious insider": 221516.60138833857,
+    "Hacktivist": 54554.74550945705
+  },
+  "scenario_aal": {
+    "Critical business-service disruption": 415574.4736797652,
+    "Sensitive-data compromise": 285360.26730172866,
+    "Data or transaction-integrity compromise": 150370.70810621142,
+    "Cyber-enabled theft or fraud": 253081.94526359855
+  },
+  "actor_mix_pack": {
+    "Nation-state": 0.1,
+    "Cybercriminal": 0.8,
+    "Malicious insider": 0.08,
+    "Hacktivist": 0.02
+  },
+  "methodology": "unified_balbix_impact",
+  "freeze_date": "2026-08-27",
+  "previous_fixture_prudent_aal": 1116064.996041575,
+  "drift_resolution": "Outcome A \u2014 unified Balbix per-driver impact; see docs/validation/BALBIX_UNIFIED_IMPACT_ACCEPTANCE.md"
+}

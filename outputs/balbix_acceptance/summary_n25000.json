@@ -1,0 +1,365 @@
+{
+  "aal": 2451544.1567003657,
+  "var95": 9474206.653155869,
+  "tvar95": 43118041.29956654,
+  "var99": 40482446.25267004,
+  "tvar99": 141649830.3689162,
+  "p_any": 0.12304,
+  "event_frequency": 0.1355352869350519,
+  "aal_se": 200536.88310455834,
+  "validation": "FAIL",
+  "pack_id": "FS-v1.1.1",
+  "top_component": "Direct Loss of Funds costs \u2014 $83,723,452 (59.1% of TVaR 99)",
+  "top_driver": "Monetary theft / funds at risk (net of recovery) \u2014 $83,723,452 (59.1% of TVaR 99)",
+  "impact_reconcile": {
+    "aal_drivers_ok": true,
+    "aal_categories_ok": true,
+    "trial_drivers_ok": true,
+    "trial_categories_ok": true,
+    "tvar99_drivers": {
+      "sum": 141649830.36891618,
+      "aggregate": 141649830.3689162,
+      "diff": -2.9802322387695312e-08,
+      "ok": true
+    },
+    "tvar99_categories": {
+      "sum": 141649830.3689162,
+      "aggregate": 141649830.3689162,
+      "diff": 0.0,
+      "ok": true
+    },
+    "tvar95_drivers": {
+      "sum": 43118041.29956653,
+      "aggregate": 43118041.29956654,
+      "diff": -7.450580596923828e-09,
+      "ok": true
+    },
+    "tvar95_categories": {
+      "sum": 43118041.29956653,
+      "aggregate": 43118041.29956654,
+      "diff": -7.450580596923828e-09,
+      "ok": true
+    },
+    "ok": true
+  },
+  "impact_dependency": {
+    "model": "channel_comonotonic_gaussian",
+    "rho": 0.5,
+    "rho_source": "LOSS_BLOCK_RHO (sector pack)",
+    "within_channel": "comonotonic (shared latent Z per Duration/Exposure/Direct)",
+    "across_channel": "equicorrelated Gaussian with correlation rho",
+    "not_used": "pairwise correlation matrix; calibrated copula; independent driver sampling"
+  },
+  "scenario_aal": {
+    "Critical business-service disruption": 630677.3455883241,
+    "Sensitive-data compromise": 340095.48459352105,
+    "Data or transaction-integrity compromise": 328009.25929144514,
+    "Cyber-enabled theft or fraud": 1152762.067227075
+  },
+  "actor_aal": {
+    "Nation-state": 109853.97141682015,
+    "Cybercriminal": 1675139.558936769,
+    "Malicious insider": 505396.0815341299,
+    "Hacktivist": 161154.5448126466
+  },
+  "scenario_tvar99_contribution": {
+    "Critical business-service disruption": 31911722.411975108,
+    "Sensitive-data compromise": 10322212.956997948,
+    "Data or transaction-integrity compromise": 16900124.226990152,
+    "Cyber-enabled theft or fraud": 82515770.77295297
+  },
+  "actor_tvar99_contribution": {
+    "Nation-state": 2899181.0733736665,
+    "Cybercriminal": 100630208.9162397,
+    "Malicious insider": 25719373.381263543,
+    "Hacktivist": 12401066.998039287
+  },
+  "scenario_tvar95_contribution": {
+    "Critical business-service disruption": 11076562.148370868,
+    "Sensitive-data compromise": 5644178.115970511,
+    "Data or transaction-integrity compromise": 5708215.251360405,
+    "Cyber-enabled theft or fraud": 20689085.783864744
+  },
+  "actor_tvar95_contribution": {
+    "Nation-state": 1695236.929192282,
+    "Cybercriminal": 29699112.402130116,
+    "Malicious insider": 8724457.147844305,
+    "Hacktivist": 2999234.8203998334
+  },
+  "loss_components": [
+    {
+      "name": "Direct Loss of Funds costs",
+      "aal": 989907.7183191944,
+      "contrib_tvar95": 19167427.282147307,
+      "contrib_tvar99": 83723451.6856217,
+      "pct_aal": 0.4037894710620069,
+      "pct_tvar99": 0.5910593148440089
+    },
+    {
+      "name": "Indirect Losses",
+      "aal": 631232.9221698574,
+      "contrib_tvar95": 9462305.312829243,
+      "contrib_tvar99": 18098566.554635245,
+      "pct_aal": 0.25748380686704003,
+      "pct_tvar99": 0.12776977217338634
+    },
+    {
+      "name": "Business Interruption costs",
+      "aal": 538895.1647818706,
+      "contrib_tvar95": 9806402.77687095,
+      "contrib_tvar99": 29830937.60867359,
+      "pct_aal": 0.21981866543541756,
+      "pct_tvar99": 0.21059635250519668
+    },
+    {
+      "name": "Fines",
+      "aal": 105811.99442751743,
+      "contrib_tvar95": 1599030.1311568525,
+      "contrib_tvar99": 2799307.912640832,
+      "pct_aal": 0.04316136592454209,
+      "pct_tvar99": 0.019762169184038184
+    },
+    {
+      "name": "Data Recovery & Restoration costs",
+      "aal": 79405.73480493746,
+      "contrib_tvar95": 1351687.127406536,
+      "contrib_tvar99": 3095865.6297178813,
+      "pct_aal": 0.03239008956371926,
+      "pct_tvar99": 0.021855766587612104
+    },
+    {
+      "name": "Incident & response costs",
+      "aal": 50442.483175315465,
+      "contrib_tvar95": 883611.3878175229,
+      "contrib_tvar99": 2517353.8765392196,
+      "pct_aal": 0.02057580037359314,
+      "pct_tvar99": 0.017771668839863506
+    },
+    {
+      "name": "Physical Damage Costs",
+      "aal": 37117.036824120194,
+      "contrib_tvar95": 583955.1845010754,
+      "contrib_tvar99": 1109807.7966834363,
+      "pct_aal": 0.015140268521239912,
+      "pct_tvar99": 0.007834868519030529
+    },
+    {
+      "name": "Legal and Defence costs",
+      "aal": 18731.102197552515,
+      "contrib_tvar95": 263622.0968370455,
+      "contrib_tvar99": 474539.30440430035,
+      "pct_aal": 0.00764053225244104,
+      "pct_tvar99": 0.003350087346863733
+    }
+  ],
+  "loss_drivers": [
+    {
+      "name": "Monetary theft / funds at risk (net of recovery)",
+      "aal": 989907.7183191944,
+      "contrib_tvar95": 19167427.282147307,
+      "contrib_tvar99": 83723451.6856217,
+      "pct_aal": 0.4037894710620069,
+      "pct_tvar99": 0.5910593148440089,
+      "driver_id": "FRAUD_NET_RECOVERY",
+      "category": "Direct Loss of Funds costs"
+    },
+    {
+      "name": "Business downtime costs",
+      "aal": 538895.1647818706,
+      "contrib_tvar95": 9806402.77687095,
+      "contrib_tvar99": 29830937.60867359,
+      "pct_aal": 0.21981866543541756,
+      "pct_tvar99": 0.21059635250519668,
+      "driver_id": "BUSINESS_INTERRUPTION",
+      "category": "Business Interruption costs"
+    },
+    {
+      "name": "Customer churn costs",
+      "aal": 433700.63569774386,
+      "contrib_tvar95": 6608831.404379473,
+      "contrib_tvar99": 12702971.666109957,
+      "pct_aal": 0.17690916743734258,
+      "pct_tvar99": 0.08967869310556909,
+      "driver_id": "CUSTOMER_ATTRITION",
+      "category": "Indirect Losses"
+    },
+    {
+      "name": "Cyber security investment costs",
+      "aal": 197532.28647211357,
+      "contrib_tvar95": 2853473.9084497695,
+      "contrib_tvar99": 5395594.888525288,
+      "pct_aal": 0.0805746394296974,
+      "pct_tvar99": 0.038091079067817245,
+      "driver_id": "POST_EVENT_UPLIFT",
+      "category": "Indirect Losses"
+    },
+    {
+      "name": "Regulatory fine costs",
+      "aal": 105811.99442751743,
+      "contrib_tvar95": 1599030.1311568525,
+      "contrib_tvar99": 2799307.912640832,
+      "pct_aal": 0.04316136592454209,
+      "pct_tvar99": 0.019762169184038184,
+      "driver_id": "REGULATORY",
+      "category": "Fines"
+    },
+    {
+      "name": "Ransom payment costs",
+      "aal": 72646.29917530452,
+      "contrib_tvar95": 1246114.598735059,
+      "contrib_tvar99": 2875217.4985001925,
+      "pct_aal": 0.029632874030334485,
+      "pct_tvar99": 0.02029806524308506,
+      "driver_id": "EXTORTION",
+      "category": "Data Recovery & Restoration costs"
+    },
+    {
+      "name": "Credit monitoring costs",
+      "aal": 26647.272554642175,
+      "contrib_tvar95": 512596.9706511223,
+      "contrib_tvar99": 1744489.6297811067,
+      "pct_aal": 0.010869587024085194,
+      "pct_tvar99": 0.012315508075355376,
+      "driver_id": "CREDIT_MONITORING",
+      "category": "Incident & response costs"
+    },
+    {
+      "name": "Server replacement costs",
+      "aal": 25338.6026892937,
+      "contrib_tvar95": 393056.1803910088,
+      "contrib_tvar99": 724951.6390331147,
+      "pct_aal": 0.010335772504868104,
+      "pct_tvar99": 0.005117913922981999,
+      "driver_id": "SERVER_RECOVERY",
+      "category": "Physical Damage Costs"
+    },
+    {
+      "name": "Legal guidance & defence costs",
+      "aal": 18731.102197552515,
+      "contrib_tvar95": 263622.0968370455,
+      "contrib_tvar99": 474539.30440430035,
+      "pct_aal": 0.00764053225244104,
+      "pct_tvar99": 0.003350087346863733,
+      "driver_id": "LEGAL_RESPONSE",
+      "category": "Legal and Defence costs"
+    },
+    {
+      "name": "Endpoint replacement costs",
+      "aal": 11778.434134826502,
+      "contrib_tvar95": 190899.00411006645,
+      "contrib_tvar99": 384856.1576503214,
+      "pct_aal": 0.004804496016371813,
+      "pct_tvar99": 0.002716954596048529,
+      "driver_id": "ENDPOINT_RECOVERY",
+      "category": "Physical Damage Costs"
+    },
+    {
+      "name": "External cyber experts cost",
+      "aal": 10834.209835411819,
+      "contrib_tvar95": 158163.07024608384,
+      "contrib_tvar99": 294473.57663907355,
+      "pct_aal": 0.004419341093979734,
+      "pct_tvar99": 0.002078884075414277,
+      "driver_id": "EXTERNAL_RESPONSE",
+      "category": "Incident & response costs"
+    },
+    {
+      "name": "Notification costs",
+      "aal": 7130.607787408243,
+      "contrib_tvar95": 129213.42620861893,
+      "contrib_tvar99": 325503.9934998487,
+      "pct_aal": 0.0029086189485591895,
+      "pct_tvar99": 0.0022979483466524335,
+      "driver_id": "NOTIFICATION",
+      "category": "Incident & response costs"
+    },
+    {
+      "name": "Data restoration costs",
+      "aal": 6759.435629632934,
+      "contrib_tvar95": 105572.52867147703,
+      "contrib_tvar99": 220648.1312176883,
+      "pct_aal": 0.0027572155333847777,
+      "pct_tvar99": 0.0015577013445270426,
+      "driver_id": "RESTORATION",
+      "category": "Data Recovery & Restoration costs"
+    },
+    {
+      "name": "Forensic investigation costs",
+      "aal": 5830.392997853228,
+      "contrib_tvar95": 83637.92071169756,
+      "contrib_tvar99": 152886.67661919072,
+      "pct_aal": 0.002378253306969022,
+      "pct_tvar99": 0.0010793283424414205,
+      "driver_id": "IR_FORENSICS",
+      "category": "Incident & response costs"
+    }
+  ],
+  "control_packages": [],
+  "whatif_top": [
+    {
+      "name": "Asset and vulnerability management",
+      "current": "Developing",
+      "next": "Managed",
+      "reduction": 0
+    },
+    {
+      "name": "Identity, authentication and MFA",
+      "current": "Developing",
+      "next": "Managed",
+      "reduction": 0
+    },
+    {
+      "name": "Privileged access management",
+      "current": "Developing",
+      "next": "Managed",
+      "reduction": 0
+    },
+    {
+      "name": "Email, web security and awareness",
+      "current": "Developing",
+      "next": "Managed",
+      "reduction": 0
+    },
+    {
+      "name": "Endpoint protection and execution control",
+      "current": "Developing",
+      "next": "Managed",
+      "reduction": 0
+    },
+    {
+      "name": "Secure configuration and patching",
+      "current": "Developing",
+      "next": "Managed",
+      "reduction": 0
+    },
+    {
+      "name": "Network security and segmentation",
+      "current": "Developing",
+      "next": "Managed",
+      "reduction": 0
+    },
+    {
+      "name": "Cloud and SaaS security",
+      "current": "Developing",
+      "next": "Managed",
+      "reduction": 0
+    },
+    {
+      "name": "Application and API security",
+      "current": "Developing",
+      "next": "Managed",
+      "reduction": 0
+    },
+    {
+      "name": "Logging, detection and threat response",
+      "current": "Developing",
+      "next": "Managed",
+      "reduction": 0
+    }
+  ],
+  "balbix_gaps": null,
+  "years": 25000,
+  "elapsed_s": 7.45348596572876,
+  "output": "/Users/sidharthwahi/Downloads/Guided_IT_OT_CRQ_Package_v0_3/outputs/balbix_acceptance/rakbank_out_n25000.xlsx",
+  "command": "PYTHONPATH=src:. CRQ_RUN_SENSITIVITY=0 python -m crq run --model /Users/sidharthwahi/Downloads/Guided_IT_OT_CRQ_Package_v0_3/outputs/balbix_acceptance/rakbank_model_n25000.xlsx --out /Users/sidharthwahi/Downloads/Guided_IT_OT_CRQ_Package_v0_3/outputs/balbix_acceptance/rakbank_out_n25000.xlsx --no-whatifs"
+}

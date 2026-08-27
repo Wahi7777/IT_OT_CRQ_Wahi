@@ -1,0 +1,64 @@
+{
+  "formula": "ANNUAL_PAYMENT_VALUE / 365 \u00d7 PAYMENT_FLOW_DAYS \u00d7 DIVERTED_SHARE \u00d7 (1 \u2212 FRAUD_RECOVERY_RATE)",
+  "driver_id": "FRAUD_NET_RECOVERY",
+  "scenario_id": "SC_FRAUD",
+  "factors": {
+    "annual_payment_value": {
+      "value": 76500000000.0,
+      "source": "IT 03 Organisation Inputs / ANNUAL_PAYMENT_VALUE",
+      "economic_meaning": "Annual payment / funds-transfer throughput",
+      "evidence": "RAKBANK facility assessment",
+      "calibration_status": "user_supplied_exposure",
+      "owner": "facility"
+    },
+    "payment_flow_days": {
+      "p50": 2.0,
+      "p99": 15.0,
+      "source": "FS pack 09 / SC_FRAUD",
+      "economic_meaning": "Days of payment flow exposed in the event",
+      "evidence": "Sector-pack working prior",
+      "calibration_status": "sector_pack_working_prior",
+      "owner": "sector_pack"
+    },
+    "diverted_share": {
+      "p50": 0.01,
+      "p99": 0.1,
+      "source": "FS pack 09 / SC_FRAUD",
+      "economic_meaning": "Share of exposed flow successfully diverted",
+      "evidence": "Sector-pack working prior",
+      "calibration_status": "sector_pack_working_prior",
+      "owner": "sector_pack"
+    },
+    "unrecovered_share": {
+      "p50": 0.19999999999999996,
+      "p99": 0.8,
+      "recovery_rate_p50": 0.8,
+      "recovery_rate_p99": 0.2,
+      "source": "FS pack 09 / SC_FRAUD",
+      "economic_meaning": "Share of diverted funds not recovered (net loss)",
+      "evidence": "Sector-pack working prior",
+      "calibration_status": "sector_pack_working_prior",
+      "owner": "sector_pack"
+    },
+    "cap_or_floor": {
+      "value": null,
+      "note": "No monetary cap beyond lognormal P50 floor of 1 used in fitting"
+    }
+  },
+  "event_p50": 838356.1643835615,
+  "event_p99": 251506849.31506848,
+  "p50_pct_of_annual_payment": 1.0958904109589038e-05,
+  "p99_pct_of_annual_payment": 0.003287671232876712,
+  "double_count_controls": {
+    "fraud_reimbursement_driver_enabled": false,
+    "recovery_applied_once_in_net_driver": true,
+    "insurance_embedded_in_ground_up": false
+  },
+  "governance_wording": {
+    "mathematically_consistent_with_exposure": true,
+    "order_of_magnitude_plausible": true,
+    "empirically_calibrated": false,
+    "working_prior_requiring_validation": true,
+    "statement": "Event P50 \u2248 $838,356 (0.0011% of annual payment) and P99 \u2248 $251,506,849 (0.3288%) follow the implemented payment-flow formula. Mathematically consistent and order-of-magnitude plausible, but sector-pack working priors \u2014 not empirically calibrated institution loss quantiles."
+  }
+}

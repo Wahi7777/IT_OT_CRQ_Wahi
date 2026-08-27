@@ -1,0 +1,349 @@
+{
+  "generated_at": "2026-08-26T20:29:17.698578+00:00",
+  "blocker1": {
+    "runs_are_nested": false,
+    "nesting_experiment_first_100_years_equal": false,
+    "nesting_mechanism": "IT _simulate draws rng.poisson(rate, size=n) per cell before severity normals. Different n changes RNG consumption, so same-seed runs at different N do not share year-level losses.",
+    "standalone_prudent": {
+      "25000": {
+        "aal": 2451544.1567003657,
+        "var95": 9474206.653155869,
+        "tvar95": 43118041.29956654,
+        "var99": 40482446.25267004,
+        "tvar99": 141649830.3689162,
+        "p_any": 0.12304,
+        "aal_se": 200536.88310455834
+      },
+      "100000": {
+        "aal": 2581666.848504075,
+        "var95": 9311505.660353214,
+        "tvar95": 45607048.85245639,
+        "var99": 40116832.48574226,
+        "tvar99": 154240113.05399445,
+        "p_any": 0.12481,
+        "aal_se": 193847.4380300092
+      },
+      "250000": {
+        "aal": 2383988.066911843,
+        "var95": 9625445.725306155,
+        "tvar95": 41287023.51159662,
+        "var99": 41883178.841699325,
+        "tvar99": 129602564.15451008,
+        "p_any": 0.127944,
+        "aal_se": 65087.161784716365
+      },
+      "500000": {
+        "aal": 2581309.265729608,
+        "var95": 9571863.200322205,
+        "tvar95": 45250159.238061875,
+        "var99": 41519840.433974914,
+        "tvar99": 149582084.37123415,
+        "p_any": 0.127606,
+        "aal_se": 100569.87661716214
+      }
+    },
+    "nested_prefix_from_master_500k": {
+      "25000": {
+        "aal": 3907520.585622732,
+        "var95": 9223236.481035205,
+        "tvar95": 72197327.52345626,
+        "var99": 42432046.04989011,
+        "tvar99": 286383966.50323135,
+        "p_any": 0.12528,
+        "aal_se": 1418393.800596225
+      },
+      "100000": {
+        "aal": 3088795.962629642,
+        "var95": 9684965.966184882,
+        "tvar95": 55322398.89818554,
+        "var99": 41846198.21860405,
+        "tvar99": 199454239.38190332,
+        "p_any": 0.128,
+        "aal_se": 426197.68943068065
+      },
+      "250000": {
+        "aal": 2643490.431642709,
+        "var95": 9538178.221457364,
+        "tvar95": 46510770.95468504,
+        "var99": 41547427.73691136,
+        "tvar99": 155784700.67389408,
+        "p_any": 0.127264,
+        "aal_se": 174990.8654079181
+      },
+      "500000": {
+        "aal": 2581309.265729608,
+        "var95": 9571863.200322205,
+        "tvar95": 45250159.238061875,
+        "var99": 41519840.433974914,
+        "tvar99": 149582084.37123415,
+        "p_any": 0.127606,
+        "aal_se": 100569.87661716214
+      }
+    },
+    "uncertainty_500k": {
+      "aal": {
+        "estimate_500k": 2581309.265729608,
+        "mc_se_bootstrap": 107384.61284582307,
+        "mc_se_batch_means": 100569.87661716214,
+        "ci95_bootstrap": [
+          2407410.4439050234,
+          2795081.048909896
+        ],
+        "reporting_precision_usd": 1000.0,
+        "stable_at_reporting_precision": false
+      },
+      "var95": {
+        "estimate_500k": 9571863.200322205,
+        "mc_se_bootstrap": 68464.60681683497,
+        "mc_se_batch_means": 65072.23102021968,
+        "ci95_bootstrap": [
+          9448341.702820903,
+          9695044.281648232
+        ],
+        "reporting_precision_usd": 10000.0,
+        "stable_at_reporting_precision": false
+      },
+      "tvar95": {
+        "estimate_500k": 45250159.238061875,
+        "mc_se_bootstrap": 2135576.2509182314,
+        "mc_se_batch_means": 2530987.0578686143,
+        "ci95_bootstrap": [
+          41826390.115112245,
+          49549535.249337725
+        ],
+        "reporting_precision_usd": 10000.0,
+        "stable_at_reporting_precision": false
+      },
+      "var99": {
+        "estimate_500k": 41519840.433974914,
+        "mc_se_bootstrap": 395298.8727117461,
+        "mc_se_batch_means": 299801.450586248,
+        "ci95_bootstrap": [
+          40748800.14527457,
+          42253352.03938403
+        ],
+        "reporting_precision_usd": 10000.0,
+        "stable_at_reporting_precision": false
+      },
+      "tvar99": {
+        "estimate_500k": 149582084.37123415,
+        "mc_se_bootstrap": 10582762.8326825,
+        "mc_se_batch_means": 12632349.139427712,
+        "ci95_bootstrap": [
+          132305291.61444288,
+          171538582.74870488
+        ],
+        "reporting_precision_usd": 10000.0,
+        "stable_at_reporting_precision": false
+      }
+    },
+    "outlier_250k": {
+      "standalone_aal_vs_500k_pct": -0.07644229284629789,
+      "nested_aal_vs_500k_pct": 0.024089002716040416,
+      "standalone_tvar99_vs_500k_pct": -0.13356893842406098,
+      "nested_tvar99_vs_500k_pct": 0.041466304796677525,
+      "explanation": "The prior 250k 'outlier' compared independent same-seed runs that are not nested prefixes. It is not failure of a single nested path. Production stability is judged from Monte Carlo SE / bootstrap CIs on the 500k run."
+    },
+    "rho": 0.5,
+    "prudence_frequency_factor": 1.25,
+    "dependency_model": {
+      "id": "channel_comonotonic_gaussian",
+      "within_channel": "comonotonic",
+      "across_channel": "equicorrelated_gaussian",
+      "rho_parameter": "LOSS_BLOCK_RHO"
+    }
+  },
+  "blocker2": {
+    "dependency_model": {
+      "id": "channel_comonotonic_gaussian",
+      "within_channel": "comonotonic",
+      "across_channel": "equicorrelated_gaussian",
+      "rho_parameter": "LOSS_BLOCK_RHO"
+    },
+    "rows": [
+      {
+        "rho": 0.0,
+        "elapsed_s": 0.96,
+        "aal": 2397381.491179272,
+        "var95": 10658970.96339503,
+        "tvar95": 40025918.691970855,
+        "var99": 38245692.550241046,
+        "tvar99": 124166965.64253423,
+        "p_any": 0.127606,
+        "aal_se": 57215.22684660222,
+        "direct_loss_funds_aal": 962463.4796142718,
+        "direct_loss_funds_tvar99c": 78882431.11488953,
+        "incident_response_aal": 50759.7326338718,
+        "incident_response_tvar99c": 2260217.479990858,
+        "scenario_aal": {
+          "Critical business-service disruption": 556177.9509858232,
+          "Sensitive-data compromise": 349450.4288214925,
+          "Data or transaction-integrity compromise": 301662.3825541196,
+          "Cyber-enabled theft or fraud": 1190090.7288178368
+        }
+      },
+      {
+        "rho": 0.25,
+        "elapsed_s": 1.09,
+        "aal": 2525099.2505213437,
+        "var95": 10109499.669997431,
+        "tvar95": 43381199.19773871,
+        "var99": 40052064.63291541,
+        "tvar99": 139966033.10964018,
+        "p_any": 0.127606,
+        "aal_se": 84171.96853133869,
+        "direct_loss_funds_aal": 1084884.2662349925,
+        "direct_loss_funds_tvar99c": 91350470.09321408,
+        "incident_response_aal": 50923.08601622229,
+        "incident_response_tvar99c": 2348515.356111151,
+        "scenario_aal": {
+          "Critical business-service disruption": 559250.8025604239,
+          "Sensitive-data compromise": 350455.09419921506,
+          "Data or transaction-integrity compromise": 298336.2391564967,
+          "Cyber-enabled theft or fraud": 1317057.1146052075
+        }
+      },
+      {
+        "rho": 0.5,
+        "elapsed_s": 1.17,
+        "aal": 2581309.265729608,
+        "var95": 9571863.200322205,
+        "tvar95": 45250159.238061875,
+        "var99": 41519840.433974914,
+        "tvar99": 149582084.37123415,
+        "p_any": 0.127606,
+        "aal_se": 100569.87661716214,
+        "direct_loss_funds_aal": 1145055.3077297881,
+        "direct_loss_funds_tvar99c": 97756005.44707185,
+        "incident_response_aal": 50655.213709359276,
+        "incident_response_tvar99c": 2386293.6630481714,
+        "scenario_aal": {
+          "Critical business-service disruption": 557087.8273671452,
+          "Sensitive-data compromise": 346953.0794400541,
+          "Data or transaction-integrity compromise": 298412.40752141917,
+          "Cyber-enabled theft or fraud": 1378855.9514009892
+        }
+      },
+      {
+        "rho": 0.75,
+        "elapsed_s": 1.32,
+        "aal": 2621643.634650111,
+        "var95": 8955585.760356314,
+        "tvar95": 46757207.362572715,
+        "var99": 42427831.81754459,
+        "tvar99": 158450100.56959838,
+        "p_any": 0.127606,
+        "aal_se": 131442.97401129283,
+        "direct_loss_funds_aal": 1188265.6844086552,
+        "direct_loss_funds_tvar99c": 102578583.72229879,
+        "incident_response_aal": 50012.4332705897,
+        "incident_response_tvar99c": 2452280.325818221,
+        "scenario_aal": {
+          "Critical business-service disruption": 555692.2521729431,
+          "Sensitive-data compromise": 343408.35647741565,
+          "Data or transaction-integrity compromise": 300557.716675301,
+          "Cyber-enabled theft or fraud": 1421985.3093244517
+        }
+      },
+      {
+        "rho": 1.0,
+        "elapsed_s": 1.3,
+        "aal": 2592017.770414532,
+        "var95": 8165211.586530294,
+        "tvar95": 46836938.5896801,
+        "var99": 42863159.33565361,
+        "tvar99": 161358852.1394985,
+        "p_any": 0.127606,
+        "aal_se": 123827.02691216025,
+        "direct_loss_funds_aal": 1151362.0127543327,
+        "direct_loss_funds_tvar99c": 99218595.27042812,
+        "incident_response_aal": 50695.14750507051,
+        "incident_response_tvar99c": 2699007.920563486,
+        "scenario_aal": {
+          "Critical business-service disruption": 560352.0786907504,
+          "Sensitive-data compromise": 345382.272482255,
+          "Data or transaction-integrity compromise": 304867.07879197097,
+          "Cyber-enabled theft or fraud": 1381416.3404495565
+        }
+      }
+    ],
+    "governance": {
+      "status": "structured_expert_working_prior",
+      "value": 0.5,
+      "is_empirically_calibrated": false,
+      "rationale": "LOSS_BLOCK_RHO=0.5 is the FS pack working prior from the pre-unified three-block Monte Carlo. It encodes moderate positive dependence across Duration/Exposure/Direct. Within-channel comonotonicity prevents related drivers diversifying merely because they are reported separately. Best estimate remains 0.5; prudence uses PRUDENCE_FREQUENCY_FACTOR, not max rho.",
+      "limitation": "No within-channel idiosyncratic residual variance.",
+      "aal_max_rel_deviation_vs_0_5": 0.07125367618372093,
+      "tvar99_max_rel_deviation_vs_0_5": 0.16990750486953007
+    }
+  },
+  "blocker3": {
+    "formula": "ANNUAL_PAYMENT_VALUE / 365 \u00d7 PAYMENT_FLOW_DAYS \u00d7 DIVERTED_SHARE \u00d7 (1 \u2212 FRAUD_RECOVERY_RATE)",
+    "driver_id": "FRAUD_NET_RECOVERY",
+    "scenario_id": "SC_FRAUD",
+    "factors": {
+      "annual_payment_value": {
+        "value": 76500000000.0,
+        "source": "IT 03 Organisation Inputs / ANNUAL_PAYMENT_VALUE",
+        "economic_meaning": "Annual payment / funds-transfer throughput",
+        "evidence": "RAKBANK facility assessment",
+        "calibration_status": "user_supplied_exposure",
+        "owner": "facility"
+      },
+      "payment_flow_days": {
+        "p50": 2.0,
+        "p99": 15.0,
+        "source": "FS pack 09 / SC_FRAUD",
+        "economic_meaning": "Days of payment flow exposed in the event",
+        "evidence": "Sector-pack working prior",
+        "calibration_status": "sector_pack_working_prior",
+        "owner": "sector_pack"
+      },
+      "diverted_share": {
+        "p50": 0.01,
+        "p99": 0.1,
+        "source": "FS pack 09 / SC_FRAUD",
+        "economic_meaning": "Share of exposed flow successfully diverted",
+        "evidence": "Sector-pack working prior",
+        "calibration_status": "sector_pack_working_prior",
+        "owner": "sector_pack"
+      },
+      "unrecovered_share": {
+        "p50": 0.19999999999999996,
+        "p99": 0.8,
+        "recovery_rate_p50": 0.8,
+        "recovery_rate_p99": 0.2,
+        "source": "FS pack 09 / SC_FRAUD",
+        "economic_meaning": "Share of diverted funds not recovered (net loss)",
+        "evidence": "Sector-pack working prior",
+        "calibration_status": "sector_pack_working_prior",
+        "owner": "sector_pack"
+      },
+      "cap_or_floor": {
+        "value": null,
+        "note": "No monetary cap beyond lognormal P50 floor of 1 used in fitting"
+      }
+    },
+    "event_p50": 838356.1643835615,
+    "event_p99": 251506849.31506848,
+    "p50_pct_of_annual_payment": 1.0958904109589038e-05,
+    "p99_pct_of_annual_payment": 0.003287671232876712,
+    "double_count_controls": {
+      "fraud_reimbursement_driver_enabled": false,
+      "recovery_applied_once_in_net_driver": true,
+      "insurance_embedded_in_ground_up": false
+    },
+    "governance_wording": {
+      "mathematically_consistent_with_exposure": true,
+      "order_of_magnitude_plausible": true,
+      "empirically_calibrated": false,
+      "working_prior_requiring_validation": true,
+      "statement": "Event P50 \u2248 $838,356 (0.0011% of annual payment) and P99 \u2248 $251,506,849 (0.3288%) follow the implemented payment-flow formula. Mathematically consistent and order-of-magnitude plausible, but sector-pack working priors \u2014 not empirically calibrated institution loss quantiles."
+    }
+  },
+  "blocker4_pg": {
+    "root_cause": "PG pack 09 Scenario Parameters had lower CAPACITY_AFFECTED and Safety DOWNTIME P99 than the accepted golden Impact/BIA; pack-authoritative prepare overwrote assessment values. Unrelated to Balbix IT refactor.",
+    "resolution": "Restored PG pack parameters to golden calibration; frozen-native re-run matches prudent AAL and all scenario AALs exactly.",
+    "prudent_aal_match": true
+  }
+}

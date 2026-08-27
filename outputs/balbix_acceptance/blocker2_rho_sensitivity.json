@@ -1,0 +1,124 @@
+{
+  "dependency_model": {
+    "id": "channel_comonotonic_gaussian",
+    "within_channel": "comonotonic",
+    "across_channel": "equicorrelated_gaussian",
+    "rho_parameter": "LOSS_BLOCK_RHO"
+  },
+  "rows": [
+    {
+      "rho": 0.0,
+      "elapsed_s": 0.96,
+      "aal": 2397381.491179272,
+      "var95": 10658970.96339503,
+      "tvar95": 40025918.691970855,
+      "var99": 38245692.550241046,
+      "tvar99": 124166965.64253423,
+      "p_any": 0.127606,
+      "aal_se": 57215.22684660222,
+      "direct_loss_funds_aal": 962463.4796142718,
+      "direct_loss_funds_tvar99c": 78882431.11488953,
+      "incident_response_aal": 50759.7326338718,
+      "incident_response_tvar99c": 2260217.479990858,
+      "scenario_aal": {
+        "Critical business-service disruption": 556177.9509858232,
+        "Sensitive-data compromise": 349450.4288214925,
+        "Data or transaction-integrity compromise": 301662.3825541196,
+        "Cyber-enabled theft or fraud": 1190090.7288178368
+      }
+    },
+    {
+      "rho": 0.25,
+      "elapsed_s": 1.09,
+      "aal": 2525099.2505213437,
+      "var95": 10109499.669997431,
+      "tvar95": 43381199.19773871,
+      "var99": 40052064.63291541,
+      "tvar99": 139966033.10964018,
+      "p_any": 0.127606,
+      "aal_se": 84171.96853133869,
+      "direct_loss_funds_aal": 1084884.2662349925,
+      "direct_loss_funds_tvar99c": 91350470.09321408,
+      "incident_response_aal": 50923.08601622229,
+      "incident_response_tvar99c": 2348515.356111151,
+      "scenario_aal": {
+        "Critical business-service disruption": 559250.8025604239,
+        "Sensitive-data compromise": 350455.09419921506,
+        "Data or transaction-integrity compromise": 298336.2391564967,
+        "Cyber-enabled theft or fraud": 1317057.1146052075
+      }
+    },
+    {
+      "rho": 0.5,
+      "elapsed_s": 1.17,
+      "aal": 2581309.265729608,
+      "var95": 9571863.200322205,
+      "tvar95": 45250159.238061875,
+      "var99": 41519840.433974914,
+      "tvar99": 149582084.37123415,
+      "p_any": 0.127606,
+      "aal_se": 100569.87661716214,
+      "direct_loss_funds_aal": 1145055.3077297881,
+      "direct_loss_funds_tvar99c": 97756005.44707185,
+      "incident_response_aal": 50655.213709359276,
+      "incident_response_tvar99c": 2386293.6630481714,
+      "scenario_aal": {
+        "Critical business-service disruption": 557087.8273671452,
+        "Sensitive-data compromise": 346953.0794400541,
+        "Data or transaction-integrity compromise": 298412.40752141917,
+        "Cyber-enabled theft or fraud": 1378855.9514009892
+      }
+    },
+    {
+      "rho": 0.75,
+      "elapsed_s": 1.32,
+      "aal": 2621643.634650111,
+      "var95": 8955585.760356314,
+      "tvar95": 46757207.362572715,
+      "var99": 42427831.81754459,
+      "tvar99": 158450100.56959838,
+      "p_any": 0.127606,
+      "aal_se": 131442.97401129283,
+      "direct_loss_funds_aal": 1188265.6844086552,
+      "direct_loss_funds_tvar99c": 102578583.72229879,
+      "incident_response_aal": 50012.4332705897,
+      "incident_response_tvar99c": 2452280.325818221,
+      "scenario_aal": {
+        "Critical business-service disruption": 555692.2521729431,
+        "Sensitive-data compromise": 343408.35647741565,
+        "Data or transaction-integrity compromise": 300557.716675301,
+        "Cyber-enabled theft or fraud": 1421985.3093244517
+      }
+    },
+    {
+      "rho": 1.0,
+      "elapsed_s": 1.3,
+      "aal": 2592017.770414532,
+      "var95": 8165211.586530294,
+      "tvar95": 46836938.5896801,
+      "var99": 42863159.33565361,
+      "tvar99": 161358852.1394985,
+      "p_any": 0.127606,
+      "aal_se": 123827.02691216025,
+      "direct_loss_funds_aal": 1151362.0127543327,
+      "direct_loss_funds_tvar99c": 99218595.27042812,
+      "incident_response_aal": 50695.14750507051,
+      "incident_response_tvar99c": 2699007.920563486,
+      "scenario_aal": {
+        "Critical business-service disruption": 560352.0786907504,
+        "Sensitive-data compromise": 345382.272482255,
+        "Data or transaction-integrity compromise": 304867.07879197097,
+        "Cyber-enabled theft or fraud": 1381416.3404495565
+      }
+    }
+  ],
+  "governance": {
+    "status": "structured_expert_working_prior",
+    "value": 0.5,
+    "is_empirically_calibrated": false,
+    "rationale": "LOSS_BLOCK_RHO=0.5 is the FS pack working prior from the pre-unified three-block Monte Carlo. It encodes moderate positive dependence across Duration/Exposure/Direct. Within-channel comonotonicity prevents related drivers diversifying merely because they are reported separately. Best estimate remains 0.5; prudence uses PRUDENCE_FREQUENCY_FACTOR, not max rho.",
+    "limitation": "No within-channel idiosyncratic residual variance.",
+    "aal_max_rel_deviation_vs_0_5": 0.07125367618372093,
+    "tvar99_max_rel_deviation_vs_0_5": 0.16990750486953007
+  }
+}

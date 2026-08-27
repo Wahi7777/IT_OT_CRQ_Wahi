@@ -1,0 +1,37 @@
+{
+  "schema_version": "IT-OT-ROUTER-1.0",
+  "combined_model": "model/Guided_IT_OT_CRQ_Model_v1_0.xlsx",
+  "combined_version": "1.0.0",
+  "router_version": "1.0.0",
+  "outside_in_schema": "1.0.0",
+  "sectors": {
+    "Financial Services": {
+      "domain": "IT",
+      "unit_of_analysis": "Organisation",
+      "engine": "it_crq v1.1.1",
+      "pack_id": "FS-v1.1.1",
+      "pack_file": "sector_packs/IT/IT_CRQ_Sector_Pack_Financial_Services_v1_1_1.xlsx"
+    },
+    "Power Generation": {
+      "domain": "OT",
+      "unit_of_analysis": "Facility",
+      "engine": "ot_crq v1.7.1",
+      "pack_id": "PG-v1.6",
+      "pack_file": "sector_packs/OT/OT_CRQ_Sector_Pack_Power_Generation_v1_6.xlsx"
+    },
+    "Energy Assets": {
+      "domain": "OT",
+      "unit_of_analysis": "Facility",
+      "engine": "ot_crq v1.7.1",
+      "pack_id": "EA-v1.0",
+      "pack_file": "sector_packs/OT/OT_CRQ_Sector_Pack_Energy_Assets_v1_0.xlsx"
+    },
+    "Manufacturing": {
+      "domain": "OT",
+      "unit_of_analysis": "Facility",
+      "engine": "ot_crq v1.7.1",
+      "pack_id": "MF-v1.0",
+      "pack_file": "sector_packs/OT/OT_CRQ_Sector_Pack_Manufacturing_v1_0.xlsx"
+    }
+  }
+}

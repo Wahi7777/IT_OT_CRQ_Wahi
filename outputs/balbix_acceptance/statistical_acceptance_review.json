@@ -1,0 +1,414 @@
+{
+  "generated_at": "2026-08-27T03:38:56.521488+00:00",
+  "elapsed_s": 48.0,
+  "run_identity": {
+    "assessment": "assessments/RAKBANK.xlsx",
+    "domain_sector": "IT / Financial Services",
+    "simulation_years": 500000,
+    "seed": 20260821,
+    "prudence_frequency_factor": 1.25,
+    "basis": "Prudent",
+    "loss_block_rho_baseline": 0.5,
+    "dependency": "channel_comonotonic_gaussian",
+    "path": "sector_packs/IT/IT_CRQ_Sector_Pack_Financial_Services_v1_1_1.xlsx",
+    "pack_id": "FS-v1.1.1",
+    "sha256": "3d5534faecc5390e101eab58dfecf6dedf71b5ed68d56d5d6fcab686f97f0bf4",
+    "code_commit": "no-git-repository"
+  },
+  "baseline_uncertainty": {
+    "method": {
+      "aal": "iid sample mean SE = s/\u221aN; 95% CI \u2248 estimate \u00b1 1.96\u00b7SE",
+      "quantiles_tvar": "percentile bootstrap of annual vector, B=400 resamples with replacement; SE = bootstrap sample SD; 95% CI = 2.5%/97.5% percentiles. Assumes years are exchangeable MC replicates. Heavy-tail limitation: TVaR99 CI width is dominated by rare extreme years; bootstrap can understate uncertainty if the sample max is atypical.",
+      "batch_means_supporting": "50k-year batches (10) for comparison SE only",
+      "intervals_measure": "Monte Carlo sampling error only (fixed model, seed path bootstrapped)",
+      "n_years": 500000,
+      "production_seed": 20260821,
+      "bootstrap_seed": 20260832,
+      "n_bootstrap": 400
+    },
+    "rows": {
+      "aal": {
+        "estimate": 2581309.265729608,
+        "mc_se": 100569.87661716214,
+        "mc_se_bootstrap": 107384.61284582307,
+        "mc_se_batch_means": 100569.87661716214,
+        "ci95": [
+          2384192.3075599703,
+          2778426.2238992457
+        ],
+        "ci95_halfwidth": 197116.9581696378,
+        "acceptance_tolerance": 250000.0,
+        "pass": true,
+        "plus_minus_25m_clarification": null
+      },
+      "var95": {
+        "estimate": 9571863.200322205,
+        "mc_se": 68464.60681683497,
+        "mc_se_bootstrap": 68464.60681683497,
+        "mc_se_batch_means": 65072.23102021968,
+        "ci95": [
+          9448341.702820903,
+          9695044.281648232
+        ],
+        "ci95_halfwidth": 123521.49750130251,
+        "acceptance_tolerance": 100000.0,
+        "pass": false,
+        "plus_minus_25m_clarification": null
+      },
+      "tvar95": {
+        "estimate": 45250159.238061875,
+        "mc_se": 2135576.2509182314,
+        "mc_se_bootstrap": 2135576.2509182314,
+        "mc_se_batch_means": 2530987.0578686143,
+        "ci95": [
+          41826390.115112245,
+          49549535.249337725
+        ],
+        "ci95_halfwidth": 4299376.01127585,
+        "acceptance_tolerance": 5000000.0,
+        "pass": true,
+        "plus_minus_25m_clarification": null
+      },
+      "var99": {
+        "estimate": 41519840.433974914,
+        "mc_se": 395298.8727117461,
+        "mc_se_bootstrap": 395298.8727117461,
+        "mc_se_batch_means": 299801.450586248,
+        "ci95": [
+          40748800.14527457,
+          42253352.03938403
+        ],
+        "ci95_halfwidth": 771040.2887003422,
+        "acceptance_tolerance": 500000.0,
+        "pass": false,
+        "plus_minus_25m_clarification": null
+      },
+      "tvar99": {
+        "estimate": 149582084.37123415,
+        "mc_se": 10582762.8326825,
+        "mc_se_bootstrap": 10582762.8326825,
+        "mc_se_batch_means": 12632349.139427712,
+        "ci95": [
+          132305291.61444288,
+          171538582.74870488
+        ],
+        "ci95_halfwidth": 21956498.37747073,
+        "acceptance_tolerance": 25000000.0,
+        "pass": true,
+        "plus_minus_25m_clarification": "Prior note's '\u00b1$25m' is the acceptance tolerance / decision precision for TVaR99, not the SE ($10,582,763) and not exactly the bootstrap CI half-width ($21,956,498). The 95% bootstrap CI is [132,305,292, 171,538,583]."
+      }
+    },
+    "all_pass": false
+  },
+  "rho_invariants": {
+    "analytic_aal_best_estimate": 1950264.658170932,
+    "analytic_aal_prudent": 2437830.8227136647,
+    "n_cells": 96,
+    "n_driver_draws": 936,
+    "cross_driver_cap_or_nonlinear_aggregate": false,
+    "severity_transform": "uncapped_lognormal_per_driver_then_sum",
+    "frequency_and_applicability_independent_of_rho": true,
+    "crn_frequency_match_vs_rho_0_5": {
+      "0.0": {
+        "p_any": 0.127606,
+        "p_any_equal": true,
+        "positive_years_equal": true,
+        "annual_identical": false
+      },
+      "0.25": {
+        "p_any": 0.127606,
+        "p_any_equal": true,
+        "positive_years_equal": true,
+        "annual_identical": false
+      },
+      "0.5": {
+        "p_any": 0.127606,
+        "p_any_equal": true,
+        "positive_years_equal": true,
+        "annual_identical": true
+      },
+      "0.75": {
+        "p_any": 0.127606,
+        "p_any_equal": true,
+        "positive_years_equal": true,
+        "annual_identical": false
+      },
+      "1.0": {
+        "p_any": 0.127606,
+        "p_any_equal": true,
+        "positive_years_equal": true,
+        "annual_identical": false
+      }
+    }
+  },
+  "aal_rho_paired": {
+    "rows": [
+      {
+        "rho": 0.0,
+        "simulated_aal": 2397381.491179272,
+        "analytical_aal": 2437830.8227136647,
+        "difference_vs_rho_0_5": -183927.77455033595,
+        "difference_pct_vs_rho_0_5": -0.07125367618372093,
+        "se_of_difference": 102146.23511908505,
+        "ci95_difference": [
+          -384134.39538374264,
+          16278.846283070743
+        ],
+        "ci95_contains_zero": true,
+        "abs_sim_vs_analytic_pct": 0.01659234560393596,
+        "interpretation": "95% CI for paired \u0394AAL contains 0 \u2014 compatible with sampling noise under CRN; does not prove implementation correctness by itself."
+      },
+      {
+        "rho": 0.25,
+        "simulated_aal": 2525099.2505213437,
+        "analytical_aal": 2437830.8227136647,
+        "difference_vs_rho_0_5": -56210.015208264645,
+        "difference_pct_vs_rho_0_5": -0.02177577710448301,
+        "se_of_difference": 57313.78929228243,
+        "ci95_difference": [
+          -168545.04222113822,
+          56125.01180460893
+        ],
+        "ci95_contains_zero": true,
+        "abs_sim_vs_analytic_pct": 0.035797573397868654,
+        "interpretation": "95% CI for paired \u0394AAL contains 0 \u2014 compatible with sampling noise under CRN; does not prove implementation correctness by itself."
+      },
+      {
+        "rho": 0.5,
+        "simulated_aal": 2581309.265729608,
+        "analytical_aal": 2437830.8227136647,
+        "difference_vs_rho_0_5": 0.0,
+        "difference_pct_vs_rho_0_5": 0.0,
+        "se_of_difference": 0.0,
+        "ci95_difference": [
+          0.0,
+          0.0
+        ],
+        "ci95_contains_zero": true,
+        "abs_sim_vs_analytic_pct": 0.05885496305942618,
+        "interpretation": "Baseline (by construction \u0394=0)."
+      },
+      {
+        "rho": 0.75,
+        "simulated_aal": 2621643.634650111,
+        "analytical_aal": 2437830.8227136647,
+        "difference_vs_rho_0_5": 40334.3689205038,
+        "difference_pct_vs_rho_0_5": 0.015625546871115916,
+        "se_of_difference": 64231.6873747779,
+        "ci95_difference": [
+          -85559.73833406088,
+          166228.4761750685
+        ],
+        "ci95_contains_zero": true,
+        "abs_sim_vs_analytic_pct": 0.0754001509144247,
+        "interpretation": "95% CI for paired \u0394AAL contains 0 \u2014 compatible with sampling noise under CRN; does not prove implementation correctness by itself."
+      },
+      {
+        "rho": 1.0,
+        "simulated_aal": 2592017.770414532,
+        "analytical_aal": 2437830.8227136647,
+        "difference_vs_rho_0_5": 10708.50468492466,
+        "difference_pct_vs_rho_0_5": 0.004148477994130585,
+        "se_of_difference": 134136.6897498063,
+        "ci95_difference": [
+          -252199.40722469566,
+          273616.416594545
+        ],
+        "ci95_contains_zero": true,
+        "abs_sim_vs_analytic_pct": 0.06324759957265395,
+        "interpretation": "95% CI for paired \u0394AAL contains 0 \u2014 compatible with sampling noise under CRN; does not prove implementation correctness by itself."
+      }
+    ],
+    "crn_preserves_frequency": true,
+    "systematic_aal_shift_detected": false,
+    "max_abs_sim_pct_vs_rho_0_5": 0.07125367618372093
+  },
+  "tvar_rho_paired_bootstrap": {
+    "tvar99": {
+      "metric": "tvar99",
+      "n_bootstrap": 400,
+      "point_vs_rho_0_5": {
+        "0.0": -25415118.728699923,
+        "0.25": -9616051.261593968,
+        "0.75": 8868016.198364228,
+        "1.0": 11776767.768264353
+      },
+      "rows": [
+        {
+          "rho": 0.0,
+          "point_estimate": 124166965.64253423,
+          "point_difference_vs_0_5": -25415118.728699923,
+          "point_difference_pct_vs_0_5": -0.16990750486953007,
+          "bootstrap_se_of_difference": 10306056.638703652,
+          "ci95_difference": [
+            -46838618.34037056,
+            -7023331.681406134
+          ],
+          "ci95_contains_zero": false,
+          "systematic_difference_suggested": true
+        },
+        {
+          "rho": 0.25,
+          "point_estimate": 139966033.10964018,
+          "point_difference_vs_0_5": -9616051.261593968,
+          "point_difference_pct_vs_0_5": -0.06428611622852351,
+          "bootstrap_se_of_difference": 5499050.628039107,
+          "ci95_difference": [
+            -20915799.586446267,
+            -478621.7710542698
+          ],
+          "ci95_contains_zero": false,
+          "systematic_difference_suggested": true
+        },
+        {
+          "rho": 0.75,
+          "point_estimate": 158450100.56959838,
+          "point_difference_vs_0_5": 8868016.198364228,
+          "point_difference_pct_vs_0_5": 0.05928528296447258,
+          "bootstrap_se_of_difference": 6164333.654831428,
+          "ci95_difference": [
+            -2352563.889456323,
+            20517066.944766033
+          ],
+          "ci95_contains_zero": true,
+          "systematic_difference_suggested": false
+        },
+        {
+          "rho": 1.0,
+          "point_estimate": 161358852.1394985,
+          "point_difference_vs_0_5": 11776767.768264353,
+          "point_difference_pct_vs_0_5": 0.07873113827613651,
+          "bootstrap_se_of_difference": 13057168.400196703,
+          "ci95_difference": [
+            -10280793.045425234,
+            39151328.70457471
+          ],
+          "ci95_contains_zero": true,
+          "systematic_difference_suggested": false
+        }
+      ],
+      "max_abs_pct_point": 0.16990750486953007,
+      "max_abs_pct_row": {
+        "rho": 0.0,
+        "point_estimate": 124166965.64253423,
+        "point_difference_vs_0_5": -25415118.728699923,
+        "point_difference_pct_vs_0_5": -0.16990750486953007,
+        "bootstrap_se_of_difference": 10306056.638703652,
+        "ci95_difference": [
+          -46838618.34037056,
+          -7023331.681406134
+        ],
+        "ci95_contains_zero": false,
+        "systematic_difference_suggested": true
+      }
+    },
+    "tvar95": {
+      "metric": "tvar95",
+      "n_bootstrap": 400,
+      "point_vs_rho_0_5": {
+        "0.0": -5224240.54609102,
+        "0.25": -1868960.040323168,
+        "0.75": 1507048.1245108396,
+        "1.0": 1586779.351618223
+      },
+      "rows": [
+        {
+          "rho": 0.0,
+          "point_estimate": 40025918.691970855,
+          "point_difference_vs_0_5": -5224240.54609102,
+          "point_difference_pct_vs_0_5": -0.11545242346233965,
+          "bootstrap_se_of_difference": 2066432.8095230006,
+          "ci95_difference": [
+            -9422612.64658026,
+            -1494773.508668233
+          ],
+          "ci95_contains_zero": false,
+          "systematic_difference_suggested": true
+        },
+        {
+          "rho": 0.25,
+          "point_estimate": 43381199.19773871,
+          "point_difference_vs_0_5": -1868960.040323168,
+          "point_difference_pct_vs_0_5": -0.04130283896882079,
+          "bootstrap_se_of_difference": 1100700.9293618104,
+          "ci95_difference": [
+            -4144376.5769303334,
+            -7676.848080732484
+          ],
+          "ci95_contains_zero": false,
+          "systematic_difference_suggested": true
+        },
+        {
+          "rho": 0.75,
+          "point_estimate": 46757207.362572715,
+          "point_difference_vs_0_5": 1507048.1245108396,
+          "point_difference_pct_vs_0_5": 0.03330481372633924,
+          "bootstrap_se_of_difference": 1231864.8886311455,
+          "ci95_difference": [
+            -735205.2525097401,
+            3815728.6664577154
+          ],
+          "ci95_contains_zero": true,
+          "systematic_difference_suggested": false
+        },
+        {
+          "rho": 1.0,
+          "point_estimate": 46836938.5896801,
+          "point_difference_vs_0_5": 1586779.351618223,
+          "point_difference_pct_vs_0_5": 0.03506682359436901,
+          "bootstrap_se_of_difference": 2611101.3063153857,
+          "ci95_difference": [
+            -2783418.917918569,
+            6989162.945401619
+          ],
+          "ci95_contains_zero": true,
+          "systematic_difference_suggested": false
+        }
+      ],
+      "max_abs_pct_point": 0.11545242346233965,
+      "max_abs_pct_row": {
+        "rho": 0.0,
+        "point_estimate": 40025918.691970855,
+        "point_difference_vs_0_5": -5224240.54609102,
+        "point_difference_pct_vs_0_5": -0.11545242346233965,
+        "bootstrap_se_of_difference": 2066432.8095230006,
+        "ci95_difference": [
+          -9422612.64658026,
+          -1494773.508668233
+        ],
+        "ci95_contains_zero": false,
+        "systematic_difference_suggested": true
+      }
+    }
+  },
+  "before_after_tvar99": {
+    "pairing_valid": false,
+    "limitation": "Pre-refactor annual loss vector is not available; only workbook point metrics exist. Seeds matching does not establish CRN pairing across different severity engines (per-driver vs former block LN).",
+    "before_tvar99_point": 139706747.0,
+    "after_tvar99_point": 149582084.37123418,
+    "point_difference": 9875337.371234149,
+    "point_difference_pct": 0.07068618791355974,
+    "after_bootstrap_se": 10435976.840600457,
+    "after_ci95": [
+      132755094.98688512,
+      171485187.92703602
+    ],
+    "illustrative_unpaired_se_diff_if_equal_se": 14758699.98458869,
+    "illustrative_unpaired_ci95_diff": [
+      -19051714.598559685,
+      38802389.34102798
+    ],
+    "decision_precision_note": "Point movement ~7.1% is an observed estimate difference. Without paired before annuals, systematic vs sampling attribution is not established at the same rigor as the \u03c1 sensitivity."
+  },
+  "outcome": {
+    "recommendation": "Outcome B",
+    "unresolved": [
+      "baseline_mc_precision_vs_tolerance"
+    ],
+    "notes": [
+      "Golden fixtures not modified.",
+      "LOSS_BLOCK_RHO=0.5 remains structured expert working prior.",
+      "Direct-loss calibration remains working prior requiring validation."
+    ]
+  }
+}

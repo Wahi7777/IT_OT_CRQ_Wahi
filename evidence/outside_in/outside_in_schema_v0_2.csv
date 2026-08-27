@@ -1,0 +1,2 @@
+finding_id,observed_asset_endpoint,finding_type,technology_service,cve,kev,epss,internet_exposed,organisation_attribution,facility_attribution,attribution_confidence,it_ot_relevance,attack_route_mapping,model_stage,proposed_treatment,evidence_strength,source_scanner,observation_date,quantitative_target,model_field,baseline_value,conditioned_value,approved,approver,adjustment_rationale
+OI-001,,,,,,,,,,,,,,,,,,,,,,,,

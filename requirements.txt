@@ -1,0 +1,7 @@
+# Runtime pins for `pip install -r requirements.txt` and `pip-audit -r requirements.txt`.
+# Canonical package metadata is pyproject.toml. Keep the numpy/openpyxl versions identical.
+# et-xmlfile is the openpyxl transitive dependency, pinned so audits see a full lock.
+# python 3.14.3 (freeze environment)
+numpy==2.5.2
+openpyxl==3.1.5
+et-xmlfile==2.0.0

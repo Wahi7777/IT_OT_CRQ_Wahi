@@ -1,0 +1,32 @@
+{
+  "release_version": "1.2.0",
+  "freeze_date": "2026-08-27",
+  "methodology": "unified_balbix_impact",
+  "acceptance": "Outcome A with VaR95/VaR99 precision exception",
+  "python": "3.14.3",
+  "host_os": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+  "dependencies": {
+    "numpy": "2.5.2",
+    "openpyxl": "3.1.5",
+    "pytest": "9.1.1"
+  },
+  "production_simulation_years": 500000,
+  "it_regression_simulation_years": 50000,
+  "seed": 20260821,
+  "prudence_frequency_factor": 1.25,
+  "loss_block_rho": 0.5,
+  "sha256": {
+    "combined_model": "1024b88e6c8af7263960cafc13706c609a0e885d06f778d5c67d09f924808a7a",
+    "fs_pack": "3d5534faecc5390e101eab58dfecf6dedf71b5ed68d56d5d6fcab686f97f0bf4",
+    "pg_pack": "77b3d0b86a6ed82c66063d40663a308e35a6ad357f08e493e03d1a9ae321cf0b",
+    "ea_pack": "4a063dc8858b9105abe4e426d471cd392d7a55563af170f1d497cdee32089df4",
+    "mf_pack": "1af0d0e0d795d69b759ae5c5219cb4514173e517f64fbc4c760f1de97689fe83"
+  },
+  "fixture_sha256": {
+    "regression_it_fs.json": "78c4a08babeb10c8debde70718f8bc062bc6b095b7d22c348ef7e7c62d752665",
+    "regression_it_fs_500k.json": "b0f3683b2a37c2eae823a7ab66bb568532747434bee68324ca8dbe700e52f4cb",
+    "regression_ot_energy_assets.json": "ebc3438be91bd4cbbbc00ce53ffdc91f7ff35907d02a4c7641de39f5ee90d64d",
+    "regression_ot_manufacturing.json": "3e5e40eeeadabacaef1fe6803a7a1109eef70af1947f8dcbd4b0579b80ee54e7",
+    "regression_ot_power_generation.json": "393341d1cfb3e26d2fc6ae715d6882431bffe4e5220f40c82079e817bff4152c"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "model/Guided_IT_OT_CRQ_Model_v1_0.xlsx": "1024b88e6c8af7263960cafc13706c609a0e885d06f778d5c67d09f924808a7a",
+  "sector_packs/IT/IT_CRQ_Sector_Pack_Financial_Services_v1_1_1.xlsx": "3d5534faecc5390e101eab58dfecf6dedf71b5ed68d56d5d6fcab686f97f0bf4",
+  "sector_packs/OT/OT_CRQ_Sector_Pack_Power_Generation_v1_6.xlsx": "77b3d0b86a6ed82c66063d40663a308e35a6ad357f08e493e03d1a9ae321cf0b",
+  "sector_packs/OT/OT_CRQ_Sector_Pack_Energy_Assets_v1_0.xlsx": "4a063dc8858b9105abe4e426d471cd392d7a55563af170f1d497cdee32089df4",
+  "sector_packs/OT/OT_CRQ_Sector_Pack_Manufacturing_v1_0.xlsx": "1af0d0e0d795d69b759ae5c5219cb4514173e517f64fbc4c760f1de97689fe83",
+  "tests/fixtures/regression_it_fs.json": "5f36c08aaf2709a40391e0b26a45d4ef70958f6a37de5b6289445e7e0c602823",
+  "tests/fixtures/regression_it_fs_500k.json": "e8fe2ee9a161b19d1c743c6b02cbae031188378655434e71f53ba39d4d55728f",
+  "tests/fixtures/regression_ot_energy_assets.json": "ebc3438be91bd4cbbbc00ce53ffdc91f7ff35907d02a4c7641de39f5ee90d64d",
+  "tests/fixtures/regression_ot_manufacturing.json": "3e5e40eeeadabacaef1fe6803a7a1109eef70af1947f8dcbd4b0579b80ee54e7",
+  "tests/fixtures/regression_ot_power_generation.json": "393341d1cfb3e26d2fc6ae715d6882431bffe4e5220f40c82079e817bff4152c"
+}
