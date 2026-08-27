@@ -31,7 +31,7 @@ Architecture, catalogue, pack gates, driver reporting, fraud≠IR, likelihood/pa
 | Seed | **20260821** |
 | Basis | **Prudent** (`PRUDENCE_FREQUENCY_FACTOR` = 1.25) |
 | Dependency | `channel_comonotonic_gaussian`, `LOSS_BLOCK_RHO` = **0.5** |
-| Code commit | See §7 freeze record (tag `v1.2.0`) |
+| Code commit | **`71eadc0`** (tag `v1.2.0`, local only) |
 | Combined model | `model/Guided_IT_OT_CRQ_Model_v1_0.xlsx` |
 
 ### User decision on simulation count and precision

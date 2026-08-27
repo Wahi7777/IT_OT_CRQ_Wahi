@@ -1,5 +1,6 @@
 {
-  "release_version": "1.2.0",
+  "git_commit": "71eadc00f51a778864cf571eceb8b827e000f72d",
+  "git_tag": "v1.2.0",
   "freeze_date": "2026-08-27",
   "methodology": "unified_balbix_impact",
   "acceptance": "Outcome A with VaR95/VaR99 precision exception",
