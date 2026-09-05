@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0-draft",
+  "purpose": "Exact transitional source map used by the Excel adapter. Governed pack cells are intentionally excluded from CRQAssessment and loaded through ModelBundle.",
+  "common": [
+    {"source": "00 COMMON - Run Setup!C6:C10", "classification": "USER_INPUT", "targets": ["assessment.domain", "assessment.sector", "assessment.asset_type", "assessment.reporting_basis", "outside_in.apply"], "replayed": true},
+    {"source": "00 COMMON - Run Setup!C11", "classification": "INACTIVE_LEGACY", "target": "compatibility.inactive_legacy.outside_in_file_path", "replayed": true, "quantitative_effect": false},
+    {"source": "06 Appetite & Insurance!B6:B15", "classification": "USER_INPUT", "targets": ["risk_appetite", "insurance"], "replayed": true},
+    {"source": "06 Appetite & Insurance!A18:D21", "classification": "USER_INPUT", "target": "insurance.layers", "replayed": true}
+  ],
+  "IT": [
+    {"source": "IT 03 - Organisation Inputs!C16:C23,C26:C31", "classification": "USER_INPUT", "targets": ["assessment", "scope", "runtime", "domain_inputs.financial_exposure", "domain_inputs.exposure_model_enabled"], "replayed": true},
+    {"source": "IT 03 - Organisation Inputs!C24:C25", "classification": "INACTIVE_LEGACY", "targets": ["compatibility.inactive_legacy.employees", "compatibility.inactive_legacy.customers"], "replayed": true, "quantitative_effect": false},
+    {"source": "IT 04 - Exposure Adjustments!C16:K21", "classification": "PERMITTED_OVERRIDE", "target": "domain_inputs.routes", "replayed": true},
+    {"source": "IT 04 - Exposure Adjustments!L16:O21", "classification": "EVIDENCE_ONLY", "target": "evidence", "replayed": true, "quantitative_effect": false},
+    {"source": "IT 05 - Control Assessment!E16:F115", "classification": "USER_INPUT", "target": "domain_inputs.controls", "replayed": true},
+    {"source": "IT 05 - Control Assessment!I16:I115", "classification": "EVIDENCE_ONLY", "target": "evidence", "replayed": true, "quantitative_effect": false},
+    {"source": "IT 06 - Impact & BIA Overrides!I16:J250", "classification": "PERMITTED_OVERRIDE", "target": "domain_inputs.impact_overrides", "replayed": true},
+    {"source": "IT 07 - Assessment Adjustments!B16:B22", "classification": "PERMITTED_OVERRIDE", "target": "domain_inputs.frequency_adjustments", "replayed": true},
+    {"source": "IT 08 - Reporting Settings!B16:B19", "classification": "USER_INPUT", "targets": ["assessment.reporting_basis", "runtime.tvar_selection"], "replayed": true}
+  ],
+  "OT": [
+    {"source": "OT 03 - Facility Inputs!C16:C29", "classification": "USER_INPUT", "targets": ["assessment", "scope", "domain_inputs.facility", "domain_inputs.topology"], "replayed": true},
+    {"source": "OT 04 - Control Assessment!D16:E115", "classification": "USER_INPUT", "target": "domain_inputs.controls", "replayed": true},
+    {"source": "OT 04 - Control Assessment!F16:H115", "classification": "EVIDENCE_ONLY", "target": "evidence", "replayed": true, "quantitative_effect": false},
+    {"source": "OT 05 - Impact & BIA!C16:C17,C19:C20", "classification": "USER_INPUT", "target": "domain_inputs.financial_exposure", "replayed": true},
+    {"source": "OT 05 - Impact & BIA!C18", "classification": "INACTIVE_LEGACY", "target": "compatibility.inactive_legacy.employees", "replayed": true, "quantitative_effect": false},
+    {"source": "OT 06 - Assessment Adjustments!D17", "classification": "PERMITTED_OVERRIDE", "target": "domain_inputs.assessment_adjustments.prudence_factor", "replayed": true},
+    {"source": "OT 06 - Assessment Adjustments!D18:D20", "classification": "USER_INPUT", "targets": ["assessment.reporting_basis", "runtime.simulation_count", "runtime.random_seed"], "replayed": true},
+    {"source": "OT 05 - Impact & BIA!D29:J53,C67:H84; OT 06 - Assessment Adjustments!D16,B27:D29,B43:B47,C53:C66,B82:D85", "classification": "GOVERNED_PACK_INPUT", "target": "ModelBundle", "replayed": false}
+  ]
+}

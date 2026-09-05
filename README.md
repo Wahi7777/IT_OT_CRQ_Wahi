@@ -116,7 +116,7 @@ Workbook structure and packs can be regenerated with `python -m crq rebuild-work
 export PYTHONPATH="$PWD/src:."
 python -m pytest tests
 python -m crq validate-release                 # fast CI + ruff + bandit + pip-audit
-python -m crq validate-release --production    # also 500k goldens (long)
+python -m crq validate-release --production    # execute approved 500k baselines; never regenerate them
 ```
 
 ## Documentation
@@ -130,3 +130,10 @@ python -m crq validate-release --production    # also 500k goldens (long)
 - [Cleanup manifest](docs/validation/CLEANUP_MANIFEST.md)
 - [Security review](docs/security/SECURITY_REVIEW.md)
 - [Engine changelog](docs/release_notes/MODEL_CHANGELOG.md)
+- [Productisation contracts and ownership](docs/productisation/CONTRACTS_AND_OWNERSHIP.md)
+- [Machine-readable field inventory](contracts/mappings/field-inventory.json)
+- [Immutable baseline policy](docs/productisation/BASELINE_POLICY.md)
+- [Version model](docs/productisation/VERSION_MODEL.md)
+- [Lambda benchmark](docs/productisation/LAMBDA_BENCHMARK.md)
+- [OT VaR drift investigation](docs/productisation/OT_VAR_DRIFT_INVESTIGATION.md)
+- [Phase 2 structured execution boundary](docs/productisation/PHASE2_STRUCTURED_EXECUTION.md)

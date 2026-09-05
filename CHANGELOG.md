@@ -2,6 +2,13 @@
 
 Package history. Engine-level notes are in [docs/release_notes/MODEL_CHANGELOG.md](docs/release_notes/MODEL_CHANGELOG.md).
 
+## Baseline correction and structured execution boundary — 5 Sep 2026
+
+- Governed OT baseline correction: Power Generation, Energy Assets and Manufacturing VaR fixtures now align with the already-authoritative NumPy `method="higher"` convention from release 1.2.0. Only prudent VaR95 and best/prudent VaR99 changed; superseded values and hashes remain in the approval record.
+- Classification: baseline metadata correction only. No methodology, engine, calibration, pack, seed, simulation-count, dependency or tolerance change.
+- Added runtime-neutral `CRQAssessment -> ModelBundle -> unchanged engine -> CRQResult` facade with temporary Excel compatibility execution and lossless native-result preservation.
+- This entry does not advance the methodology version.
+
 ## 1.2.0 — 27 Aug 2026
 
 Unified Balbix IT impact acceptance (**Outcome A**) and IT golden re-freeze:

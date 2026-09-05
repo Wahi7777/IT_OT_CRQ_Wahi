@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0-draft",
+  "materialization_rule": "All listed active governed values must be copied into canonical JSON and hashed. Runtime lookup from these workbook coordinates is transitional only.",
+  "shared": [
+    {"target":"sector_pack.identity","source":"config/sector_pack_registry.json packs[] plus pack 01 Pack Metadata","content":"domain, sector, pack ID/version/schema/status/minimum engine/unit"},
+    {"target":"calibration.limitations","source":"pack 16 Sources, 17 Evidence Register, 18 Validation and docs/LIMITATIONS_REGISTER.md","content":"sources, grades, validation status, limitations"},
+    {"target":"assumptions.impact_catalogue","source":"src/crq/impact/catalogue.py","content":"driver catalogue version and definitions"}
+  ],
+  "IT": [
+    {"target":"assumptions.actors","source":"FS pack 02 Actor Weights and 03 Actor Scenario"},
+    {"target":"assumptions.scenarios","source":"FS pack 03 Actor Scenario and 09 Scenario Parameters"},
+    {"target":"assumptions.routes_or_ttps","source":"FS pack 04 Route Definitions, 05 Actor Route, 06 Scenario Route, 07 Stage Requirements, 08 Stage Priors, 12 TTP Catalogue and 13 Route TTP Map"},
+    {"target":"assumptions.control_mappings","source":"FS pack 14 Control Reference and 15 Control TTP Map"},
+    {"target":"assumptions.severity_priors","source":"FS pack 09 Scenario Parameters, 10 Driver Rates and 11 Impact Driver Matrix"},
+    {"target":"assumptions.frequency_priors","source":"FS pack 01 Pack Metadata REFERENCE_CAMPAIGNS_PER_YEAR and 02/03/05/06 propensities"},
+    {"target":"assumptions.dependency","source":"FS pack 01 Pack Metadata LOSS_BLOCK_RHO"},
+    {"target":"assumptions.caps_and_floors","source":"FS pack 01 Pack Metadata control and consequence settings"}
+  ],
+  "OT": [
+    {"target":"assumptions.actors.sector_multipliers","source":"selected OT pack 02 Actor Weights"},
+    {"target":"assumptions.actors.core_configuration","source":"combined/standalone workbook OT 06 actor rows 27:29"},
+    {"target":"assumptions.scenarios.propensity","source":"selected OT pack 03 Actor Scenario"},
+    {"target":"assumptions.scenarios.impact","source":"selected OT pack 09 Scenario Parameters"},
+    {"target":"assumptions.scenarios.difficulty","source":"combined/standalone workbook OT 06 B43:B47"},
+    {"target":"assumptions.routes_or_ttps.core_maps","source":"OT CORE - Scenario-TTP Map and OT CORE route/stage tables"},
+    {"target":"assumptions.routes_or_ttps.sector_applicability","source":"selected OT pack 12 TTP Catalogue"},
+    {"target":"assumptions.routes_or_ttps.facility_exposure_map","source":"combined/standalone workbook OT 06 C53:C66"},
+    {"target":"assumptions.control_mappings","source":"OT CORE - TTP-Control Map and OT CORE - Control Method"},
+    {"target":"assumptions.severity_priors.driver_matrix","source":"combined/standalone workbook OT 05 D29:J53 and C67:H84"},
+    {"target":"assumptions.frequency_priors","source":"OT 06 REFERENCE_CAMPAIGNS_PER_YEAR plus selected pack sector/asset multipliers"},
+    {"target":"assumptions.dependency","source":"OT CORE - Control Method A41:B42 LOSS_DOWNTIME_RHO"},
+    {"target":"assumptions.caps_and_floors","source":"OT CORE - Control Method A26:B34 and actor S5 cap"},
+    {"target":"reference_only","source":"selected OT pack sheets 04,06,07,08,10,11,13,14,15","content":"placeholders/reference copies; excluded from active runtime bundle values unless ownership is deliberately migrated"}
+  ]
+}

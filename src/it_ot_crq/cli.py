@@ -37,8 +37,8 @@ def build_parser() -> argparse.ArgumentParser:
     reb = sub.add_parser("rebuild-workbook", help="Extract OT packs and rebuild combined navigation from code")
     reb.set_defaults(func=_rebuild)
 
-    val = sub.add_parser("validate-release", help="Fast CI release suite, or --production for 500k goldens")
-    val.add_argument("--production", action="store_true", help="Also freeze/check 500,000-year goldens")
+    val = sub.add_parser("validate-release", help="Fast CI release suite, or --production to execute approved 500k baselines")
+    val.add_argument("--production", action="store_true", help="Execute, but never regenerate, approved 500,000-year baselines")
     val.set_defaults(func=_validate_release)
     return p
 
@@ -104,10 +104,11 @@ def _validate_release(args: argparse.Namespace) -> int:
     root = Path(__file__).resolve().parents[2]
     env = os.environ.copy()
     env["PYTHONPATH"] = str(root / "src") + os.pathsep + str(root) + os.pathsep + env.get("PYTHONPATH", "")
-    marker = "" if args.production else "not production"
+    # Always run the fast suite without production cases first. Production
+    # baselines are executed exactly once below and are never regenerated here.
+    marker = "not production"
     cmd = [sys.executable, "-m", "pytest", "-q", str(root / "tests")]
-    if marker:
-        cmd.extend(["-m", marker])
+    cmd.extend(["-m", marker])
     proc = subprocess.run(cmd, cwd=root, env=env)
     if proc.returncode != 0:
         return proc.returncode
@@ -132,20 +133,6 @@ def _validate_release(args: argparse.Namespace) -> int:
         return audit.returncode
     if args.production:
         env["CRQ_REQUIRE_GOLDENS"] = "1"
-        freeze = subprocess.run(
-            [sys.executable, str(root / "tests" / "regression" / "freeze_goldens.py")],
-            cwd=root,
-            env=env,
-        )
-        if freeze.returncode != 0:
-            return freeze.returncode
-        whatif = subprocess.run(
-            [sys.executable, str(root / "tests" / "regression" / "freeze_whatifs.py")],
-            cwd=root,
-            env=env,
-        )
-        if whatif.returncode != 0:
-            return whatif.returncode
         prod = subprocess.run(
             [sys.executable, "-m", "pytest", "-q", str(root / "tests"), "-m", "production"],
             cwd=root,

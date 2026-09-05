@@ -54,9 +54,7 @@ def test_financial_services_it_engine(tmp_path):
         "actor_aal": er["actor_aal"],
         "scenario_aal": er["scenario_aal"],
     }
-    FIXTURE.parent.mkdir(parents=True, exist_ok=True)
-    if not FIXTURE.exists():
-        FIXTURE.write_text(json.dumps(snapshot, indent=2))
+    assert FIXTURE.is_file(), "Approved fixture is missing; ordinary tests must never create it"
     golden = json.loads(FIXTURE.read_text())
     assert golden["pack_id"] == snapshot["pack_id"]
     assert snapshot["n"] == 50000

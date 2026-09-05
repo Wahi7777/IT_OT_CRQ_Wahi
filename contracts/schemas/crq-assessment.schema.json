@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://crq.local/contracts/crq-assessment/1.0.0-draft",
+  "title": "CRQAssessment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "assessment", "scope", "runtime", "risk_appetite", "insurance", "outside_in", "domain_inputs", "assessment_hash", "compatibility"],
+  "properties": {
+    "schema_version": {"const": "1.0.0-draft"},
+    "assessment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["assessment_id", "assessment_version", "domain", "sector", "asset_type", "reporting_basis"],
+      "properties": {
+        "assessment_id": {"type": "string", "minLength": 1},
+        "assessment_version": {"type": "integer", "minimum": 1},
+        "organisation": {"type": ["string", "null"]},
+        "domain": {"enum": ["IT", "OT"]},
+        "sector": {"enum": ["Financial Services", "Power Generation", "Energy Assets", "Manufacturing"]},
+        "asset_type": {"type": "string", "minLength": 1},
+        "reporting_basis": {"enum": ["Best Estimate", "Prudent", "Both"]},
+        "currency": {"type": ["string", "null"]}
+      }
+    },
+    "scope": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "country_region": {"type": ["string", "null"]},
+        "facility": {"type": ["string", "null"]},
+        "critical_process": {"type": ["string", "null"]}
+      }
+    },
+    "runtime": {
+      "type": "object", "additionalProperties": false,
+      "required": ["simulation_count", "random_seed", "run_whatifs", "run_packages", "run_sensitivity"],
+      "properties": {
+        "simulation_count": {"type": "integer", "minimum": 10000, "maximum": 2000000},
+        "random_seed": {"type": "integer", "minimum": 0},
+        "run_whatifs": {"type": "boolean"},
+        "run_packages": {"type": "boolean"},
+        "run_sensitivity": {"type": "boolean"},
+        "legacy_simulation_mode": {"type": ["string", "null"], "readOnly": true}
+      }
+    },
+    "risk_appetite": {"$ref": "#/$defs/riskAppetite"},
+    "insurance": {"$ref": "#/$defs/insurance"},
+    "outside_in": {"$ref": "#/$defs/outsideIn"},
+    "domain_inputs": {
+      "oneOf": [
+        {"$ref": "#/$defs/itInputs"},
+        {"$ref": "#/$defs/otInputs"}
+      ]
+    },
+    "requested_model_bundle_id": {"type": ["string", "null"]},
+    "governed_overrides": {
+      "type": "array", "items": {"$ref": "#/$defs/governedOverride"}, "default": []
+    },
+    "evidence": {
+      "type": "array", "items": {"$ref": "#/$defs/evidence"}, "default": []
+    },
+    "assessment_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$", "readOnly": true},
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workbook_cells", "inactive_legacy", "source_format", "ownership_rule"],
+      "properties": {
+        "workbook_cells": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["sheet", "cell", "value", "classification", "canonical_path"],
+            "properties": {
+              "sheet": {"type": "string"},
+              "cell": {"type": "string"},
+              "value": {},
+              "classification": {"enum": ["USER_INPUT", "PERMITTED_OVERRIDE", "EVIDENCE_ONLY", "INACTIVE_LEGACY"]},
+              "canonical_path": {"type": "string"}
+            }
+          }
+        },
+        "inactive_legacy": {"type": "object"},
+        "source_format": {"const": "combined-xlsx"},
+        "ownership_rule": {"type": "string"}
+      }
+    }
+  },
+  "$defs": {
+    "nullableNonNegative": {"type": ["number", "null"], "minimum": 0},
+    "riskAppetite": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "annual_loss_tolerance": {"$ref": "#/$defs/nullableNonNegative"},
+        "max_acceptable_event_probability": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "max_acceptable_tvar95": {"$ref": "#/$defs/nullableNonNegative"},
+        "max_acceptable_tvar99": {"$ref": "#/$defs/nullableNonNegative"},
+        "max_acceptable_downtime_days": {"$ref": "#/$defs/nullableNonNegative"}
+      }
+    },
+    "insurance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["retention", "layers"],
+      "properties": {
+        "retention": {"type": "number", "minimum": 0},
+        "primary_limit": {"$ref": "#/$defs/nullableNonNegative"},
+        "aggregate_programme_limit": {"$ref": "#/$defs/nullableNonNegative"},
+        "layers": {"type": "array", "maxItems": 4, "items": {"type": "object", "additionalProperties": false, "required": ["name", "attachment", "limit", "coinsurance"], "properties": {"name": {"type": "string"}, "attachment": {"type": "number", "minimum": 0}, "limit": {"type": "number", "minimum": 0}, "coinsurance": {"type": "number", "minimum": 0, "maximum": 1}}}}
+      }
+    },
+    "outsideIn": {
+      "type": "object", "additionalProperties": false,
+      "required": ["apply"],
+      "properties": {
+        "apply": {"type": "boolean"},
+        "evidence_set_id": {"type": ["string", "null"]},
+        "source_file_hash": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+        "approved_adjustments": {"type": "array", "items": {"$ref": "#/$defs/governedOverride"}}
+      }
+    },
+    "governedOverride": {
+      "type": "object", "additionalProperties": false,
+      "required": ["target_path", "value", "rationale", "approved_by", "approved_at"],
+      "properties": {"target_path": {"type": "string"}, "value": {}, "rationale": {"type": "string"}, "evidence_id": {"type": ["string", "null"]}, "approved_by": {"type": "string"}, "approved_at": {"type": "string", "format": "date-time"}}
+    },
+    "evidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["evidence_id", "description"],
+      "properties": {"evidence_id": {"type": "string"}, "description": {"type": "string"}, "source": {"type": ["string", "null"]}, "observed_at": {"type": ["string", "null"], "format": "date-time"}, "hash": {"type": ["string", "null"]}}
+    },
+    "controlAssessment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["control_id", "maturity", "coverage"],
+      "properties": {"control_id": {"type": "string"}, "maturity": {"type": "string"}, "coverage": {"type": "number", "minimum": 0, "maximum": 1}, "tested": {"type": ["boolean", "null"]}, "test_result": {"type": ["string", "null"]}, "evidence_ids": {"type": "array", "items": {"type": "string"}}}
+    },
+    "quantileOverride": {
+      "type": "object", "additionalProperties": false,
+      "required": ["parameter_id"],
+      "properties": {"scenario_id": {"type": ["string", "null"]}, "parameter_id": {"type": "string"}, "p50": {"$ref": "#/$defs/nullableNonNegative"}, "p99": {"$ref": "#/$defs/nullableNonNegative"}, "evidence_id": {"type": ["string", "null"]}}
+    },
+    "itInputs": {
+      "type": "object", "additionalProperties": false, "required": ["domain", "financial_exposure", "exposure_model_enabled", "routes", "controls", "impact_overrides", "frequency_adjustments"],
+      "properties": {
+        "domain": {"const": "IT"},
+        "financial_exposure": {"type": "object", "additionalProperties": false, "required": ["annual_revenue_at_risk", "annual_payment_value", "bi_loss_factor", "sensitive_records", "critical_endpoints", "critical_servers"], "properties": {"annual_revenue_at_risk": {"type": "number", "minimum": 0}, "annual_payment_value": {"type": "number", "minimum": 0}, "bi_loss_factor": {"type": "number", "minimum": 0}, "employees": {"type": ["integer", "null"], "minimum": 0, "deprecated": true, "readOnly": true}, "customers": {"type": ["integer", "null"], "minimum": 0, "deprecated": true, "readOnly": true}, "sensitive_records": {"type": "integer", "minimum": 0}, "critical_endpoints": {"type": "integer", "minimum": 0}, "critical_servers": {"type": "integer", "minimum": 0}}},
+        "exposure_model_enabled": {"type": "boolean"},
+        "routes": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["route_id", "organisation_applicable", "model_feasible", "opportunity_factor", "stage_factors", "impact_factor"], "properties": {"route_id": {"enum": ["R_ID", "R_USER", "R_EXP", "R_TP", "R_DDOS", "R_INS"]}, "organisation_applicable": {"enum": ["Yes", "No", "Unknown"]}, "model_feasible": {"enum": ["Yes", "No", "Unknown"]}, "opportunity_factor": {"type": "number", "minimum": 0}, "stage_factors": {"type": "object", "required": ["S1", "S2", "S3", "S4", "S5"], "additionalProperties": false, "properties": {"S1": {"type": "number", "minimum": 0}, "S2": {"type": "number", "minimum": 0}, "S3": {"type": "number", "minimum": 0}, "S4": {"type": "number", "minimum": 0}, "S5": {"type": "number", "minimum": 0}}}, "impact_factor": {"type": "number", "minimum": 0}, "confidence": {"type": ["string", "null"]}, "recommendation_id": {"type": ["string", "null"]}, "evidence_date": {"type": ["string", "null"], "format": "date"}, "rationale": {"type": ["string", "null"]}}}},
+        "controls": {"type": "array", "items": {"$ref": "#/$defs/controlAssessment"}},
+        "impact_overrides": {"type": "array", "items": {"$ref": "#/$defs/quantileOverride"}},
+        "frequency_adjustments": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0}}
+      }
+    },
+    "otInputs": {
+      "type": "object", "additionalProperties": false, "required": ["domain", "facility", "topology", "financial_exposure", "controls", "impact_drivers", "assessment_adjustments"],
+      "properties": {
+        "domain": {"const": "OT"},
+        "facility": {"type": "object", "additionalProperties": false, "properties": {"facility_name": {"type": ["string", "null"]}, "critical_process": {"type": ["string", "null"]}}},
+        "topology": {"type": "object", "additionalProperties": {"type": "string"}},
+        "financial_exposure": {"type": "object", "additionalProperties": false, "required": ["annual_revenue_at_risk", "bi_loss_factor", "critical_ot_endpoints", "critical_ot_servers"], "properties": {"annual_revenue_at_risk": {"type": "number", "minimum": 0}, "bi_loss_factor": {"type": "number", "minimum": 0}, "employees": {"type": ["integer", "null"], "minimum": 0, "deprecated": true, "readOnly": true}, "critical_ot_endpoints": {"type": "integer", "minimum": 0}, "critical_ot_servers": {"type": "integer", "minimum": 0}}},
+        "controls": {"type": "array", "items": {"$ref": "#/$defs/controlAssessment"}},
+        "impact_drivers": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["driver_id", "actor_applicability", "sensitivity", "scenario_applicability", "rate_p50", "rate_p99", "quantity_p50", "quantity_p99"], "properties": {"driver_id": {"type": "string"}, "actor_applicability": {"type": "object"}, "sensitivity": {"type": "string"}, "scenario_applicability": {"type": "object"}, "rate_p50": {"type": "number", "minimum": 0}, "rate_p99": {"type": "number", "minimum": 0}, "quantity_p50": {"type": "number", "minimum": 0}, "quantity_p99": {"type": "number", "minimum": 0}, "scaling_input": {"type": ["string", "null"]}, "formula_type": {"type": ["string", "null"]}}}},
+        "assessment_adjustments": {"type": "object", "additionalProperties": true}
+      }
+    }
+  }
+}

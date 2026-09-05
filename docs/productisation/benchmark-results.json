@@ -1,0 +1,18 @@
+{
+  "benchmark_schema_version": "1.0.0",
+  "captured_at_utc": "2026-09-05T02:24:24Z",
+  "host": "macOS arm64, Python 3.14.3, NumPy 2.5.2, openpyxl 3.1.5",
+  "conclusion": "LAMBDA_SUITABLE_WITH_CONSTRAINTS",
+  "cases": [
+    {"case":"IT Financial Services","asset_type":"Organisation","simulation_count":500000,"seed":20260821,"cold_import_seconds":0.105,"assessment_prepare_and_save_seconds":1.143,"total_router_run_seconds":8.355,"engine_refresh_seconds_including_engine_workbook_io":1.948,"router_and_report_workbook_overhead_seconds":6.407,"process_wall_seconds":9.613,"process_cpu_seconds":9.576,"cpu_utilisation_one_core_percent":99.6,"peak_rss_bytes":552747008,"input_workbook_bytes":658876,"output_workbook_bytes":694706,"structured_engine_result_json_bytes":72681,"peak_temporary_disk_bytes":1809773,"validation":"PASS"},
+    {"case":"OT Power Generation","asset_type":"CCGT","simulation_count":500000,"seed":20260813,"cold_import_seconds":0.063,"assessment_prepare_and_save_seconds":1.140,"total_router_run_seconds":6.883,"engine_refresh_seconds_including_engine_workbook_io":2.459,"router_and_report_workbook_overhead_seconds":4.423,"process_wall_seconds":8.104,"process_cpu_seconds":8.105,"cpu_utilisation_one_core_percent":100.0,"peak_rss_bytes":1221296128,"input_workbook_bytes":658874,"output_workbook_bytes":691541,"structured_engine_result_json_bytes":689669,"peak_temporary_disk_bytes":1350415,"validation":"PASS"},
+    {"case":"OT Energy Assets","asset_type":"Upstream Onshore","simulation_count":500000,"seed":20260813,"cold_import_seconds":0.063,"assessment_prepare_and_save_seconds":1.137,"total_router_run_seconds":6.905,"engine_refresh_seconds_including_engine_workbook_io":2.447,"router_and_report_workbook_overhead_seconds":4.458,"process_wall_seconds":8.178,"process_cpu_seconds":8.128,"cpu_utilisation_one_core_percent":99.4,"peak_rss_bytes":1221918720,"input_workbook_bytes":658895,"output_workbook_bytes":691970,"structured_engine_result_json_bytes":688420,"peak_temporary_disk_bytes":1350865,"validation":"PASS"},
+    {"case":"OT Manufacturing","asset_type":"Process Manufacturing","simulation_count":500000,"seed":20260813,"cold_import_seconds":0.064,"assessment_prepare_and_save_seconds":1.161,"total_router_run_seconds":6.849,"engine_refresh_seconds_including_engine_workbook_io":2.444,"router_and_report_workbook_overhead_seconds":4.406,"process_wall_seconds":8.094,"process_cpu_seconds":8.095,"cpu_utilisation_one_core_percent":100.0,"peak_rss_bytes":1237352448,"input_workbook_bytes":658886,"output_workbook_bytes":691744,"structured_engine_result_json_bytes":687924,"peak_temporary_disk_bytes":1350630,"validation":"PASS"}
+  ],
+  "measurement_limitations": [
+    "Local measurements are evidence for sizing, not a substitute for deployment-package benchmarking inside Lambda.",
+    "Current refresh functions include engine-owned workbook I/O; pure calculation time cannot be isolated without prohibited instrumentation/refactoring.",
+    "Peak RSS uses process ru_maxrss and therefore includes imported libraries and workbook processing.",
+    "Temporary disk monitoring sampled the temporary directory every 50 ms."
+  ]
+}

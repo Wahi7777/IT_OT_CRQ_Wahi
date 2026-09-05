@@ -26,8 +26,8 @@
   "fixture_sha256": {
     "regression_it_fs.json": "78c4a08babeb10c8debde70718f8bc062bc6b095b7d22c348ef7e7c62d752665",
     "regression_it_fs_500k.json": "b0f3683b2a37c2eae823a7ab66bb568532747434bee68324ca8dbe700e52f4cb",
-    "regression_ot_energy_assets.json": "ebc3438be91bd4cbbbc00ce53ffdc91f7ff35907d02a4c7641de39f5ee90d64d",
-    "regression_ot_manufacturing.json": "3e5e40eeeadabacaef1fe6803a7a1109eef70af1947f8dcbd4b0579b80ee54e7",
-    "regression_ot_power_generation.json": "393341d1cfb3e26d2fc6ae715d6882431bffe4e5220f40c82079e817bff4152c"
+    "regression_ot_energy_assets.json": "c6a82a5594c164042003967cd77b73606b8e819e7fb3ce7ad98aa6b60961376c",
+    "regression_ot_manufacturing.json": "d5cbd4e6ac3016a13867f1e5434492acdba70d79e7079655db88d76d7494a1c5",
+    "regression_ot_power_generation.json": "e6116aca5bf5bf22e20bcd1b15327e4028c8c7406c7d1edf0e7be181e967b953"
   }
 }

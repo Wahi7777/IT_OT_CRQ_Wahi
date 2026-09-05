@@ -1,0 +1,85 @@
+{
+  "approval_record_version": "1.0.0",
+  "decision": "CURRENT_ENGINE_AUTHORITATIVE",
+  "authoritative_convention": "numpy.quantile(annual_aggregate_loss, q, method=\"higher\")",
+  "effective_authority": {
+    "release": "1.2.0",
+    "date": "2026-08-27",
+    "commit": "71eadc00f51a778864cf571eceb8b827e000f72d"
+  },
+  "root_cause": "The retained OT fixtures contained VaR values generated with NumPy method=linear even though release 1.2.0 made method=higher authoritative.",
+  "classification": "baseline metadata correction; not a methodology, engine, simulation, calibration, pack, seed, dependency or input change",
+  "approval_date": "2026-09-05",
+  "reviewer": "Codex deterministic reproduction and field-by-field verification",
+  "approver": "Sid Wahi, model owner, through the governed correction instruction dated 2026-09-05",
+  "environment": {
+    "python": "3.14.3",
+    "numpy": "2.5.2",
+    "openpyxl": "3.1.5",
+    "simulation_count": 500000,
+    "seed": 20260813,
+    "quantile_method": "higher"
+  },
+  "source_hashes": {
+    "combined_workbook": "1024b88e6c8af7263960cafc13706c609a0e885d06f778d5c67d09f924808a7a",
+    "power_generation_pack": "77b3d0b86a6ed82c66063d40663a308e35a6ad357f08e493e03d1a9ae321cf0b",
+    "energy_assets_pack": "4a063dc8858b9105abe4e426d471cd392d7a55563af170f1d497cdee32089df4",
+    "manufacturing_pack": "1af0d0e0d795d69b759ae5c5219cb4514173e517f64fbc4c760f1de97689fe83"
+  },
+  "cases": [
+    {
+      "baseline_id": "OT-PG-500K-20260827",
+      "pack_id": "PG-v1.6",
+      "historical_workbook_input_hash": "a845ec2e937d21c8356a12a8b2ba62e27012acf0240e316eb18c050d1f87add8",
+      "superseded_baseline_hash": "393341d1cfb3e26d2fc6ae715d6882431bffe4e5220f40c82079e817bff4152c",
+      "replacement_baseline_hash": "e6116aca5bf5bf22e20bcd1b15327e4028c8c7406c7d1edf0e7be181e967b953",
+      "changes": [
+        {"field": "prudent_var95", "old": 924397.2530921894, "new": 925138.4397844824, "absolute_difference": 741.1866922929185, "relative_difference_percent": 0.080180538162958},
+        {"field": "best_var99", "old": 34846254.94240714, "new": 34868942.69882667, "absolute_difference": 22687.756419532, "relative_difference_percent": 0.06510816286292359},
+        {"field": "prudent_var99", "old": 50166813.79479161, "new": 50170571.70185813, "absolute_difference": 3757.907066524029, "relative_difference_percent": 0.0074908226818944995}
+      ]
+    },
+    {
+      "baseline_id": "OT-EA-500K-20260827",
+      "pack_id": "EA-v1.0",
+      "historical_workbook_input_hash": "6eeed8d83eacdafed7ce247ec73861eb784b1a2e51c309436ac29016540bb185",
+      "superseded_baseline_hash": "ebc3438be91bd4cbbbc00ce53ffdc91f7ff35907d02a4c7641de39f5ee90d64d",
+      "replacement_baseline_hash": "c6a82a5594c164042003967cd77b73606b8e819e7fb3ce7ad98aa6b60961376c",
+      "changes": [
+        {"field": "prudent_var95", "old": 2304412.465655165, "new": 2304505.7758556977, "absolute_difference": 93.3102005328983, "relative_difference_percent": 0.004049197004598281},
+        {"field": "best_var99", "old": 36142883.89882679, "new": 36153204.75418573, "absolute_difference": 10320.855358935893, "relative_difference_percent": 0.028555705150221593},
+        {"field": "prudent_var99", "old": 52265985.36273328, "new": 52279254.17428593, "absolute_difference": 13268.811552651227, "relative_difference_percent": 0.02538708772170621}
+      ]
+    },
+    {
+      "baseline_id": "OT-MF-500K-20260827",
+      "pack_id": "MF-v1.0",
+      "historical_workbook_input_hash": "e6cda5465e24e12d7f3daa8dca1a0f6d97ba6172ce2faf35cd9f74e2a278a612",
+      "superseded_baseline_hash": "3e5e40eeeadabacaef1fe6803a7a1109eef70af1947f8dcbd4b0579b80ee54e7",
+      "replacement_baseline_hash": "d5cbd4e6ac3016a13867f1e5434492acdba70d79e7079655db88d76d7494a1c5",
+      "changes": [
+        {"field": "prudent_var95", "old": 4209116.050035754, "new": 4210741.891783138, "absolute_difference": 1625.841747383587, "relative_difference_percent": 0.03862667904748733},
+        {"field": "best_var99", "old": 37130641.275538415, "new": 37137226.38036694, "absolute_difference": 6585.104828521609, "relative_difference_percent": 0.01773496121344896},
+        {"field": "prudent_var99", "old": 54818514.64877888, "new": 54828218.34815289, "absolute_difference": 9703.699374012649, "relative_difference_percent": 0.017701500006310013}
+      ]
+    }
+  ],
+  "invariants": {
+    "best_var95_zero": true,
+    "aal_exact": true,
+    "tvar95_exact": true,
+    "tvar99_exact": true,
+    "probabilities_exact": true,
+    "frequencies_exact": true,
+    "actor_decomposition_exact": true,
+    "scenario_decomposition_exact": true,
+    "engine_and_pack_metadata_exact": true,
+    "tolerances_changed": false,
+    "quantitative_source_changed": false
+  },
+  "candidate_generation": {
+    "directory": "_work/baseline_candidates/ot-var-higher-20260905",
+    "note": "The directory is unapproved and ignored. Only the governed VaR fields were transferred. Historical assessment hashes were retained because temporary XLSX ZIP container hashes are serialization-time dependent; source-template and semantic-input hashes were verified separately."
+  },
+  "superseded_values_preserved": true
+}

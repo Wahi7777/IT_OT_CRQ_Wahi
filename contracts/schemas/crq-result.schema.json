@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://crq.local/contracts/crq-result/1.0.0-draft",
+  "title": "CRQResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run", "provenance", "summary", "formation", "decomposition", "loss", "architecture", "impact", "treatments", "sensitivity", "uncertainty", "insurance", "limitations", "compatibility"],
+  "properties": {
+    "schema_version": {"const": "1.0.0-draft"},
+    "run": {"type": "object", "required": ["run_id", "started_at", "completed_at", "assessment_id", "assessment_version", "simulation_count", "seed", "runtime_configuration"], "properties": {"run_id": {"type": "string"}, "started_at": {"type": "string", "format": "date-time"}, "completed_at": {"type": "string", "format": "date-time"}, "assessment_id": {"type": "string"}, "assessment_version": {"type": "integer"}, "simulation_count": {"type": "integer"}, "seed": {"type": "integer"}, "runtime_configuration": {"type": "object"}}},
+    "provenance": {"type": "object", "required": ["platform_version", "engine_version", "methodology_version", "model_bundle_id", "model_bundle_version", "sector_pack_id", "sector_pack_version", "assessment_hash", "bundle_hash", "result_hash"], "properties": {"platform_version": {"type": "string"}, "engine_version": {"type": "string"}, "methodology_version": {"type": "string"}, "input_schema_version": {"type": "string"}, "output_schema_version": {"type": "string"}, "model_bundle_id": {"type": "string"}, "model_bundle_version": {"type": "string"}, "sector_pack_id": {"type": "string"}, "sector_pack_version": {"type": "string"}, "assessment_hash": {"type": "string"}, "bundle_hash": {"type": "string"}, "result_hash": {"type": "string"}}},
+    "summary": {"type": "object", "required": ["best_estimate", "prudent"], "properties": {"best_estimate": {"$ref": "#/$defs/riskMetrics"}, "prudent": {"$ref": "#/$defs/riskMetrics"}, "appetite": {"type": "object"}}},
+    "formation": {"type": "object", "properties": {"campaigns": {"type": "number"}, "attempts": {"type": "number"}, "actor_propensity": {"type": "array", "items": {"$ref": "#/$defs/component"}}, "scenario_propensity": {"type": "array", "items": {"$ref": "#/$defs/component"}}, "route_or_path_success": {"type": "array", "items": {"$ref": "#/$defs/component"}}, "frequency_funnel": {"type": "array", "items": {"type": "object"}}}},
+    "decomposition": {"type": "object", "properties": {"actors": {"type": "array", "items": {"$ref": "#/$defs/component"}}, "scenarios": {"type": "array", "items": {"$ref": "#/$defs/component"}}, "actor_scenario": {"type": "array", "items": {"$ref": "#/$defs/component"}}, "it_routes": {"type": "array", "items": {"$ref": "#/$defs/component"}}, "ot_paths_ttps": {"type": "array", "items": {"$ref": "#/$defs/component"}}}},
+    "loss": {"type": "object", "properties": {"aep": {"type": "array", "items": {"$ref": "#/$defs/curvePoint"}}, "oep": {"type": "array", "items": {"$ref": "#/$defs/curvePoint"}}, "return_periods": {"type": "array", "items": {"type": "object"}}, "business_interruption": {"type": "object"}, "non_bi": {"type": "object"}, "categories": {"type": "array", "items": {"$ref": "#/$defs/component"}}, "drivers": {"type": "array", "items": {"$ref": "#/$defs/component"}}, "reconciliation": {"type": "object"}}},
+    "architecture": {"type": "object", "properties": {"input_snapshot": {"type": "object"}, "route_path_states": {"type": "array", "items": {"type": "object"}}, "relevant_ttps": {"type": "array", "items": {"type": "object"}}, "barriers": {"type": "array", "items": {"type": "object"}}, "stage_through_probabilities": {"type": "array", "items": {"type": "object"}}, "applicability": {"type": "array", "items": {"type": "object"}}, "feasibility": {"type": "array", "items": {"type": "object"}}, "evidence_status": {"type": "array", "items": {"type": "object"}}}},
+    "impact": {"type": "object", "properties": {"ot_downtime": {"type": ["object", "null"]}, "ot_capacity": {"type": ["object", "null"]}, "it_affected_records": {"type": ["object", "null"]}, "it_affected_endpoints": {"type": ["object", "null"]}, "it_affected_services": {"type": ["object", "null"]}}},
+    "treatments": {"type": "object", "properties": {"individual_controls": {"type": "array", "items": {"type": "object"}}, "packages": {"type": "array", "items": {"type": "object"}}, "post_treatment_metrics": {"type": "array", "items": {"type": "object"}}, "reductions": {"type": "array", "items": {"type": "object"}}, "rankings": {"type": "array", "items": {"type": "object"}}}},
+    "sensitivity": {"type": "array", "items": {"type": "object"}},
+    "uncertainty": {"type": "object", "properties": {"monte_carlo": {"type": "object"}, "evidence_limitations": {"type": "array", "items": {"type": "string"}}}},
+    "insurance": {"type": "object", "properties": {"ground_up": {"$ref": "#/$defs/riskMetrics"}, "retained": {"$ref": "#/$defs/riskMetrics"}, "recoveries": {"type": "object"}, "attachment_probability": {"type": ["number", "null"]}, "exhaustion_probability": {"type": ["number", "null"]}, "reconciliation": {"type": "object"}}},
+    "limitations": {"type": "array", "items": {"type": "object"}},
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["native_domain", "legacy_engine_extension", "router_metadata", "lossless"],
+      "properties": {
+        "native_domain": {"enum": ["IT", "OT"]},
+        "legacy_engine_extension": {"type": "object", "description": "Lossless native engine dictionary retained until every field has a typed canonical mapping."},
+        "router_metadata": {"type": "object"},
+        "lossless": {"const": true}
+      }
+    }
+  },
+  "$defs": {
+    "riskMetrics": {"type": "object", "required": ["aal", "var95", "var99", "tvar95", "tvar99", "event_frequency", "p_any_event"], "properties": {"aal": {"type": "number"}, "var95": {"type": "number"}, "var99": {"type": "number"}, "tvar95": {"type": "number"}, "tvar99": {"type": "number"}, "event_frequency": {"type": "number"}, "p_any_event": {"type": "number"}, "multi_year_probabilities": {"type": "object"}, "tolerance_exceedance_probability": {"type": ["number", "null"]}}},
+    "component": {"type": "object", "required": ["id"], "properties": {"id": {"type": "string"}, "name": {"type": ["string", "null"]}, "metrics": {"type": "object"}, "contribution": {"type": "object"}, "metadata": {"type": "object"}}},
+    "curvePoint": {"type": "object", "required": ["exceedance_probability", "loss"], "properties": {"exceedance_probability": {"type": "number", "minimum": 0, "maximum": 1}, "loss": {"type": "number", "minimum": 0}, "basis": {"type": "string"}, "component_id": {"type": ["string", "null"]}}}
+  }
+}

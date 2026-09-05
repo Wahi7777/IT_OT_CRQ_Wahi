@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://crq.local/contracts/model-bundle/1.0.0-draft",
+  "title": "ModelBundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "bundle_id", "model_bundle_version", "engine_version", "methodology_version", "sector_pack", "applicability", "assumptions", "calibration", "effective_date", "bundle_hash"],
+  "properties": {
+    "schema_version": {"const": "1.0.0-draft"},
+    "bundle_id": {"type": "string"},
+    "model_bundle_version": {"type": "string"},
+    "engine_version": {"type": "string"},
+    "methodology_version": {"type": "string"},
+    "sector_pack": {"type": "object", "additionalProperties": false, "required": ["pack_id", "pack_version", "pack_schema_version", "pack_hash"], "properties": {"pack_id": {"type": "string"}, "pack_version": {"type": "string"}, "pack_schema_version": {"type": "string"}, "pack_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "source": {"type": "string"}, "status": {"type": "string"}}},
+    "applicability": {"type": "object", "required": ["domain", "sectors", "asset_types"], "properties": {"domain": {"enum": ["IT", "OT"]}, "sectors": {"type": "array", "items": {"type": "string"}}, "asset_types": {"type": "array", "items": {"type": "string"}}}},
+    "assumptions": {"type": "object", "required": ["actors", "scenarios", "routes_or_ttps", "control_mappings", "severity_priors", "frequency_priors", "dependency", "caps_and_floors"], "properties": {"actors": {"type": "object"}, "scenarios": {"type": "object"}, "routes_or_ttps": {"type": "object"}, "control_mappings": {"type": "object"}, "severity_priors": {"type": "object"}, "frequency_priors": {"type": "object"}, "dependency": {"type": "object"}, "caps_and_floors": {"type": "object"}, "governed_mappings": {"type": "object"}}},
+    "calibration": {"type": "object", "required": ["status", "limitations", "validation_status"], "properties": {"status": {"type": "string"}, "limitations": {"type": "array", "items": {"type": "string"}}, "validation_status": {"type": "string"}, "approved_by": {"type": ["string", "null"]}, "approved_at": {"type": ["string", "null"], "format": "date-time"}}},
+    "effective_date": {"type": "string", "format": "date"},
+    "supersedes_bundle_id": {"type": ["string", "null"]},
+    "source_hashes": {"type": "object", "additionalProperties": {"type": "string", "pattern": "^[a-f0-9]{64}$"}},
+    "bundle_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "hash_algorithm": {"const": "sha256-canonical-json"}
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0-draft",
+  "source_result_hash": "example-only",
+  "facts": {
+    "executive_summary": [
+      {"fact_id":"executive-prudent-tvar99","kind":"numeric","label":"Prudent TVaR 99","value":49647805.4145752,"rendered_value":"$49,647,805","unit":"USD","source_pointer":"/summary/prudent/tvar99","basis":"Prudent","rank":null}
+    ],
+    "key_risk_drivers": [],
+    "dominant_actors": [],
+    "dominant_scenarios": [],
+    "architecture_paths": [],
+    "business_impact": [],
+    "treatment_opportunities": [],
+    "insurance": [],
+    "uncertainty": [],
+    "model_limitations": []
+  },
+  "numeric_allowlist": [
+    {"rendered_value":"$49,647,805","raw_value":49647805.4145752,"unit":"USD","source_pointer":"/summary/prudent/tvar99"}
+  ],
+  "prohibited_operations": [
+    "quantitative_calculation",
+    "numeric_interpolation",
+    "missing_metric_inference",
+    "risk_reduction_calculation",
+    "insurance_recovery_calculation"
+  ],
+  "generation_context": {
+    "instruction":"Explain supplied facts only. Every numeric claim must match numeric_allowlist and retain a source pointer."
+  }
+}

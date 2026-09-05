@@ -1,7 +1,8 @@
-"""Freeze production-N Control What-If results. Invoked by validate-release --production."""
+"""Generate unapproved production-N Control What-If candidates."""
 from __future__ import annotations
 
 import json
+import argparse
 import os
 import shutil
 import sys
@@ -126,10 +127,21 @@ def freeze_one(sector, asset, filename, is_it, out_dir: Path, work: Path):
 
 
 def main():
-    out_dir = ROOT / "tests" / "fixtures"
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument("--acknowledge-candidate-not-approved", action="store_true")
+    parser.add_argument("cases", nargs="*")
+    args = parser.parse_args()
+    if not args.acknowledge_candidate_not_approved:
+        raise SystemExit("Pass --acknowledge-candidate-not-approved after reviewing the baseline policy.")
+    out_dir = args.output_dir.expanduser().resolve()
+    protected = [(ROOT / "tests" / "fixtures").resolve(), (ROOT / "tests" / "baselines" / "approved").resolve()]
+    if any(out_dir == p or p in out_dir.parents for p in protected):
+        raise SystemExit("Candidate output must be outside approved fixture/baseline directories.")
+    out_dir.mkdir(parents=True, exist_ok=True)
     work = ROOT / "_work" / "whatif_freeze"
     work.mkdir(parents=True, exist_ok=True)
-    only = sys.argv[1:]
+    only = args.cases
     for sector, asset, filename, is_it in CASES:
         if only and filename not in only and sector not in only:
             continue

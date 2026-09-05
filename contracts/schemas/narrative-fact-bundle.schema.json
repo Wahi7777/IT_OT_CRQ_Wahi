@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://crq.local/contracts/narrative-fact-bundle/1.0.0-draft",
+  "title": "NarrativeFactBundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "source_result_hash", "facts", "numeric_allowlist", "prohibited_operations"],
+  "properties": {
+    "schema_version": {"const": "1.0.0-draft"},
+    "source_result_hash": {"type": "string"},
+    "facts": {
+      "type": "object",
+      "required": ["executive_summary", "key_risk_drivers", "dominant_actors", "dominant_scenarios", "architecture_paths", "business_impact", "treatment_opportunities", "insurance", "uncertainty", "model_limitations"],
+      "properties": {
+        "executive_summary": {"$ref": "#/$defs/facts"},
+        "key_risk_drivers": {"$ref": "#/$defs/facts"},
+        "dominant_actors": {"$ref": "#/$defs/facts"},
+        "dominant_scenarios": {"$ref": "#/$defs/facts"},
+        "architecture_paths": {"$ref": "#/$defs/facts"},
+        "business_impact": {"$ref": "#/$defs/facts"},
+        "treatment_opportunities": {"$ref": "#/$defs/facts"},
+        "insurance": {"$ref": "#/$defs/facts"},
+        "uncertainty": {"$ref": "#/$defs/facts"},
+        "model_limitations": {"$ref": "#/$defs/facts"}
+      }
+    },
+    "numeric_allowlist": {"type": "array", "items": {"type": "object", "required": ["rendered_value", "source_pointer"], "properties": {"rendered_value": {"type": "string"}, "raw_value": {"type": ["number", "null"]}, "unit": {"type": ["string", "null"]}, "source_pointer": {"type": "string", "pattern": "^/"}}}},
+    "prohibited_operations": {"type": "array", "items": {"type": "string"}, "contains": {"const": "quantitative_calculation"}},
+    "generation_context": {"type": "object"}
+  },
+  "$defs": {
+    "facts": {"type": "array", "items": {"$ref": "#/$defs/fact"}},
+    "fact": {"type": "object", "additionalProperties": false, "required": ["fact_id", "kind", "value", "source_pointer"], "properties": {"fact_id": {"type": "string"}, "kind": {"enum": ["numeric", "categorical", "text", "limitation"]}, "label": {"type": "string"}, "value": {}, "rendered_value": {"type": ["string", "null"]}, "unit": {"type": ["string", "null"]}, "source_pointer": {"type": "string", "pattern": "^/"}, "basis": {"type": ["string", "null"]}, "rank": {"type": ["integer", "null"]}}}
+  }
+}
