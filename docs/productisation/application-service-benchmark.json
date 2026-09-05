@@ -1,0 +1,57 @@
+{
+  "benchmark_schema_version": "1.0.0",
+  "cases": {
+    "IT Financial Services 500k": {
+      "application_boundary_ms": 840.4682490509003,
+      "application_boundary_percent_of_engine": 10.647168376648949,
+      "application_import_ms": 115.33145792782307,
+      "input_bytes": 13963,
+      "output_bytes": 210937,
+      "peak_process_memory_mb": 477.40625,
+      "result_hash": "a042fbbc53d60aa0579a29f6ef5674e1a5e9f88f4e0ff9bdab5cca32e5a7d567",
+      "status": "SUCCESS",
+      "timing_ms": {
+        "bundle_resolution_ms": 204.799790866673,
+        "engine_execution_ms": 7893.819458084181,
+        "result_normalization_ms": 9.417416993528605,
+        "result_validation_ms": 7.344542071223259,
+        "serialization_ms": 2.3091661278158426,
+        "total_ms": 9713.310124818236,
+        "validation_ms": 626.0147499851882,
+        "workbook_materialization_ms": 966.8715000152588
+      }
+    },
+    "OT Power Generation 500k": {
+      "application_boundary_ms": 1103.4739164169878,
+      "application_boundary_percent_of_engine": 12.747611562742026,
+      "application_import_ms": 100.92012514360249,
+      "input_bytes": 14439,
+      "output_bytes": 2065710,
+      "peak_process_memory_mb": 942.359375,
+      "result_hash": "f444c5783cc79302a935fbb7abbb01215f4af9f950ac4d6ef5f95a55ac7016ff",
+      "status": "SUCCESS",
+      "timing_ms": {
+        "bundle_resolution_ms": 250.23716618306935,
+        "engine_execution_ms": 8656.318958150223,
+        "result_normalization_ms": 282.23408292979,
+        "result_validation_ms": 196.5976250357926,
+        "serialization_ms": 77.93166604824364,
+        "total_ms": 10975.85166618228,
+        "validation_ms": 578.7074591498822,
+        "workbook_materialization_ms": 928.5594578832388
+      }
+    }
+  },
+  "conclusion": "APPLICATION_OVERHEAD_LOW_BUT_MEASURABLE; ACTUAL_LAMBDA_BENCHMARK_REQUIRED",
+  "host": {
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "processor": "arm",
+    "python": "3.12.14"
+  },
+  "limitations": [
+    "Local workstation measurements are not Lambda measurements.",
+    "Peak RSS includes Python, OpenPyXL, NumPy, governed bundle loading, workbook compatibility materialisation, and the engine."
+  ],
+  "method": "One clean child process per case; resource.getrusage peak RSS; application service internal stage timers.",
+  "recorded_at": "2026-09-05T12:46:00.500267+00:00"
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://crq.local/contracts/assessment-run-request/1.0.0",
+  "title": "AssessmentRunRequest",
+  "description": "Caller-safe synchronous request. Governed assumptions and implementation paths are prohibited.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "request_id", "assessment", "model_bundle_reference", "run_config"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "request_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "assessment": {
+      "allOf": [
+        {"$ref": "https://crq.local/contracts/crq-assessment/1.0.0-draft"},
+        {
+          "not": {
+            "anyOf": [
+              {"required": ["assessment_hash"]},
+              {"required": ["compatibility"]},
+              {"required": ["requested_model_bundle_id"]},
+              {"required": ["governed_overrides"]}
+            ]
+          }
+        }
+      ]
+    },
+    "model_bundle_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bundle_id", "bundle_version"],
+      "properties": {
+        "bundle_id": {"enum": ["FS-v1.1.1", "PG-v1.6", "EA-v1.0", "MF-v1.0"]},
+        "bundle_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "run_config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reporting_basis", "simulation_count", "random_seed"],
+      "properties": {
+        "reporting_basis": {"enum": ["Best Estimate", "Prudent", "Both"]},
+        "simulation_count": {"type": "integer", "minimum": 10000, "maximum": 2000000},
+        "random_seed": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

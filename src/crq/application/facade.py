@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import tempfile
+import time
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
@@ -14,15 +15,34 @@ from crq.application.models import CRQAssessment, CRQResult, ModelBundle, RunCon
 from crq.application.result_adapter import normalize_result
 
 
-def run_it_assessment(assessment: CRQAssessment, model_bundle: ModelBundle, run_config: RunConfig) -> CRQResult:
-    return _run("IT", assessment, model_bundle, run_config)
+def run_it_assessment(
+    assessment: CRQAssessment,
+    model_bundle: ModelBundle,
+    run_config: RunConfig,
+    *,
+    diagnostics: dict[str, float] | None = None,
+) -> CRQResult:
+    return _run("IT", assessment, model_bundle, run_config, diagnostics=diagnostics)
 
 
-def run_ot_assessment(assessment: CRQAssessment, model_bundle: ModelBundle, run_config: RunConfig) -> CRQResult:
-    return _run("OT", assessment, model_bundle, run_config)
+def run_ot_assessment(
+    assessment: CRQAssessment,
+    model_bundle: ModelBundle,
+    run_config: RunConfig,
+    *,
+    diagnostics: dict[str, float] | None = None,
+) -> CRQResult:
+    return _run("OT", assessment, model_bundle, run_config, diagnostics=diagnostics)
 
 
-def _run(domain: str, assessment: CRQAssessment, bundle: ModelBundle, config: RunConfig) -> CRQResult:
+def _run(
+    domain: str,
+    assessment: CRQAssessment,
+    bundle: ModelBundle,
+    config: RunConfig,
+    *,
+    diagnostics: dict[str, float] | None = None,
+) -> CRQResult:
     if assessment.domain != domain:
         raise ValueError(f"{domain} facade cannot execute a {assessment.domain} assessment.")
     bundle_data = bundle.to_dict()
@@ -38,9 +58,12 @@ def _run(domain: str, assessment: CRQAssessment, bundle: ModelBundle, config: Ru
         work = Path(temp)
         source = work / "assessment.xlsx"
         output = work / "result.xlsx"
+        materialization_started = time.perf_counter()
         materialize_compatibility_workbook(assessment, template, source)
+        materialization_elapsed = time.perf_counter() - materialization_started
         from it_ot_crq.router import run_combined
         with _runtime_flags(config):
+            engine_started = time.perf_counter()
             result = run_combined(
                 source,
                 output=output,
@@ -48,7 +71,14 @@ def _run(domain: str, assessment: CRQAssessment, bundle: ModelBundle, config: Ru
                 work_dir=work / "engine-work",
                 run_whatifs=config.run_whatifs,
             )
-        return normalize_result(result, assessment, bundle, config, started)
+            engine_elapsed = time.perf_counter() - engine_started
+        normalization_started = time.perf_counter()
+        normalized = normalize_result(result, assessment, bundle, config, started)
+        if diagnostics is not None:
+            diagnostics["workbook_materialization_ms"] = materialization_elapsed * 1000.0
+            diagnostics["engine_execution_ms"] = engine_elapsed * 1000.0
+            diagnostics["result_normalization_ms"] = (time.perf_counter() - normalization_started) * 1000.0
+        return normalized
 
 
 @contextmanager

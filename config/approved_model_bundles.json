@@ -1,0 +1,45 @@
+{
+  "registry_schema_version": "1.0.0",
+  "bundles": [
+    {
+      "bundle_id": "FS-v1.1.1",
+      "bundle_version": "1.0.0",
+      "domain": "IT",
+      "sector": "Financial Services",
+      "engine_version": "1.1.1",
+      "pack_version": "1.1.1",
+      "pack_hash": "3d5534faecc5390e101eab58dfecf6dedf71b5ed68d56d5d6fcab686f97f0bf4",
+      "status": "APPROVED"
+    },
+    {
+      "bundle_id": "PG-v1.6",
+      "bundle_version": "1.0.0",
+      "domain": "OT",
+      "sector": "Power Generation",
+      "engine_version": "1.7.1",
+      "pack_version": "1.6",
+      "pack_hash": "77b3d0b86a6ed82c66063d40663a308e35a6ad357f08e493e03d1a9ae321cf0b",
+      "status": "APPROVED"
+    },
+    {
+      "bundle_id": "EA-v1.0",
+      "bundle_version": "1.0.0",
+      "domain": "OT",
+      "sector": "Energy Assets",
+      "engine_version": "1.7.1",
+      "pack_version": "1.0",
+      "pack_hash": "4a063dc8858b9105abe4e426d471cd392d7a55563af170f1d497cdee32089df4",
+      "status": "APPROVED"
+    },
+    {
+      "bundle_id": "MF-v1.0",
+      "bundle_version": "1.0.0",
+      "domain": "OT",
+      "sector": "Manufacturing",
+      "engine_version": "1.7.1",
+      "pack_version": "1.0",
+      "pack_hash": "1af0d0e0d795d69b759ae5c5219cb4514173e517f64fbc4c760f1de97689fe83",
+      "status": "APPROVED"
+    }
+  ]
+}

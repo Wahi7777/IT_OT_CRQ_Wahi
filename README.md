@@ -137,3 +137,4 @@ python -m crq validate-release --production    # execute approved 500k baselines
 - [Lambda benchmark](docs/productisation/LAMBDA_BENCHMARK.md)
 - [OT VaR drift investigation](docs/productisation/OT_VAR_DRIFT_INVESTIGATION.md)
 - [Phase 2 structured execution boundary](docs/productisation/PHASE2_STRUCTURED_EXECUTION.md)
+- [Phase 3A runtime-neutral application service](docs/productisation/PHASE3A_APPLICATION_SERVICE.md)

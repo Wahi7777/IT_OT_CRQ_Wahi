@@ -1,7 +1,12 @@
 import json
 from pathlib import Path
 
+from jsonschema import Draft202012Validator
+from referencing import Registry, Resource
+
 from crq.versions import (
+    APPLICATION_REQUEST_SCHEMA_VERSION,
+    APPLICATION_RESPONSE_SCHEMA_VERSION,
     INPUT_SCHEMA_VERSION,
     MODEL_BUNDLE_SCHEMA_VERSION,
     NARRATIVE_FACT_SCHEMA_VERSION,
@@ -14,6 +19,8 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_contract_schemas_are_parseable_and_versioned():
     expected = {
+        "assessment-run-request.schema.json": APPLICATION_REQUEST_SCHEMA_VERSION,
+        "assessment-run-response.schema.json": APPLICATION_RESPONSE_SCHEMA_VERSION,
         "crq-assessment.schema.json": INPUT_SCHEMA_VERSION,
         "model-bundle.schema.json": MODEL_BUNDLE_SCHEMA_VERSION,
         "crq-result.schema.json": OUTPUT_SCHEMA_VERSION,
@@ -55,3 +62,41 @@ def test_narrative_example_has_source_pointer_for_every_numeric_fact():
 def test_platform_version_matches_package_metadata():
     pyproject = (ROOT / "pyproject.toml").read_text()
     assert f'version = "{PLATFORM_VERSION}"' in pyproject
+
+
+def test_application_examples_conform_to_runtime_contracts():
+    from crq.application.service import AssessmentRunRequest, validate_response_payload
+
+    example_dir = ROOT / "contracts" / "examples"
+    schema_dir = ROOT / "contracts" / "schemas"
+    request_schema = json.loads((schema_dir / "assessment-run-request.schema.json").read_text())
+    response_schema = json.loads((schema_dir / "assessment-run-response.schema.json").read_text())
+    assessment_schema = json.loads((schema_dir / "crq-assessment.schema.json").read_text())
+    result_schema = json.loads((schema_dir / "crq-result.schema.json").read_text())
+    registry = Registry().with_resources(
+        (schema["$id"], Resource.from_contents(schema)) for schema in (assessment_schema, result_schema)
+    )
+    request_validator = Draft202012Validator(request_schema, registry=registry)
+    response_validator = Draft202012Validator(response_schema, registry=registry)
+    for case_id in ("it-fs", "ot-pg"):
+        request = json.loads((example_dir / f"assessment-run-request-{case_id}.json").read_text())
+        response = json.loads((example_dir / f"assessment-run-response-{case_id}.json").read_text())
+        AssessmentRunRequest.from_dict(request)
+        validate_response_payload(response)
+        request_validator.validate(request)
+        response_validator.validate(response)
+        assert response["status"] == "SUCCESS"
+        assert response["request_id"] == request["request_id"]
+        assert "output" not in response["result"]["compatibility"]["legacy_engine_extension"]
+        assert "/Users/" not in json.dumps(response)
+
+
+def test_approved_bundle_registry_is_explicit_and_unique():
+    registry = json.loads((ROOT / "config" / "approved_model_bundles.json").read_text())
+    expected = {"FS-v1.1.1", "PG-v1.6", "EA-v1.0", "MF-v1.0"}
+    ids = [row["bundle_id"] for row in registry["bundles"]]
+    assert set(ids) == expected
+    assert len(ids) == len(set(ids))
+    for row in registry["bundles"]:
+        assert row["status"] == "APPROVED"
+        assert len(row["pack_hash"]) == 64

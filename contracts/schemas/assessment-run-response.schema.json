@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://crq.local/contracts/assessment-run-response/1.0.0",
+  "title": "AssessmentRunResponse",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "request_id", "status", "result", "warnings", "validation", "error"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "request_id": {"type": ["string", "null"]},
+    "status": {"enum": ["SUCCESS", "ERROR"]},
+    "result": {"oneOf": [{"$ref": "https://crq.local/contracts/crq-result/1.0.0-draft"}, {"type": "null"}]},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stages", "timing_ms"],
+      "properties": {
+        "stages": {"type": "object", "additionalProperties": {"type": "string"}},
+        "timing_ms": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0}}
+      }
+    },
+    "error": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["code", "message", "details"],
+          "properties": {
+            "code": {"enum": ["INVALID_REQUEST", "INVALID_ASSESSMENT", "UNSUPPORTED_DOMAIN", "UNSUPPORTED_SECTOR", "MODEL_BUNDLE_NOT_FOUND", "MODEL_BUNDLE_INCOMPATIBLE", "SCHEMA_VERSION_UNSUPPORTED", "VALIDATION_FAILED", "EXECUTION_FAILED", "RESULT_VALIDATION_FAILED"]},
+            "message": {"type": "string"},
+            "details": {"type": "object"}
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {"if": {"properties": {"status": {"const": "SUCCESS"}}}, "then": {"properties": {"error": {"type": "null"}, "result": {"$ref": "https://crq.local/contracts/crq-result/1.0.0-draft"}}}},
+    {"if": {"properties": {"status": {"const": "ERROR"}}}, "then": {"properties": {"result": {"type": "null"}, "error": {"type": "object"}}}}
+  ]
+}

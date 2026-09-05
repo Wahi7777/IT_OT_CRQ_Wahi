@@ -4,7 +4,7 @@
   "title": "CRQAssessment",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "assessment", "scope", "runtime", "risk_appetite", "insurance", "outside_in", "domain_inputs", "assessment_hash", "compatibility"],
+  "required": ["schema_version", "assessment", "scope", "runtime", "risk_appetite", "insurance", "outside_in", "domain_inputs"],
   "properties": {
     "schema_version": {"const": "1.0.0-draft"},
     "assessment": {

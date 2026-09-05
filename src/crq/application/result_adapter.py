@@ -17,7 +17,9 @@ def normalize_result(
     started_at: datetime,
 ) -> CRQResult:
     completed = datetime.now(timezone.utc)
-    native = json_value(router_result["engine_result"])
+    # The engine's output path is execution infrastructure, not a model result.
+    # Never expose the temporary filesystem path through the canonical contract.
+    native = json_value({key: value for key, value in router_result["engine_result"].items() if key != "output"})
     identity = assessment.to_dict()["assessment"]
     bundle_data = bundle.to_dict()
     best = _metrics(native, "best")
