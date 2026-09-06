@@ -14,6 +14,10 @@
 
 Workbook and router versions remain historical compatibility identifiers. They must not be used as aliases for the platform or engine version.
 
+## V1 execution runtime
+
+The governed V1 application and Lambda packaging runtime is CPython 3.12.x, declared by `.python-version`, `pyproject.toml`, the Phase 3B Terraform runtime, and the package builder. Runtime version is deployment provenance, not a substitute for any of the seven model/platform identifiers above. Historical freeze records naming Python 3.14.3 remain unchanged evidence of the environment in which those artifacts were accepted.
+
 ## Current identifier inventory
 
 | Current identifier | Source | Current value | Actual meaning | Authoritative now? | Stale or inconsistent? | Future identifier |
@@ -50,4 +54,3 @@ Workbook and router versions remain historical compatibility identifiers. They m
 | ModelBundle contract | `contracts/schemas/model-bundle.schema.json` | `1.0.0-draft` | Future immutable assumption bundle | Draft authority | Not yet materialized | `model_bundle_version` |
 
 Historical workbooks, fixtures, acceptance files and release notes are intentionally unchanged.
-

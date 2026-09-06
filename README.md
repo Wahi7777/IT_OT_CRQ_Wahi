@@ -63,7 +63,7 @@ On `00 COMMON - Run Setup`, **C6** (IT or OT) and **C7** (sector) select the eng
 
 ## Install
 
-Python 3.11 or newer.
+Python 3.12.x. V1 intentionally uses one runtime line; NumPy 2.5.2 requires Python 3.12 or newer.
 
 ```bash
 python3 -m venv .venv
@@ -138,3 +138,4 @@ python -m crq validate-release --production    # execute approved 500k baselines
 - [OT VaR drift investigation](docs/productisation/OT_VAR_DRIFT_INVESTIGATION.md)
 - [Phase 2 structured execution boundary](docs/productisation/PHASE2_STRUCTURED_EXECUTION.md)
 - [Phase 3A runtime-neutral application service](docs/productisation/PHASE3A_APPLICATION_SERVICE.md)
+- [Phase 3B Lambda and HTTP API boundary](docs/productisation/PHASE3B_LAMBDA_HTTP_BOUNDARY.md)

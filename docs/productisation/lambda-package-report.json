@@ -1,0 +1,28 @@
+{
+  "architecture": "arm64",
+  "artifact_type": "Lambda ZIP",
+  "base64sha256": "93StGaUCSIoHzxQoADf5kCuf+bVUcf/qK+BbEuKEShY=",
+  "bundled_assets": [
+    "src",
+    "model",
+    "sector_packs",
+    "config",
+    "contracts/mappings/model-bundle-source-map.json"
+  ],
+  "compressed_bytes": 17346892,
+  "dependencies": {
+    "et-xmlfile": "2.0.0",
+    "numpy": "2.5.2",
+    "openpyxl": "3.1.5"
+  },
+  "file_count": 1200,
+  "handler": "crq.lambda_adapter.handler",
+  "local_import_note": "Linux arm64 native wheels cannot be imported on the macOS build host; source-equivalent import is measured by the Lambda-boundary benchmark.",
+  "package_schema_version": "1.0.0",
+  "pythonpath": "/var/task/src",
+  "reproducibility": "Pinned wheels, fixed ZIP timestamps, sorted entries, normalized file modes.",
+  "runtime": "python3.12",
+  "sha256": "f774ad19a502488a07cf14280037f9902b9ff9b55471ffea2be05b12e2844a16",
+  "target_platform": "manylinux_2_28_aarch64 (Amazon Linux 2023 compatible)",
+  "uncompressed_bytes": 57226444
+}

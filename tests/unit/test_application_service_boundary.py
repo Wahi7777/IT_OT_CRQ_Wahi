@@ -9,6 +9,7 @@ import pytest
 
 from crq.application import extract_assessment, public_assessment_payload
 from crq.application.errors import ErrorCode
+from crq.application.request_adapter import assessment_from_public_payload
 from crq.application.serialization import dumps, loads
 from crq.application.service import AssessmentRunRequest, execute_assessment, validate_response_payload
 from tests.helpers import configure_run
@@ -56,6 +57,15 @@ def _error(request, code):
 def test_request_round_trip_is_deterministic(requests):
     parsed = AssessmentRunRequest.from_dict(requests["it"])
     assert AssessmentRunRequest.from_json(parsed.to_json()).to_dict() == parsed.to_dict()
+
+
+def test_it_assessment_hash_is_stable_across_json_key_order(requests):
+    payload = copy.deepcopy(requests["it"]["assessment"])
+    frequency = payload["domain_inputs"]["frequency_adjustments"]
+    payload["domain_inputs"]["frequency_adjustments"] = dict(reversed(list(frequency.items())))
+    before = assessment_from_public_payload(payload).to_dict()["assessment_hash"]
+    after = assessment_from_public_payload(loads(dumps(payload))).to_dict()["assessment_hash"]
+    assert before == after
 
 
 def test_invalid_domain_is_rejected(requests):

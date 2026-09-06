@@ -102,7 +102,7 @@ The application-boundary work (validation, bundle resolution, result validation 
 
 ## Remaining Lambda-wrapper blockers
 
-1. Build and test an arm64/x86_64 deployment artifact with pinned NumPy/OpenPyXL and packaged model/sector assets. The current `requires-python >=3.11` metadata conflicts with NumPy 2.5.2 requiring Python 3.12+ and must be governed before packaging.
+1. Build and test an arm64 deployment artifact with pinned NumPy/OpenPyXL and packaged model/sector assets. Phase 3B resolved the prior Python metadata conflict by governing Python 3.12.x as the V1 runtime.
 2. Benchmark in actual Lambda. Local peak RSS suggests starting at 1,536–2,048 MiB; local processing is 10–11 seconds, so start with a 60-second timeout and measure cold/warm behaviour.
 3. Enforce a 1 MiB request limit and a response-size guard below Lambda's synchronous response limit. The current OT PG response is about 2.07 MB.
 4. Map error codes to fixed HTTP statuses and add structured, redacted CloudWatch logging keyed by `request_id`; do not log assessments or full results by default.

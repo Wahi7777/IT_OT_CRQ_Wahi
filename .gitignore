@@ -35,6 +35,7 @@ pip-audit-cache/
 Thumbs.db
 .idea/
 .vscode/
+.terraform/
 *.swp
 *~
 

@@ -282,7 +282,9 @@ def _it_cells(identity, scope, runtime, inputs, wb) -> list[dict[str, Any]]:
         row = impact_rows[key]
         records.extend((_record("IT 06 - Impact & BIA Overrides", f"I{row}", override.get("p50"), "PERMITTED_OVERRIDE", "domain_inputs.impact_overrides"), _record("IT 06 - Impact & BIA Overrides", f"J{row}", override.get("p99"), "PERMITTED_OVERRIDE", "domain_inputs.impact_overrides")))
     freq_rows = _row_index(wb["IT 07 - Assessment Adjustments"], 1, 16, 22)
-    for key, value in (inputs.get("frequency_adjustments") or {}).items():
+    frequency_adjustments = inputs.get("frequency_adjustments") or {}
+    for key in sorted(frequency_adjustments):
+        value = frequency_adjustments[key]
         _nonnegative_or_none(value, f"assessment.domain_inputs.frequency_adjustments.{key}", allow_none=False)
         if key not in freq_rows:
             raise public_error(ErrorCode.INVALID_ASSESSMENT, "Unknown IT frequency adjustment.", parameter=key)

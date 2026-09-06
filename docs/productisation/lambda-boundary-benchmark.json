@@ -1,0 +1,87 @@
+{
+  "actual_aws_execution": false,
+  "benchmark_schema_version": "1.0.0",
+  "cases": {
+    "IT Financial Services 500k": {
+      "adapter_import_ms": 113.30708302557468,
+      "cold_handler_ms": 9425.352582940832,
+      "cold_parity_hash": "db5b6159848b0bf8fb2c716c2a1b40205b8035a4ba2504cf1d2307d32d61f5e0",
+      "cold_result_hash": "d058eb14a2d24367b4049a17f3963c52338b5e9da751a0f35cd6108186fbd91b",
+      "cold_stage_timing_ms": {
+        "bundle_resolution_ms": 190.14016608707607,
+        "engine_execution_ms": 7670.484957983717,
+        "result_normalization_ms": 9.5768750179559,
+        "result_validation_ms": 7.37854209728539,
+        "serialization_ms": 2.277999883517623,
+        "total_ms": 9421.12608300522,
+        "validation_ms": 590.1274580974132,
+        "workbook_materialization_ms": 948.5808750614524
+      },
+      "cold_total_ms": 9538.659665966406,
+      "peak_process_memory_mb": 479.3125,
+      "response_bytes": 210934,
+      "warm_handler_ms": 9540.666790911928,
+      "warm_parity_hash": "db5b6159848b0bf8fb2c716c2a1b40205b8035a4ba2504cf1d2307d32d61f5e0",
+      "warm_result_hash": "12d6eb45f371331c8f45a8a6cd6e2d6c7c3c3e2e3c07739df72b3f8a85baf5a9",
+      "warm_stage_timing_ms": {
+        "bundle_resolution_ms": 147.6798749063164,
+        "engine_execution_ms": 7727.174750063568,
+        "result_normalization_ms": 9.522749809548259,
+        "result_validation_ms": 7.306999992579222,
+        "serialization_ms": 2.2965839598327875,
+        "total_ms": 9536.529999924824,
+        "validation_ms": 643.4817919507623,
+        "workbook_materialization_ms": 996.955000096932
+      }
+    },
+    "OT Power Generation 500k": {
+      "adapter_import_ms": 66.65754201821983,
+      "cold_handler_ms": 8641.628625104204,
+      "cold_parity_hash": "cd25ddb1aa0d57100b22638a15f14e71162f6265aedbc6b90b5333b77b9a1da0",
+      "cold_result_hash": "f71d78a26593fea4826c29c6c176bfabdbe9942c9c39329fae980f3b8cdaa7a7",
+      "cold_stage_timing_ms": {
+        "bundle_resolution_ms": 256.4287499990314,
+        "engine_execution_ms": 6213.635750114918,
+        "result_normalization_ms": 251.97470793500543,
+        "result_validation_ms": 180.4777500219643,
+        "serialization_ms": 70.78204187564552,
+        "total_ms": 8528.601875063032,
+        "validation_ms": 590.1257500518113,
+        "workbook_materialization_ms": 960.2417079731822
+      },
+      "cold_total_ms": 8708.286167122424,
+      "peak_process_memory_mb": 1158.65625,
+      "response_bytes": 2065712,
+      "warm_handler_ms": 8762.766208965331,
+      "warm_parity_hash": "cd25ddb1aa0d57100b22638a15f14e71162f6265aedbc6b90b5333b77b9a1da0",
+      "warm_result_hash": "a8482a9ff70fbdf7f57d510ed7ea85d86d05e16bd0208f97deae908be44f44fd",
+      "warm_stage_timing_ms": {
+        "bundle_resolution_ms": 271.6412500012666,
+        "engine_execution_ms": 6260.898917214945,
+        "result_normalization_ms": 263.39200022630394,
+        "result_validation_ms": 192.1638750936836,
+        "serialization_ms": 76.35395810939372,
+        "total_ms": 8648.639959050342,
+        "validation_ms": 615.895583992824,
+        "workbook_materialization_ms": 963.593291118741
+      }
+    }
+  },
+  "deployment_benchmark_plan": [
+    "Publish one immutable package/version and invoke each case once cold and at least five times warm at 2048, 3072 and 4096 MB.",
+    "Record Lambda REPORT init duration, billed duration, max memory used, service stage timings, response size and result hash.",
+    "Compare canonical CRQResult with the Phase 3A example result at every memory setting.",
+    "Select the lowest-cost setting that retains timeout and memory headroom; do not alter quantitative code."
+  ],
+  "host": {
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "processor": "arm",
+    "python": "3.12.14"
+  },
+  "lambda_memory_plan": {
+    "2048_mb": "REQUIRED_FIRST_AWS_MEASUREMENT",
+    "3072_mb": "REQUIRED_AWS_COMPARISON",
+    "4096_mb": "REQUIRED_AWS_COMPARISON"
+  },
+  "recorded_at": "2026-09-05T19:07:29.660430+00:00"
+}
