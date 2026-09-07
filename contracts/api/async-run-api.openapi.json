@@ -1,0 +1,112 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CRQ asynchronous execution API",
+    "version": "1.0.0-draft",
+    "description": "Phase 4A design contract. The API and infrastructure are not implemented in this phase."
+  },
+  "servers": [{"url": "https://{host}", "variables": {"host": {"default": "api.example.invalid"}}}],
+  "paths": {
+    "/v1/assessments/run": {
+      "post": {
+        "operationId": "queueAssessmentRun",
+        "parameters": [{"$ref": "#/components/parameters/IdempotencyKey"}],
+        "requestBody": {
+          "required": true,
+          "content": {"application/json": {"schema": {"$ref": "../schemas/assessment-run-request.schema.json"}}}
+        },
+        "responses": {
+          "202": {"description": "Durably accepted and queued", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/RunAccepted"}}}},
+          "400": {"$ref": "#/components/responses/Problem"},
+          "413": {"$ref": "#/components/responses/Problem"},
+          "415": {"$ref": "#/components/responses/Problem"},
+          "422": {"$ref": "#/components/responses/Problem"},
+          "500": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    },
+    "/v1/runs/{run_id}": {
+      "get": {
+        "operationId": "getRunStatus",
+        "parameters": [{"$ref": "#/components/parameters/RunId"}],
+        "responses": {
+          "200": {"description": "Current lifecycle state", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/RunStatus"}}}},
+          "404": {"$ref": "#/components/responses/Problem"},
+          "500": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    },
+    "/v1/runs/{run_id}/result": {
+      "get": {
+        "operationId": "getRunResult",
+        "parameters": [{"$ref": "#/components/parameters/RunId"}],
+        "responses": {
+          "200": {"description": "Completed canonical CRQResult", "content": {"application/json": {"schema": {"$ref": "../schemas/crq-result.schema.json"}}}},
+          "202": {"description": "Run is not terminal", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/RunStatus"}}}},
+          "404": {"$ref": "#/components/responses/Problem"},
+          "409": {"description": "Run failed and has no result", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Problem"}}}},
+          "500": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "RunId": {"name": "run_id", "in": "path", "required": true, "schema": {"type": "string", "format": "uuid"}},
+      "IdempotencyKey": {"name": "Idempotency-Key", "in": "header", "required": true, "schema": {"type": "string", "minLength": 16, "maxLength": 128}}
+    },
+    "schemas": {
+      "RunState": {"type": "string", "enum": ["QUEUED", "RUNNING", "COMPLETED", "FAILED"]},
+      "RunAccepted": {
+        "type": "object", "additionalProperties": false,
+        "required": ["schema_version", "run_id", "assessment_id", "status", "submitted_at", "links"],
+        "properties": {
+          "schema_version": {"const": "1.0.0-draft"},
+          "run_id": {"type": "string", "format": "uuid"},
+          "assessment_id": {"type": "string", "minLength": 1},
+          "status": {"const": "QUEUED"},
+          "submitted_at": {"type": "string", "format": "date-time"},
+          "links": {"$ref": "#/components/schemas/RunLinks"}
+        }
+      },
+      "RunStatus": {
+        "type": "object", "additionalProperties": false,
+        "required": ["schema_version", "run_id", "assessment_id", "status", "submitted_at", "updated_at", "links"],
+        "properties": {
+          "schema_version": {"const": "1.0.0-draft"},
+          "run_id": {"type": "string", "format": "uuid"},
+          "assessment_id": {"type": "string", "minLength": 1},
+          "status": {"$ref": "#/components/schemas/RunState"},
+          "submitted_at": {"type": "string", "format": "date-time"},
+          "started_at": {"type": ["string", "null"], "format": "date-time"},
+          "completed_at": {"type": ["string", "null"], "format": "date-time"},
+          "updated_at": {"type": "string", "format": "date-time"},
+          "phase": {"type": ["string", "null"], "enum": ["VALIDATING", "EXECUTING", "FINALISING", null]},
+          "failure": {"anyOf": [{"$ref": "#/components/schemas/SafeFailure"}, {"type": "null"}]},
+          "links": {"$ref": "#/components/schemas/RunLinks"}
+        }
+      },
+      "RunLinks": {
+        "type": "object", "additionalProperties": false, "required": ["status", "result"],
+        "properties": {"status": {"type": "string"}, "result": {"type": "string"}}
+      },
+      "SafeFailure": {
+        "type": "object", "additionalProperties": false, "required": ["code", "message", "retryable"],
+        "properties": {"code": {"type": "string"}, "message": {"type": "string"}, "retryable": {"type": "boolean"}, "correlation_id": {"type": "string"}}
+      },
+      "Problem": {
+        "type": "object", "additionalProperties": false, "required": ["code", "message", "request_id"],
+        "properties": {"code": {"type": "string"}, "message": {"type": "string"}, "request_id": {"type": "string"}, "field_errors": {"type": "array", "items": {"type": "object"}}}
+      }
+    },
+    "responses": {
+      "Problem": {"description": "Safe JSON error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Problem"}}}}
+    }
+  },
+  "x-crq-execution-design": {
+    "flow": ["API_GATEWAY", "API_LAMBDA", "SQS", "WORKER_LAMBDA", "CRQ_ENGINE", "S3"],
+    "sqs": {"batch_size": 1, "maximum_batching_window_seconds": 0},
+    "s3_keys": ["assessments/{assessment_id}/input.json", "runs/{run_id}/status.json", "runs/{run_id}/result.json"],
+    "excluded": ["RDS", "STEP_FUNCTIONS", "FARGATE"]
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "policy_id": "crq-cross-platform-numerical-equivalence",
+  "policy_version": "1.0.0",
+  "status": "APPROVED_FOR_PHASE_4A_DESIGN",
+  "scope": {
+    "source_runtime": "CPython 3.12 / NumPy 2.5.2 / macOS arm64",
+    "target_runtime": "CPython 3.12 / NumPy 2.5.2 / Lambda Linux arm64",
+    "evidence_commit": "ccb2ac344a9ab5c62ff893dae8f9a86f12abde9a",
+    "evidence_file": "outputs/phase3c-blocked-evidence.json"
+  },
+  "comparison_preconditions": [
+    "assessment_hash is exactly equal",
+    "model_bundle_hash is exactly equal",
+    "engine, methodology, schema and sector-pack versions are exactly equal",
+    "seed, simulation_count and quantitative runtime configuration are exactly equal"
+  ],
+  "exact_rules": {
+    "non_numeric": [
+      "all strings, booleans, integers and nulls",
+      "categorical values",
+      "path and route states",
+      "identifiers and versions",
+      "stable assessment, bundle, pack and artifact hashes"
+    ],
+    "headline_json_pointer_patterns": [
+      "/summary/best_estimate/aal",
+      "/summary/prudent/aal",
+      "/summary/best_estimate/var95",
+      "/summary/prudent/var95",
+      "/summary/best_estimate/var99",
+      "/summary/prudent/var99",
+      "/summary/best_estimate/tvar95",
+      "/summary/prudent/tvar95",
+      "/summary/best_estimate/tvar99",
+      "/summary/prudent/tvar99",
+      "/summary/best_estimate/event_frequency",
+      "/summary/prudent/event_frequency",
+      "/summary/best_estimate/p_any_event",
+      "/summary/prudent/p_any_event"
+    ],
+    "default_numeric_rule": "exact"
+  },
+  "platform_sensitive_exceptions": [
+    {
+      "id": "IT_LIBM_ANNUAL_EVENT_PROBABILITY",
+      "domain": "IT",
+      "json_pointer_patterns": [
+        "/architecture/route_path_states/*/annual_event_probability",
+        "/decomposition/actor_scenario/*/annual_event_probability",
+        "/compatibility/legacy_engine_extension/actor_scenario_rows/*/annual_event_probability"
+      ],
+      "comparison": {
+        "operator": "absolute_and_relative",
+        "absolute_tolerance": 1.2e-16,
+        "relative_tolerance": 6.5e-14
+      },
+      "observed_max_absolute_delta": 1.1102230246251565e-16,
+      "rationale": "The same 1-math.exp(-frequency) result is mirrored at three surfaces and differs only through the platform libm final bits. Both absolute and relative limits must pass."
+    },
+    {
+      "id": "OT_EMPIRICAL_LEC_SINGLE_ORDINATE",
+      "domain": "OT",
+      "json_pointer_patterns": [
+        "/treatments/individual_controls/*/prudent/lec/91/0",
+        "/treatments/post_treatment_metrics/*/prudent/lec/91/0",
+        "/compatibility/legacy_engine_extension/whatifs/*/prudent/lec/91/0"
+      ],
+      "comparison": {
+        "operator": "absolute_and_ulp",
+        "absolute_tolerance": 4.0e-9,
+        "max_ulps": 2
+      },
+      "observed_max_absolute_delta": 3.725290298461914e-9,
+      "rationale": "One empirical LEC x-ordinate is mirrored across 52 controls and three surfaces; the Linux/macOS values are separated by machine precision. Both absolute and ULP limits must pass."
+    }
+  ],
+  "hash_semantics": {
+    "rule": "Hashes are never tolerance-compared.",
+    "stable_hashes": "Must match exactly after preconditions are applied.",
+    "invocation_result_hash": "Must exactly verify its own complete payload. It is not a cross-invocation parity key because run_id and timestamps are intentionally included.",
+    "equivalence_attestation": "Record policy version, exact comparison failures, accepted exception pointers and maximum observed deltas; do not replace any payload hash."
+  },
+  "failure_governance": {
+    "on_unlisted_numeric_difference": "FAIL_AND_OPEN_DRIFT_INVESTIGATION",
+    "on_tolerance_exceeded": "FAIL_AND_OPEN_DRIFT_INVESTIGATION",
+    "on_precondition_mismatch": "NOT_COMPARABLE",
+    "baseline_update": "PROHIBITED_BY_THIS_POLICY",
+    "automatic_blessing": false
+  }
+}

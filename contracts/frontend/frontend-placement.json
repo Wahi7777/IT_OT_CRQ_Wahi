@@ -1,0 +1,159 @@
+{
+  "schema_version": "1.0.0-draft",
+  "source_inventory": "contracts/mappings/field-inventory.json",
+  "matching_rule": "Each grouped canonical_path is listed exactly once. Expanded instances inherit its placement.",
+  "input_screens": [
+    {
+      "screen_id": "assessment-setup",
+      "applies_to": ["IT", "OT"],
+      "canonical_paths": [
+        "assessment.domain", "assessment.sector", "assessment.asset_type", "assessment.reporting_basis",
+        "runtime.{parameter}", "runtime.tvar_selection", "assessment.resolved_{parameter}", "model_bundle.{parameter}"
+      ]
+    },
+    {
+      "screen_id": "organisation-exposure",
+      "applies_to": ["IT"],
+      "canonical_paths": [
+        "assessment.{parameter}", "domain_inputs.financial_exposure.{parameter}",
+        "domain_inputs.exposure_model_enabled"
+      ]
+    },
+    {
+      "screen_id": "it-architecture",
+      "applies_to": ["IT"],
+      "canonical_paths": [
+        "domain_inputs.routes[{id}].{parameter}"
+      ],
+      "classification_disambiguation": "PERMITTED_OVERRIDE renders as an override card; EVIDENCE_ONLY renders in its attached evidence drawer."
+    },
+    {
+      "screen_id": "it-controls",
+      "applies_to": ["IT"],
+      "canonical_paths": [
+        "domain_inputs.controls[{id}].{parameter}", "domain_inputs.controls[{id}].evidence_ids"
+      ],
+      "classification_disambiguation": "USER_INPUT maturity/coverage and EVIDENCE_ONLY metadata are distinct controls."
+    },
+    {
+      "screen_id": "it-business-impact",
+      "applies_to": ["IT"],
+      "canonical_paths": [
+        "domain_inputs.impact_overrides[{parameter}]", "domain_inputs.impact_overrides[{id}.{parameter}]"
+      ]
+    },
+    {
+      "screen_id": "it-assumptions-overrides",
+      "applies_to": ["IT"],
+      "canonical_paths": [
+        "domain_inputs.frequency_adjustments.{parameter}"
+      ]
+    },
+    {
+      "screen_id": "facility",
+      "applies_to": ["OT"],
+      "canonical_paths": [
+        "assessment.{parameter}"
+      ]
+    },
+    {
+      "screen_id": "ot-architecture-topology",
+      "applies_to": ["OT"],
+      "canonical_paths": [
+        "domain_inputs.topology.{parameter}"
+      ]
+    },
+    {
+      "screen_id": "ot-controls",
+      "applies_to": ["OT"],
+      "canonical_paths": [
+        "domain_inputs.controls[{id}].{parameter}"
+      ],
+      "classification_disambiguation": "USER_INPUT maturity/coverage and EVIDENCE_ONLY tested/result/evidence values render separately."
+    },
+    {
+      "screen_id": "ot-business-impact",
+      "applies_to": ["OT"],
+      "canonical_paths": [
+        "domain_inputs.financial_exposure.{parameter}", "domain_inputs.financial_exposure.employees"
+      ]
+    },
+    {
+      "screen_id": "ot-loss-driver-assumptions",
+      "applies_to": ["OT"],
+      "canonical_paths": [
+        "domain_inputs.impact_drivers[{id}].{parameter}", "model_bundle.assumptions.scenarios.impact"
+      ],
+      "classification_disambiguation": "All values are locked governed-pack reference cards."
+    },
+    {
+      "screen_id": "ot-assumptions-overrides",
+      "applies_to": ["OT"],
+      "canonical_paths": [
+        "domain_inputs.assessment_adjustments.prudence_factor",
+        "model_bundle.assumptions.frequency_priors.reference_campaigns_per_year",
+        "model_bundle.assumptions.actors.core_configuration",
+        "model_bundle.assumptions.scenarios.difficulty",
+        "model_bundle.assumptions.routes_or_ttps.exposure_map",
+        "model_bundle.assumptions.frequency_priors.geography_actor_multipliers",
+        "model_bundle.assumptions.scenarios.propensity",
+        "model_bundle.assumptions.frequency_priors.sector_asset_multipliers",
+        "model_bundle.assumptions.routes_or_ttps.sector_applicability"
+      ]
+    },
+    {
+      "screen_id": "outside-in-evidence",
+      "applies_to": ["IT", "OT"],
+      "canonical_paths": [
+        "outside_in.apply", "outside_in.legacy_file_path", "outside_in.evidence[{id}].{parameter}"
+      ]
+    },
+    {
+      "screen_id": "risk-appetite-insurance",
+      "applies_to": ["IT", "OT"],
+      "canonical_paths": [
+        "risk_appetite.{parameter}", "insurance.retention", "insurance.primary_limit",
+        "insurance.aggregate_programme_limit", "insurance.layers[{id}].{parameter}"
+      ]
+    },
+    {
+      "screen_id": "methodology-evidence-drawer",
+      "applies_to": ["IT", "OT"],
+      "canonical_paths": [
+        "model_bundle.assumptions.{parameter}", "model_bundle.evidence.{parameter}",
+        "model_bundle.reference_only.{parameter}"
+      ]
+    },
+    {
+      "screen_id": "presentation-only",
+      "applies_to": ["IT", "OT"],
+      "canonical_paths": ["presentation.{parameter}"]
+    },
+    {
+      "screen_id": "review-run",
+      "applies_to": ["IT", "OT"],
+      "canonical_paths": [],
+      "summary_rule": "Read-only readiness summary of the already placed canonical fields; it does not own a second editable field instance."
+    }
+  ],
+  "rendering_by_classification": {
+    "USER_INPUT": {"editable": true, "pattern": "question-card"},
+    "PERMITTED_OVERRIDE": {"editable": true, "pattern": "permissioned-override-card", "requires": ["rationale", "evidence", "actor", "timestamp"]},
+    "GOVERNED_PACK_INPUT": {"editable": false, "pattern": "locked-reference-card"},
+    "DERIVED": {"editable": false, "pattern": "resolved-value-card"},
+    "EVIDENCE_ONLY": {"editable": "only where source inventory permits", "pattern": "evidence-card", "quantitative_effect_label": "No direct quantitative effect"},
+    "DISPLAY_ONLY": {"editable": false, "pattern": "presentation-or-hidden"},
+    "INACTIVE_LEGACY": {"editable": false, "pattern": "migration-context-or-hidden", "quantitative_effect_label": "Inactive"}
+  },
+  "results_screens": [
+    {"screen_id": "overview", "prefixes": ["run.", "provenance.", "summary."]},
+    {"screen_id": "risk-drivers", "prefixes": ["formation.", "decomposition.actors", "decomposition.actor_scenario"]},
+    {"screen_id": "scenarios", "prefixes": ["decomposition.scenarios", "decomposition.it_routes", "decomposition.ot_paths_ttps"]},
+    {"screen_id": "attack-paths", "prefixes": ["architecture."]},
+    {"screen_id": "business-impact", "prefixes": ["loss.", "impact."]},
+    {"screen_id": "treatment", "prefixes": ["treatments.", "sensitivity"]},
+    {"screen_id": "insurance", "prefixes": ["insurance."]},
+    {"screen_id": "uncertainty", "prefixes": ["uncertainty."]},
+    {"screen_id": "evidence", "prefixes": ["compatibility."]}
+  ]
+}
