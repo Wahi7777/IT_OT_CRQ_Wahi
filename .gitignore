@@ -63,3 +63,9 @@ outputs/_balbix_pack_smoke/
 outputs/_balbix_verify_*.xlsx
 outputs/_pg_verify.xlsx
 assessments/_pg_verify.xlsx
+
+# Frontend generated dependencies and build metadata
+node_modules/
+*.tsbuildinfo
+frontend/vite.config.js
+frontend/vite.config.d.ts

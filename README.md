@@ -139,3 +139,5 @@ python -m crq validate-release --production    # execute approved 500k baselines
 - [Phase 2 structured execution boundary](docs/productisation/PHASE2_STRUCTURED_EXECUTION.md)
 - [Phase 3A runtime-neutral application service](docs/productisation/PHASE3A_APPLICATION_SERVICE.md)
 - [Phase 3B Lambda and HTTP API boundary](docs/productisation/PHASE3B_LAMBDA_HTTP_BOUNDARY.md)
+- [Phase 4A asynchronous product design](docs/productisation/PHASE4A_ASYNC_FRONTEND_DESIGN.md)
+- [Phase 4B V1 frontend implementation](docs/productisation/PHASE4B_FRONTEND_IMPLEMENTATION.md)
