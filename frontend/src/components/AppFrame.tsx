@@ -3,6 +3,7 @@ import {useState, type ReactNode} from "react";
 import {NavLink, useLocation} from "react-router-dom";
 import {useAssessment} from "../features/assessment/AssessmentContext";
 import {Badge, Button} from "./ui";
+import {signOut} from "../auth/CognitoAuth";
 
 export function AppFrame({children}: {children: ReactNode}) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -27,7 +28,7 @@ export function AppFrame({children}: {children: ReactNode}) {
         <div><span>Model governance</span><strong>Controls active</strong></div>
         <Badge tone="green">Locked</Badge>
       </div>
-      <nav className="sidebar-bottom"><a href="#settings"><Settings2 />Workspace settings</a><a href="/login"><LogOut />Sign out</a></nav>
+      <nav className="sidebar-bottom"><a href="#settings"><Settings2 />Workspace settings</a><button type="button" onClick={signOut}><LogOut />Sign out</button></nav>
     </aside>
     {mobileOpen && <button className="nav-scrim" aria-label="Close navigation" onClick={() => setMobileOpen(false)} />}
     <div className="main-column">

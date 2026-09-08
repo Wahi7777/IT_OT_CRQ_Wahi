@@ -92,6 +92,12 @@ export interface RunStatus {
   completed_at?: string | null;
   updated_at: string;
   phase?: "VALIDATING" | "EXECUTING" | "FINALISING" | null;
+  domain?: Domain | null;
+  bundle_id?: string | null;
+  engine_version?: string | null;
+  methodology_version?: string | null;
+  result_available?: boolean;
+  error_code?: string | null;
   failure?: {code: string; message: string; retryable: boolean; correlation_id?: string} | null;
   links: {status: string; result: string};
 }

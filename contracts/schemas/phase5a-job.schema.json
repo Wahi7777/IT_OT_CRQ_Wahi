@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://crq.local/contracts/phase5a-job.schema.json",
+  "title": "Phase 5A CRQ asynchronous job",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["job_schema_version", "run_id", "assessment_id", "tenant_id", "bundle_id", "run_config"],
+  "properties": {
+    "job_schema_version": {"const": "1.0"},
+    "run_id": {"type": "string", "format": "uuid"},
+    "assessment_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "tenant_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "bundle_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "run_config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["simulation_count", "random_seed", "reporting_basis"],
+      "properties": {
+        "simulation_count": {"type": "integer", "minimum": 10000, "maximum": 2000000},
+        "random_seed": {"type": "integer", "minimum": 0},
+        "reporting_basis": {"enum": ["best_estimate", "prudent", "both"]}
+      }
+    }
+  }
+}

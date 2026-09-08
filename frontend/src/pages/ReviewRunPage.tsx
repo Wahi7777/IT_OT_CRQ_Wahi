@@ -4,7 +4,7 @@ import {Link, useNavigate} from "react-router-dom";
 import {getRunApi} from "../api/RunApi";
 import {PageHeader} from "../components/PageHeader";
 import {Badge, Button, GlassPanel, ProvenanceStamp} from "../components/ui";
-import {approvedResults, fieldInventory, sectorPacks} from "../contracts/governedData";
+import {fieldInventory, sectorPacks} from "../contracts/governedData";
 import {validateRunRequest} from "../contracts/validation";
 import {AssessmentShell, getSteps} from "../features/assessment/AssessmentShell";
 import {useAssessment} from "../features/assessment/AssessmentContext";
@@ -23,7 +23,6 @@ export function ReviewRunPage() {
   if (dataMode === "demo" && request.model_bundle_reference.bundle_id !== approvedDemoPack) validationIssues.push({path: "/model_bundle_reference/bundle_id", message: "has no approved offline result artifact; select Real API mode when that governed pack is deployed", keyword: "approvedDemoArtifact"});
   const ready = validationIssues.length === 0;
   const readiness = ready ? 92 : 76;
-  const provenance = approvedResults[domain].provenance;
   const selectedPack = sectorPacks.find((pack) => pack.pack_id === request.model_bundle_reference.bundle_id);
 
   async function run() {
@@ -56,8 +55,8 @@ export function ReviewRunPage() {
         <Identity label="Domain" value={domain} />
         <Identity label="Sector pack" value={`${selectedPack?.pack_id ?? request.model_bundle_reference.bundle_id} · ${selectedPack?.pack_version ?? "Unresolved"}`} />
         <Identity label="Model bundle reference" value={`${request.model_bundle_reference.bundle_id} · ${request.model_bundle_reference.bundle_version}`} />
-        <Identity label="Engine version" value={String(selectedPack?.minimum_engine_version ?? provenance.engine_version)} />
-        <Identity label="Methodology version" value={String(provenance.methodology_version)} />
+        <Identity label="Engine version" value={String(selectedPack?.minimum_engine_version ?? "Resolved by worker")} />
+        <Identity label="Methodology version" value="unified-balbix-impact/1.0" />
         <Identity label="Simulation count" value={request.run_config.simulation_count.toLocaleString()} />
         <Identity label="Random seed" value={String(request.run_config.random_seed)} />
         <Identity label="Reporting basis" value={request.run_config.reporting_basis} />

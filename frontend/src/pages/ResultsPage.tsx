@@ -4,7 +4,7 @@ import {useLocation, useParams} from "react-router-dom";
 import {getRunApi} from "../api/RunApi";
 import {AIPlaceholder} from "../components/AIPlaceholder";
 import {Badge, EmptyState, GlassPanel} from "../components/ui";
-import {approvedResults, outputMappings, resultScreens} from "../contracts/governedData";
+import {outputMappings, resultScreens} from "../contracts/governedData";
 import type {CRQResult} from "../contracts/types";
 import {FinancialBars, MetricCard, NoCanonicalData, RankedList, RiskFunnel, StateBadge, money, number, percent} from "../features/results/ResultComponents";
 import {ResultsShell} from "../features/results/ResultsShell";
@@ -13,7 +13,7 @@ import {useAssessment} from "../features/assessment/AssessmentContext";
 export function ResultsPage() {
   const {domain, dataMode, request} = useAssessment();
   const {runId = "demo"} = useParams();
-  const [result, setResult] = useState<CRQResult>(() => approvedResults[domain]);
+  const [result, setResult] = useState<CRQResult | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const page = useLocation().pathname.split("/").at(-1) ?? "overview";
   useEffect(() => {
@@ -21,6 +21,7 @@ export function ResultsPage() {
     getRunApi(dataMode).getResult(runId).then((next) => {if (active) {setResult(next); setLoadError(null);}}).catch((reason) => {if (active) setLoadError(reason instanceof Error ? reason.message : "The result could not be loaded.");});
     return () => {active = false;};
   }, [dataMode, domain, runId]);
+  if (!result) return <GlassPanel><span className="spinner" /> Loading canonical result…{loadError && <div className="error-banner" role="alert">{loadError}</div>}</GlassPanel>;
   const resultDomain = result.compatibility?.native_domain === "OT" || result.provenance?.sector_pack_id?.startsWith("OT-") ? "OT" : domain;
   const currency = request.assessment.assessment.currency;
   return <ResultsShell result={result} domain={resultDomain} currency={currency}>{loadError && <div className="error-banner" role="alert">{loadError}</div>}{renderPage(page, result, resultDomain, currency)}</ResultsShell>;

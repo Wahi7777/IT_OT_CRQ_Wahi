@@ -84,9 +84,9 @@ svg { flex: none; }
 .brand strong { font-size: 1.05rem; letter-spacing: .08em; }
 .brand span { margin-top: .05rem; color: var(--muted); font-size: .67rem; }
 .sidebar nav { display: grid; gap: .3rem; margin-top: 2rem; }
-.sidebar nav a { display: flex; align-items: center; gap: .75rem; border: 1px solid transparent; border-radius: 11px; padding: .7rem .75rem; color: #929daf; font-size: .87rem; font-weight: 600; transition: .18s ease; }
-.sidebar nav a svg { width: 17px; }
-.sidebar nav a:hover { color: var(--text); background: rgba(255,255,255,.035); }
+.sidebar nav a, .sidebar nav button { display: flex; width: 100%; align-items: center; gap: .75rem; border: 1px solid transparent; border-radius: 11px; padding: .7rem .75rem; color: #929daf; background: transparent; cursor: pointer; font: inherit; font-size: .87rem; font-weight: 600; text-align: left; transition: .18s ease; }
+.sidebar nav a svg, .sidebar nav button svg { width: 17px; }
+.sidebar nav a:hover, .sidebar nav button:hover { color: var(--text); background: rgba(255,255,255,.035); }
 .sidebar nav a.active { border-color: rgba(139,131,255,.18); color: var(--text); background: linear-gradient(90deg, rgba(139,131,255,.14), rgba(139,131,255,.035)); }
 .sidebar-spacer { flex: 1; }
 .governance-card { display: grid; grid-template-columns: auto 1fr; gap: .55rem .6rem; align-items: center; border: 1px solid var(--line); border-radius: 13px; padding: .75rem; background: rgba(255,255,255,.025); }

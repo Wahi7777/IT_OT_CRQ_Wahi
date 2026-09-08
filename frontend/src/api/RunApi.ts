@@ -1,4 +1,5 @@
-import {approvedRequests, approvedResults} from "../contracts/governedData";
+import {clearSession, getIdToken} from "../auth/CognitoAuth";
+import {approvedRequests, loadApprovedResult} from "../contracts/governedData";
 import type {AssessmentRunRequest, CRQResult, Domain, RunAccepted, RunApi, RunStatus} from "../contracts/types";
 
 type DemoRun = {domain: Domain; polls: number; submittedAt: string; failed: boolean};
@@ -45,18 +46,24 @@ export class DemoRunApi implements RunApi {
   async getResult(runId: string): Promise<CRQResult> {
     await delay(260);
     const domain = this.runs.get(runId)?.domain ?? inferDomain();
-    return structuredClone(approvedResults[domain]);
+    return loadApprovedResult(domain);
   }
 }
 
 export class HttpRunApi implements RunApi {
-  constructor(private baseUrl: string) {}
+  constructor(private baseUrl: string, private tokenProvider: () => string | null = getIdToken) {}
 
-  submit(request: AssessmentRunRequest, idempotencyKey: string) {
-    return this.request<RunAccepted>("/v1/assessments/run", {
+  async submit(request: AssessmentRunRequest, idempotencyKey: string) {
+    const assessmentId = encodeURIComponent(request.assessment.assessment.assessment_id);
+    await this.request(`/v1/assessments`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(request.assessment)
+    });
+    return this.request<RunAccepted>(`/v1/assessments/${assessmentId}/run`, {
       method: "POST",
       headers: {"Content-Type": "application/json", "Idempotency-Key": idempotencyKey},
-      body: JSON.stringify(request)
+      body: JSON.stringify({schema_version: request.schema_version, request_id: request.request_id, model_bundle_reference: request.model_bundle_reference, run_config: request.run_config})
     });
   }
 
@@ -69,8 +76,13 @@ export class HttpRunApi implements RunApi {
   }
 
   private async request<T>(path: string, init?: RequestInit): Promise<T> {
-    const response = await fetch(`${this.baseUrl.replace(/\/$/, "")}${path}`, {cache: "no-store", ...init});
+    const token = this.tokenProvider();
+    if (!token) { window.location.assign("/login?expired=1"); throw new Error("An authenticated session is required."); }
+    const headers = new Headers(init?.headers);
+    headers.set("Authorization", `Bearer ${token}`);
+    const response = await fetch(`${this.baseUrl.replace(/\/$/, "")}${path}`, {cache: "no-store", ...init, headers});
     const body = await response.json().catch(() => null);
+    if (response.status === 401 || response.status === 403) { clearSession(); window.location.assign("/login?expired=1"); }
     if (!response.ok) throw new Error(body?.message ?? `Request failed (${response.status})`);
     return body as T;
   }

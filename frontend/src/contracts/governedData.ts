@@ -1,22 +1,22 @@
 import itRequestJson from "../../../contracts/examples/assessment-run-request-it-fs.json";
 import otRequestJson from "../../../contracts/examples/assessment-run-request-ot-pg.json";
-import itResponseJson from "../../../contracts/examples/assessment-run-response-it-fs.json";
-import otResponseJson from "../../../contracts/examples/assessment-run-response-ot-pg.json";
 import inventoryJson from "../../../contracts/mappings/field-inventory.json";
 import outputMappingJson from "../../../contracts/mappings/engine-output-to-crq-result.json";
 import placementJson from "../../../contracts/frontend/frontend-placement.json";
 import registryJson from "../../../config/sector_pack_registry.json";
-import type {AssessmentRunRequest, CRQResult, FieldInventoryItem, PlacementScreen} from "./types";
+import type {AssessmentRunRequest, CRQResult, Domain, FieldInventoryItem, PlacementScreen} from "./types";
 
 export const approvedRequests = {
   IT: structuredClone(itRequestJson) as AssessmentRunRequest,
   OT: structuredClone(otRequestJson) as AssessmentRunRequest
 };
 
-export const approvedResults = {
-  IT: structuredClone(itResponseJson.result) as CRQResult,
-  OT: structuredClone(otResponseJson.result) as CRQResult
-};
+export async function loadApprovedResult(domain: Domain): Promise<CRQResult> {
+  const module = domain === "IT"
+    ? await import("../../../contracts/examples/assessment-run-response-it-fs.json")
+    : await import("../../../contracts/examples/assessment-run-response-ot-pg.json");
+  return structuredClone(module.default.result) as CRQResult;
+}
 
 export const fieldInventory = inventoryJson.fields as FieldInventoryItem[];
 export const inputScreens = placementJson.input_screens as PlacementScreen[];

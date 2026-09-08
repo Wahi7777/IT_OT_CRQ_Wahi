@@ -1,0 +1,10 @@
+output "api_endpoint" { value = aws_apigatewayv2_api.product.api_endpoint }
+output "api_lambda_name" { value = aws_lambda_function.api.function_name }
+output "worker_lambda_name" { value = aws_lambda_function.worker.function_name }
+output "bucket_name" { value = aws_s3_bucket.product.id }
+output "queue_url" { value = aws_sqs_queue.jobs.id }
+output "dead_letter_queue_url" { value = aws_sqs_queue.dead_letter.id }
+output "cognito_user_pool_id" { value = aws_cognito_user_pool.users.id }
+output "cognito_user_pool_client_id" { value = aws_cognito_user_pool_client.frontend.id }
+output "cognito_domain" { value = "https://${aws_cognito_user_pool_domain.frontend.domain}.auth.${var.aws_region}.amazoncognito.com" }
+output "default_tenant_id" { value = var.default_tenant_id }

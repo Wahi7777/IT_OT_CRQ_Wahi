@@ -12,9 +12,9 @@ describe("canonical result presentation", () => {
     }
   });
 
-  it("renders approved headline metrics without calculating replacements", () => {
+  it("renders approved headline metrics without calculating replacements", async () => {
     render(<MemoryRouter initialEntries={["/results/demo/overview"]}><AssessmentProvider><Routes><Route path="/results/:runId/:page" element={<ResultsPage />} /></Routes></AssessmentProvider></MemoryRouter>);
-    expect(screen.getByText("Prudent AAL")).toBeInTheDocument();
+    expect(await screen.findByText("Prudent AAL")).toBeInTheDocument();
     expect(screen.getByText("VaR 99")).toBeInTheDocument();
     expect(screen.getByText("TVaR 99")).toBeInTheDocument();
     expect(screen.getByText("AI Risk Interpretation")).toBeInTheDocument();

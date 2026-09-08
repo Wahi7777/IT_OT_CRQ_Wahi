@@ -76,7 +76,11 @@ def main() -> int:
             "runtime": "python3.12",
             "architecture": "arm64",
             "target_platform": "manylinux_2_28_aarch64 (Amazon Linux 2023 compatible)",
-            "handler": "crq.lambda_adapter.handler",
+            "handlers": [
+                "crq.lambda_adapter.handler",
+                "crq.product.api_lambda.handler",
+                "crq.product.worker_lambda.handler",
+            ],
             "pythonpath": "/var/task/src",
             "compressed_bytes": len(content),
             "uncompressed_bytes": sum(path.stat().st_size for path in files),

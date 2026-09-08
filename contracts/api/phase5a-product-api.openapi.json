@@ -1,0 +1,39 @@
+{
+  "openapi": "3.1.0",
+  "info": {"title": "CRQ Phase 5A Product API", "version": "1.0.0-draft"},
+  "servers": [{"url": "{apiOrigin}", "variables": {"apiOrigin": {"default": "https://api.example.invalid"}}}],
+  "components": {
+    "securitySchemes": {"CognitoJwt": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"}},
+    "schemas": {
+      "RunSubmission": {
+        "type": "object", "additionalProperties": false,
+        "required": ["schema_version", "request_id", "model_bundle_reference", "run_config"],
+        "properties": {
+          "schema_version": {"type": "string"}, "request_id": {"type": "string"},
+          "model_bundle_reference": {"type": "object"}, "run_config": {"type": "object"}
+        }
+      },
+      "RunStatus": {
+        "type": "object",
+        "required": ["schema_version", "run_id", "assessment_id", "status", "submitted_at", "result_available", "links"],
+        "properties": {
+          "schema_version": {"const": "1.0.0-draft"}, "run_id": {"type": "string", "format": "uuid"},
+          "assessment_id": {"type": "string"}, "status": {"enum": ["QUEUED", "RUNNING", "COMPLETED", "FAILED"]},
+          "submitted_at": {"type": "string", "format": "date-time"}, "started_at": {"type": ["string", "null"], "format": "date-time"},
+          "completed_at": {"type": ["string", "null"], "format": "date-time"}, "domain": {"type": ["string", "null"]},
+          "bundle_id": {"type": ["string", "null"]}, "engine_version": {"type": ["string", "null"]},
+          "methodology_version": {"type": ["string", "null"]}, "result_available": {"type": "boolean"},
+          "error_code": {"type": ["string", "null"]}, "links": {"type": "object"}
+        }
+      }
+    }
+  },
+  "paths": {
+    "/health": {"get": {"responses": {"200": {"description": "Healthy"}}}},
+    "/v1/assessments": {"post": {"security": [{"CognitoJwt": []}], "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "../schemas/crq-assessment.schema.json"}}}}, "responses": {"201": {"description": "Created"}, "200": {"description": "Existing identical assessment"}, "401": {"description": "Unauthenticated"}}}},
+    "/v1/assessments/{assessment_id}": {"get": {"security": [{"CognitoJwt": []}], "parameters": [{"name": "assessment_id", "in": "path", "required": true, "schema": {"type": "string"}}], "responses": {"200": {"description": "Assessment"}, "404": {"description": "Not found in caller tenant"}}}},
+    "/v1/assessments/{assessment_id}/run": {"post": {"security": [{"CognitoJwt": []}], "parameters": [{"name": "assessment_id", "in": "path", "required": true, "schema": {"type": "string"}}, {"name": "Idempotency-Key", "in": "header", "required": true, "schema": {"type": "string", "minLength": 16, "maxLength": 128}}], "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/RunSubmission"}}}}, "responses": {"202": {"description": "Queued", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/RunStatus"}}}}}}},
+    "/v1/runs/{run_id}": {"get": {"security": [{"CognitoJwt": []}], "parameters": [{"name": "run_id", "in": "path", "required": true, "schema": {"type": "string", "format": "uuid"}}], "responses": {"200": {"description": "Run status", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/RunStatus"}}}}}}},
+    "/v1/runs/{run_id}/result": {"get": {"security": [{"CognitoJwt": []}], "parameters": [{"name": "run_id", "in": "path", "required": true, "schema": {"type": "string", "format": "uuid"}}], "responses": {"200": {"description": "Canonical CRQResult"}, "202": {"description": "Not ready"}, "409": {"description": "Run failed"}}}}
+  }
+}
