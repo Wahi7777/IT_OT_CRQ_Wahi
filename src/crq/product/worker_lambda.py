@@ -30,11 +30,11 @@ def handler(event: Mapping[str, Any], context: Any) -> dict[str, Any]:
             job = ProductJob.from_dict(loads(record.get("body", "")))
             processed = _process(job, _store())
             _safe_log(job, "PROCESSED" if processed else "SKIPPED", None)
-        except Exception:
+        except Exception as exc:
             job = _job_if_safe(record)
             if job is not None:
                 _mark_failed(job, _store(), "WORKER_EXECUTION_FAILED", "The governed run could not be completed.")
-                _safe_log(job, "FAILED", "WORKER_EXECUTION_FAILED")
+                _safe_log(job, "FAILED", "WORKER_EXECUTION_FAILED", diagnostic_code=_diagnostic_code(exc))
             failures.append({"itemIdentifier": message_id})
     return {"batchItemFailures": failures}
 
@@ -161,5 +161,11 @@ def _metadata_keys() -> tuple[str, ...]:
     return ("object_schema_version", "tenant_id", "user_id", "assessment_id", "assessment_version", "run_id", "created_at", "updated_at", "created_by", "domain", "sector", "bundle_id", "engine_version", "methodology_version", "assessment_hash", "result_hash", "status")
 
 
-def _safe_log(job: ProductJob, status: str, error_code: str | None, duration_ms: float | None = None) -> None:
-    _LOGGER.info(dumps({"run_id": job.run_id, "assessment_id": job.assessment_id, "tenant_id": job.tenant_id, "bundle_id": job.bundle_id, "status": status, "error_code": error_code, "duration_ms": duration_ms}))
+def _diagnostic_code(exc: Exception) -> str:
+    aws_code = getattr(exc, "response", {}).get("Error", {}).get("Code")
+    value = str(aws_code or type(exc).__name__)
+    return value if value.isidentifier() and len(value) <= 64 else "UnhandledException"
+
+
+def _safe_log(job: ProductJob, status: str, error_code: str | None, duration_ms: float | None = None, diagnostic_code: str | None = None) -> None:
+    _LOGGER.info(dumps({"run_id": job.run_id, "assessment_id": job.assessment_id, "tenant_id": job.tenant_id, "bundle_id": job.bundle_id, "status": status, "error_code": error_code, "duration_ms": duration_ms, "diagnostic_code": diagnostic_code}))

@@ -74,3 +74,7 @@ def test_unexpected_failure_is_safe_and_requests_retry(prepared, monkeypatch):
     assert status["status"] == "FAILED"
     assert status["error_code"] == "WORKER_EXECUTION_FAILED"
     assert "secret" not in json.dumps(status).lower()
+
+
+def test_diagnostic_code_never_exposes_exception_messages():
+    assert worker._diagnostic_code(RuntimeError("secret assessment content")) == "RuntimeError"

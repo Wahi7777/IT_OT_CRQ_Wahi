@@ -18,7 +18,7 @@
       "properties": {
         "simulation_count": {"type": "integer", "minimum": 10000, "maximum": 2000000},
         "random_seed": {"type": "integer", "minimum": 0},
-        "reporting_basis": {"enum": ["best_estimate", "prudent", "both"]}
+        "reporting_basis": {"enum": ["Best Estimate", "Prudent", "Both"]}
       }
     }
   }
