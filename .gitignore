@@ -36,6 +36,8 @@ Thumbs.db
 .idea/
 .vscode/
 .terraform/
+*.tfstate
+*.tfstate.*
 *.swp
 *~
 
