@@ -9,6 +9,7 @@ import pytest
 
 import crq.product.api_lambda as api
 from crq.product.storage import MemoryJobQueue, MemoryObjectStore
+from crq.product.storage import ObjectNotFound, S3ObjectStore
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -125,3 +126,15 @@ def test_arbitrary_bundle_path_is_rejected(services):
     body["model_bundle_reference"]["path"] = "s3://attacker/bundle.xlsx"
     response = api.handler(event("POST", "/v1/assessments/IT-CRQ-001/run", body, headers={"idempotency-key": "phase5a-idempotency-0003"}), CONTEXT)
     assert response["statusCode"] in {400, 422}
+
+
+def test_scoped_s3_missing_object_403_is_non_disclosing_not_found():
+    class AccessDenied(Exception):
+        response = {"Error": {"Code": "AccessDenied"}, "ResponseMetadata": {"HTTPStatusCode": 403}}
+
+    class Client:
+        def get_object(self, **kwargs):
+            raise AccessDenied()
+
+    with pytest.raises(ObjectNotFound):
+        S3ObjectStore("private-product-bucket", Client()).get("runs/tenant-a/missing/status.json")

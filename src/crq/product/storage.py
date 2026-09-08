@@ -47,7 +47,10 @@ class S3ObjectStore:
             response = self.client.get_object(Bucket=self.bucket, Key=key)
         except Exception as exc:
             code = str(getattr(exc, "response", {}).get("Error", {}).get("Code", ""))
-            if code in {"NoSuchKey", "404", "NotFound"}:
+            # Without ListBucket, S3 deliberately reports a missing object as
+            # 403. Keys are server-constructed and the role is prefix-scoped,
+            # so normalize that non-disclosing response to the same miss.
+            if code in {"NoSuchKey", "404", "NotFound", "AccessDenied", "403"}:
                 raise ObjectNotFound(key) from exc
             raise
         value = loads(response["Body"].read())
