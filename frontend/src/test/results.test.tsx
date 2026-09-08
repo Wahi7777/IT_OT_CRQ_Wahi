@@ -1,9 +1,14 @@
 import {render, screen} from "@testing-library/react";
 import {MemoryRouter, Route, Routes} from "react-router-dom";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
 import {outputMappings, resultScreens} from "../contracts/governedData";
 import {AssessmentProvider} from "../features/assessment/AssessmentContext";
 import {ResultsPage} from "../pages/ResultsPage";
+
+vi.mock("../api/RunApi", async () => {
+  const {loadApprovedResult} = await import("../contracts/governedData");
+  return {getRunApi: () => ({getResult: () => loadApprovedResult("IT")})};
+});
 
 describe("canonical result presentation", () => {
   it("maps every canonical output family to a results screen", () => {

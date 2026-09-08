@@ -1,6 +1,6 @@
 # Phase 5A — Minimum integrated product backend
 
-Status: local deployment candidate validated; controlled AWS evidence to be recorded after apply.
+Status: implemented and validated in the controlled AWS development account.
 
 ## Protected starting point
 
@@ -131,7 +131,7 @@ Completed on 2026-09-08:
 
 | Check | Result |
 |---|---|
-| Complete Python suite | 220 passed, 1 skipped in 330.07 s |
+| Complete Python suite | 222 passed, 1 skipped in 337.13 s |
 | Phase 5A async IT FS 500k and OT PG 500k | passed, exact canonical equality after approved transient-field normalization |
 | Frontend tests | 6 files, 19 passed |
 | Frontend TypeScript/Vite production build | passed |
@@ -147,6 +147,42 @@ because cosmetic edits to governed code are outside this phase.
 
 ## AWS evidence
 
-To be added after the clean deployment commit, reviewed plan, controlled apply,
-and approved-fixture validation. Destruction remains a separate human-approved
-action.
+Deployment used profile `aiengineer`, region `us-east-1`, and non-production
+account `826971436811`, matching Phase 3C. The clean committed initial plan was
+exactly `31 add, 0 change, 0 destroy` and contained only the scoped Phase 5A
+resources. The final package SHA-256 is
+`d345638cd4f7e0087db9c70790c5a301541907b203250de48d6eae3b34ccc15f`.
+A final Terraform plan reported no changes.
+
+Health returned 200; missing and invalid JWTs returned 401. Cognito issued ID
+tokens for controlled temporary users with distinct tenant claims. Tenant B
+received 404 for Tenant A's assessment, run, and result. All temporary test
+users were deleted after validation. S3 independently reports the bucket as
+non-public; encryption, versioning, public-access blocks, event mapping, queue
+encryption, retry and DLQ settings match Terraform. Targeted CloudWatch scans
+found zero financial, architecture, control or insurance payload patterns.
+
+Actual AWS results:
+
+| Case | Queue pickup | Worker | Submit-to-complete | Max memory | Parity |
+|---|---:|---:|---:|---:|---|
+| IT Financial Services 500k | 1.872 s | 29.250 s | 31.122 s | 550 MiB | PASS |
+| OT Power Generation 500k | 0.208 s | 26.446 s | 26.655 s | 1,024 MiB | PASS |
+
+The comparison applied `crq-cross-platform-numerical-equivalence/1.0.0` with
+exact comparison as the default. Both cases had zero exact failures. The only
+deltas were the already-governed Phase 4A exceptions: three mirrored IT values
+at a maximum `1.1102230246251565e-16` and 156 mirrored OT values at a maximum
+`3.725290298461914e-09`. Headline AAL, VaR, TVaR, event frequency and P(any)
+were exact.
+
+At the governed Phase 3C arm64 rate of USD 0.0000133334 per GB-second, measured
+2,048 MiB worker compute is USD 0.000812857 per IT run and USD 0.000708110 per
+OT run, excluding free tier. This is worker model-execution compute only, not
+total product cost. Full resource identifiers, hashes, latencies, controls and
+the investigated S3 missing-object failure are recorded in
+`phase5a-aws-evidence.json`.
+
+The reviewed destroy plan is exactly `0 add, 0 change, 31 destroy`, limited to
+the Phase 5A dev stack. The stack remains live: the plan has not been applied
+and destruction requires explicit human approval.
