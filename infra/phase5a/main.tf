@@ -1,7 +1,8 @@
 data "aws_caller_identity" "current" {}
 
 locals {
-  bucket_name = "${var.resource_prefix}-${data.aws_caller_identity.current.account_id}-${var.aws_region}"
+  bucket_name            = "${var.resource_prefix}-${data.aws_caller_identity.current.account_id}-${var.aws_region}"
+  hosted_frontend_origin = "https://${var.frontend_branch_name}.${aws_amplify_app.frontend.default_domain}"
 }
 
 data "aws_iam_policy_document" "lambda_assume" {
@@ -135,8 +136,8 @@ resource "aws_cognito_user_pool_client" "frontend" {
   allowed_oauth_flows_user_pool_client = true
   allowed_oauth_flows                  = ["code"]
   allowed_oauth_scopes                 = ["openid", "email", "profile"]
-  callback_urls                        = var.frontend_callback_urls
-  logout_urls                          = var.frontend_logout_urls
+  callback_urls                        = distinct(concat(var.frontend_callback_urls, ["${local.hosted_frontend_origin}/auth/callback"]))
+  logout_urls                          = distinct(concat(var.frontend_logout_urls, ["${local.hosted_frontend_origin}/login"]))
   supported_identity_providers         = ["COGNITO"]
   explicit_auth_flows                  = ["ALLOW_USER_PASSWORD_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
   access_token_validity                = 60
@@ -296,7 +297,7 @@ resource "aws_apigatewayv2_api" "product" {
   cors_configuration {
     allow_headers = ["authorization", "content-type", "idempotency-key"]
     allow_methods = ["GET", "POST", "OPTIONS"]
-    allow_origins = var.cors_allowed_origins
+    allow_origins = distinct(concat(var.cors_allowed_origins, [local.hosted_frontend_origin]))
     max_age       = 300
   }
 }

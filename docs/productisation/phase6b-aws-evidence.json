@@ -1,0 +1,100 @@
+{
+  "evidence_schema_version": "1.0.0",
+  "phase": "6B",
+  "captured_at": "2026-09-09T19:26:41Z",
+  "deployment": {
+    "profile": "aiengineer",
+    "region": "us-east-1",
+    "account_id": "826971436811",
+    "principal_arn": "arn:aws:iam::826971436811:user/aiengineer",
+    "phase6a_baseline_commit": "a8919572c9cadba14d1da42deae345d2c4da26e1",
+    "hosting": "AWS Amplify Hosting",
+    "amplify_app_id": "d2226knnvh46il",
+    "branch": "main",
+    "frontend_url": "https://main.d2226knnvh46il.amplifyapp.com",
+    "deployment_job_id": "1",
+    "deployment_job_status": "SUCCEED",
+    "api_endpoint": "https://vwr5b8xfig.execute-api.us-east-1.amazonaws.com",
+    "cognito_user_pool_id": "us-east-1_ZBVh3Kka0",
+    "cognito_user_pool_client_id": "5bkosmtrcdn6ft1q2qeltnlm22",
+    "api_lambda_code_base64sha256": "ilZ6XRP604DtMn/kjz7ZpxmzHfCdF+H0UgoQx6U1BC8="
+  },
+  "hosting_controls": {
+    "https": "PASS",
+    "spa_rewrite": "/<*> -> /index.html (200)",
+    "direct_routes": {
+      "/": 200,
+      "/login": 200,
+      "/assessments": 200,
+      "/assessments/example/organization": 200,
+      "/results/example/overview": 200,
+      "/auth/callback": 200
+    },
+    "runtime_mode": "api",
+    "public_signup": false,
+    "cognito_flow": "authorization code with PKCE",
+    "cognito_client_secret": false,
+    "cors_wildcard": false,
+    "cors_allowed_origins": [
+      "https://main.d2226knnvh46il.amplifyapp.com",
+      "http://127.0.0.1:4173",
+      "http://localhost:4173"
+    ],
+    "callback_url": "https://main.d2226knnvh46il.amplifyapp.com/auth/callback",
+    "logout_url": "https://main.d2226knnvh46il.amplifyapp.com/login",
+    "unauthenticated_api_http": 401,
+    "s3_public_access_block": true,
+    "ephemeral_test_users_removed": true
+  },
+  "hosted_async_runs": [
+    {
+      "case": "IT Financial Services 500k",
+      "run_id": "756427b7-1fac-56a1-b798-d7f7712f2823",
+      "assessment_http": 201,
+      "reload_http": 200,
+      "submission_http": 202,
+      "status_sequence_observed": ["QUEUED", "RUNNING", "COMPLETED"],
+      "result_http": 200,
+      "submit_to_result_seconds": 42,
+      "prudent_summary_matches_approved_example": true
+    },
+    {
+      "case": "OT Power Generation 500k",
+      "run_id": "5943ef87-9c74-531d-a0ba-59c2fe61cffb",
+      "assessment_http": 201,
+      "reload_http": 200,
+      "submission_http": 202,
+      "status_sequence_observed": ["RUNNING", "COMPLETED"],
+      "result_http": 200,
+      "submit_to_result_seconds": 46,
+      "prudent_summary_matches_approved_example": true
+    }
+  ],
+  "copilot": {
+    "overview_http": 200,
+    "overview_status": "VERIFIED",
+    "attack_paths_http": 200,
+    "attack_paths_status": "VERIFIED",
+    "phase6a_response_baseline_deployed": true
+  },
+  "verification": {
+    "frontend_test_files": 7,
+    "frontend_tests_passed": 27,
+    "typescript": "PASS",
+    "lint": "PASS",
+    "production_build": "PASS",
+    "npm_audit_high": "0 vulnerabilities",
+    "python_tests_passed": 295,
+    "python_tests_skipped": 1,
+    "terraform_validate": "PASS",
+    "in_app_browser_laptop_width": "PASS",
+    "chrome_desktop": "MANUAL CHECK REQUIRED: installed-browser automation unavailable",
+    "safari_desktop": "MANUAL CHECK REQUIRED: installed-browser automation unavailable"
+  },
+  "cost": {
+    "estimated_monthly_idle_frontend_usd": 0,
+    "assumption": "3.3 MB static artifact and small internal traffic remain within current Amplify included storage and transfer allowances",
+    "excluded": "Existing API Gateway, Lambda, SQS, S3, Cognito, Bedrock and CloudWatch costs"
+  },
+  "remaining_blocker": "Manual product-owner visual smoke in installed Chrome and Safari; no functional AWS deployment blocker was observed."
+}

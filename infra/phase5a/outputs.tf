@@ -8,3 +8,6 @@ output "cognito_user_pool_id" { value = aws_cognito_user_pool.users.id }
 output "cognito_user_pool_client_id" { value = aws_cognito_user_pool_client.frontend.id }
 output "cognito_domain" { value = "https://${aws_cognito_user_pool_domain.frontend.domain}.auth.${var.aws_region}.amazoncognito.com" }
 output "default_tenant_id" { value = var.default_tenant_id }
+output "frontend_amplify_app_id" { value = aws_amplify_app.frontend.id }
+output "frontend_amplify_branch" { value = aws_amplify_branch.frontend.branch_name }
+output "frontend_url" { value = local.hosted_frontend_origin }

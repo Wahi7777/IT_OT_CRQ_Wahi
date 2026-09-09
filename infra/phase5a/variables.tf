@@ -67,3 +67,9 @@ variable "bedrock_model_id" {
   type        = string
   default     = "amazon.nova-pro-v1:0"
 }
+
+variable "frontend_branch_name" {
+  description = "Amplify branch name used for the stable controlled-dev URL."
+  type        = string
+  default     = "main"
+}
