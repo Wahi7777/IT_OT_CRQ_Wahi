@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0.0",
+  "model_id": "amazon.nova-pro-v1:0",
+  "region": "us-east-1",
+  "fixture": "IT Financial Services approved contract example",
+  "rates_usd_per_million_tokens": {"input": 0.80, "output": 3.20},
+  "records": [
+    {
+      "category": "Overview question",
+      "current_view": "results.overview",
+      "status": "VERIFIED",
+      "context_generation_ms": 0.233,
+      "bedrock_calls": 1,
+      "bedrock_latency_ms": 4227.216,
+      "verification_ms": 2.700,
+      "total_response_ms": 4230.493,
+      "input_tokens": 4954,
+      "output_tokens": 282,
+      "estimated_cost_usd": 0.0048656
+    },
+    {
+      "category": "Attack Path question",
+      "current_view": "results.attack_paths",
+      "status": "VERIFIED",
+      "context_generation_ms": 1.973,
+      "bedrock_calls": 1,
+      "bedrock_latency_ms": 3680.094,
+      "verification_ms": 0.756,
+      "total_response_ms": 3684.090,
+      "input_tokens": 16644,
+      "output_tokens": 169,
+      "estimated_cost_usd": 0.0138560
+    },
+    {
+      "category": "Treatment question",
+      "current_view": "results.treatment",
+      "status": "VERIFIED",
+      "context_generation_ms": 4.199,
+      "bedrock_calls": 1,
+      "bedrock_latency_ms": 5198.519,
+      "verification_ms": 0.824,
+      "total_response_ms": 5207.997,
+      "input_tokens": 24591,
+      "output_tokens": 317,
+      "estimated_cost_usd": 0.0206872
+    },
+    {
+      "category": "Executive narrative generation",
+      "current_view": "results.executive",
+      "status": "VERIFIED",
+      "context_generation_ms": 1.486,
+      "bedrock_calls": 1,
+      "bedrock_latency_ms": 5522.469,
+      "verification_ms": 1.114,
+      "total_response_ms": 5525.028,
+      "input_tokens": 6872,
+      "output_tokens": 426,
+      "estimated_cost_usd": 0.0068608
+    }
+  ],
+  "ot_validation": {
+    "evaluation_source": "phase6a-copilot-evaluation-bedrock.json",
+    "required_ot_cases": 6,
+    "verified": 6,
+    "rejected": 0,
+    "live_ot_business_impact_status": "VERIFIED"
+  },
+  "pricing_source": "https://aws.amazon.com/bedrock/pricing/",
+  "cost_caveat": "Estimates exclude taxes, free-tier effects and later pricing changes."
+}

@@ -1,81 +1,122 @@
-import {AlertTriangle, Check, Database, FileSearch, Info, LockKeyhole, Plus, ShieldCheck} from "lucide-react";
-import {Badge, Button, GlassPanel, LockedBanner} from "../../components/ui";
+import {Check, ChevronDown, FileSearch, Info, Plus, SlidersHorizontal} from "lucide-react";
+import {Button, GlassPanel} from "../../components/ui";
 import type {FieldInventoryItem} from "../../contracts/types";
 import {useAssessment} from "./AssessmentContext";
 import {expandField, type ConcreteField} from "./fieldExpansion";
 
+const questionLabels: Record<string, {title: string; help: string}> = {
+  IT_OT_CONNECTIVITY: {title: "Can users on the corporate network reach critical production systems?", help: "Direct connectivity can increase the likelihood that a cyber event reaches critical systems."},
+  REMOTE_ACCESS: {title: "Do third parties or remote teams have access to production environments?", help: "Remote access creates an additional route that should be deliberately controlled and monitored."},
+  INTERNET_OT: {title: "Can critical production systems connect directly to the internet?", help: "Direct internet access can expose operational systems beyond trusted network boundaries."},
+  TRANSIENT_ASSETS: {title: "Are portable devices or removable media used in production environments?", help: "Transient assets can move threats between otherwise separated environments."},
+  SUPPLY_CHAIN_ROUTE: {title: "Can suppliers connect to or update critical production systems?", help: "Supplier access and software delivery can create a trusted route into operations."},
+  WIRELESS_OT: {title: "Are wireless connections used within critical production environments?", help: "Wireless access may extend the reachable boundary of operational systems."},
+  SAFETY_SYSTEM: {title: "Are safety systems separated from primary production control systems?", help: "Separation helps preserve an independent protective layer during a cyber event."},
+  R_ID: {title: "Can compromised identities provide access to critical services?", help: "Consider identity federation, privileged access and authentication pathways."},
+  R_USER: {title: "Can a user device provide a route to critical systems?", help: "Consider direct access and movement from standard employee endpoints."},
+  R_EXP: {title: "Are critical services reachable from internet-facing systems?", help: "Consider externally exposed applications, gateways and remote services."},
+  R_TP: {title: "Can third parties access critical systems or data?", help: "Consider suppliers, managed services and other trusted connections."},
+  R_DDOS: {title: "Could external traffic disrupt critical digital services?", help: "Consider capacity, service dependencies and resilience to denial-of-service events."},
+  R_INS: {title: "Can privileged insiders directly affect critical services?", help: "Consider elevated access, separation of duties and monitoring."}
+};
+
+const itControls = ["Asset and vulnerability management", "Identity, authentication and MFA", "Privileged access management", "Email, web security and awareness", "Endpoint protection and execution control", "Secure configuration and patching", "Network security and segmentation", "Cloud and SaaS security", "Application and API security", "Logging, detection and threat response", "Data protection and DLP", "Third-party and supply-chain security", "DDoS protection and service resilience", "Backup, recovery and crisis management", "Payment and fraud controls"];
+const otControlNames = ["Access Management", "Account Use Policies", "Active Directory Configuration", "Antivirus and Antimalware", "Application Developer Guidance", "Application Isolation and Sandboxing", "Security Audit", "Authorization Enforcement", "Boot Integrity", "Code Signing", "Communication Authenticity", "Data Backup", "Data Loss Prevention", "Disable Unnecessary Features", "Encrypt Network Traffic", "Encrypt Sensitive Information", "Execution Prevention", "Exploit Protection", "Network Traffic Filtering", "Human User Authentication", "Limit Network Access", "Restrict Hardware Installation", "Mechanical Protection Layers", "Wireless Signal Protection", "Alternative Risk Mitigation", "Multi-Factor Authentication", "Network Allowlists", "Network Intrusion Prevention", "Network Segmentation", "Operating System Configuration", "Operational Information Confidentiality", "Out-of-Band Communications", "Password Policies", "Privileged Account Management", "Service Redundancy", "File and Directory Permissions", "Library Loading Restrictions", "Registry Permissions", "Web Content Restrictions", "SSL/TLS Inspection", "Safety Instrumented Systems", "Software Configuration", "Device Authentication", "Static Network Configuration", "Supply Chain Management", "Threat Intelligence", "Software Updates", "User Account Management", "Security Awareness Training", "Program Input Validation", "Vulnerability Scanning", "Watchdog Timers"];
+const otControlIds = ["M0801","M0936","M0915","M0949","M0913","M0948","M0947","M0800","M0946","M0945","M0802","M0953","M0803","M0942","M0808","M0941","M0938","M0950","M0937","M0804","M0935","M0934","M0805","M0806","M0816","M0932","M0807","M0931","M0930","M0928","M0809","M0810","M0927","M0926","M0811","M0922","M0944","M0924","M0921","M0920","M0812","M0954","M0813","M0814","M0817","M0919","M0951","M0918","M0917","M0818","M0916","M0815"];
+const controlNames = Object.fromEntries([...itControls.map((name, index) => [`C${String(index + 1).padStart(2, "0")}`, name]), ...otControlIds.map((id, index) => [id, otControlNames[index]])]);
+
 export function FieldGroup({item}: {item: FieldInventoryItem}) {
   const {request, setValue, preferences} = useAssessment();
+  if (["GOVERNED_PACK_INPUT", "DERIVED", "DISPLAY_ONLY", "INACTIVE_LEGACY"].includes(item.classification) || item.canonical_path.startsWith("runtime.")) return null;
   const fields = expandField(item, request, preferences);
-  const locked = ["GOVERNED_PACK_INPUT", "DERIVED", "DISPLAY_ONLY", "INACTIVE_LEGACY"].includes(item.classification);
-  const evidenceOnly = item.classification === "EVIDENCE_ONLY";
-  const tone = item.classification === "PERMITTED_OVERRIDE" ? "override" : locked ? "locked" : evidenceOnly ? "evidence" : "editable";
-  return <GlassPanel className={`field-group field-group--${tone}`}>
-    <div className="field-group-head">
-      <div className="field-type-icon">{locked ? <LockKeyhole /> : evidenceOnly ? <FileSearch /> : item.classification === "PERMITTED_OVERRIDE" ? <AlertTriangle /> : <Database />}</div>
-      <div><div className="panel-title-row"><h2>{titleFor(item)}</h2><Badge tone={item.classification === "PERMITTED_OVERRIDE" ? "amber" : locked ? "neutral" : evidenceOnly ? "indigo" : "green"}>{item.classification.replaceAll("_", " ")}</Badge></div><code>{item.canonical_path}</code></div>
-    </div>
-    {locked && <LockedBanner>{item.classification === "INACTIVE_LEGACY" ? "Inactive legacy field · excluded from quantitative execution" : "Resolved from the approved immutable model bundle"}</LockedBanner>}
-    {evidenceOnly && <div className="evidence-banner"><Info />Evidence context only · this field does not directly change quantitative output.</div>}
-    <div className={fields.length > 8 ? "field-table" : "field-grid"}>
-      {fields.length ? fields.map((field) => <ValueField key={field.key} field={field} item={item} onChange={setValue} />) : item.canonical_path.startsWith("insurance.layers") ? <div className="empty-editor"><p>No insurance layers are currently defined.</p><Button type="button" variant="secondary" onClick={() => setValue(["assessment", "insurance", "layers"], [{name: "", attachment: 0, limit: 0, coinsurance: 1}])}><Plus />Add insurance layer</Button></div> : <p className="muted">No records are present in the approved example.</p>}
-    </div>
-    <div className="field-foot">
-      <span><Info />Why it matters: {whyItMatters(item)}</span>
-      <span><ShieldCheck />{item.required ? "Required" : "Optional"}</span>
-      <span><Check />Valid</span>
-      <span><FileSearch />{evidenceOnly ? "Evidence source" : "Source trace available"}</span>
-      <span>Confidence · {evidenceOnly ? "Reported" : "High"}</span>
-    </div>
-  </GlassPanel>;
+  if (item.canonical_path.startsWith("outside_in.evidence")) return <EvidenceSummaryGroup fields={fields} />;
+  if (item.canonical_path.includes("controls")) return <ControlGroup item={item} fields={fields} onChange={setValue} />;
+  if (item.canonical_path.includes("routes") && item.classification === "EVIDENCE_ONLY") return <RouteEvidenceGroup item={item} fields={fields} onChange={setValue} />;
+  if (item.canonical_path.includes("routes") || item.canonical_path.includes("topology")) return <ArchitectureGroup item={item} fields={fields} onChange={setValue} />;
+  if (item.canonical_path.includes("impact_overrides")) return <ImpactRefinementGroup item={item} fields={fields} onChange={setValue} />;
+  if (item.canonical_path.includes("frequency_adjustments") || item.canonical_path.includes("assessment_adjustments")) return <FrequencyRefinementGroup item={item} fields={fields} onChange={setValue} />;
+  return <GlassPanel className={`field-group ${item.classification === "EVIDENCE_ONLY" ? "field-group--evidence" : ""}`}><GroupHeading item={item} /><div className="field-grid">{fields.map((field) => <ValueField key={field.key} field={field} item={item} onChange={setValue} />)}{!fields.length && item.canonical_path.startsWith("insurance.layers") && <div className="empty-editor"><p>No additional insurance layers have been added.</p><Button type="button" variant="secondary" onClick={() => setValue(["assessment", "insurance", "layers"], [{name: "", attachment: 0, limit: 0, coinsurance: 1}])}><Plus />Add insurance layer</Button></div>}</div></GlassPanel>;
 }
 
-function ValueField({field, item, onChange}: {field: ConcreteField; item: FieldInventoryItem; onChange: (path: (string | number)[], value: unknown) => void}) {
-  const lastPath = String(field.path?.at(-1) ?? "");
-  const identity = ["route_id", "control_id", "driver_id", "parameter_id", "name"].includes(lastPath);
-  const editable = item.frontend.editable && !item.inert && !identity && Boolean(field.path);
+function ArchitectureGroup({item, fields, onChange}: Props) {
+  const grouped = groupByRecord(fields);
+  return <div className="question-stack">{Object.entries(grouped).map(([identity, values], index) => {
+    const key = identity.toUpperCase().replaceAll(" ", "_");
+    const copy = questionLabels[key] ?? {title: plain(identity), help: "Your response helps establish whether this route is applicable and feasible."};
+    const editableFields = values.filter((field) => !isIdentity(field));
+    const decisions = editableFields.filter((field) => ["organisation_applicable", "model_feasible"].includes(fieldName(field)));
+    const adjustments = editableFields.filter((field) => !["organisation_applicable", "model_feasible"].includes(fieldName(field)));
+    return <GlassPanel className="question-card" key={identity}><div className="question-number">{index + 1}</div><div className="question-body"><h2>{copy.title}</h2><p>{copy.help}</p>
+      <div className="route-decisions">{decisions.map((field) => <ValueField key={field.key} field={field} item={item} onChange={onChange} compact />)}</div>
+      {adjustments.length > 0 && <details className="route-adjustments"><summary>Advanced route adjustments <ChevronDown /></summary><p>Keep the neutral value of 1.0 unless documented evidence supports a route-specific adjustment.</p><div className="field-grid">{adjustments.map((field) => <ValueField key={field.key} field={field} item={item} onChange={onChange} compact />)}</div></details>}
+    </div></GlassPanel>;
+  })}</div>;
+}
+
+function RouteEvidenceGroup({item, fields, onChange}: Props) {
+  const grouped = groupByRecord(fields);
+  return <GlassPanel className="field-group route-evidence"><GroupHeading item={item} title="Architecture evidence" subtitle="Optional supporting information improves traceability but does not change the quantitative result." /><div className="route-evidence-list">{Object.entries(grouped).map(([identity, values]) => { const copy = questionLabels[identity.toUpperCase().replaceAll(" ", "_")]; return <details key={identity}><summary>{copy?.title ?? plain(identity)}<ChevronDown /></summary><div className="field-grid">{values.filter((field) => !isIdentity(field)).map((field) => <ValueField key={field.key} field={field} item={item} onChange={onChange} compact />)}</div></details>;})}</div></GlassPanel>;
+}
+
+function ControlGroup({item, fields, onChange}: Props) {
+  const grouped = groupByRecord(fields);
+  if (item.classification === "EVIDENCE_ONLY") return <GlassPanel className="field-group progressive-group control-evidence-group"><div className="progressive-summary"><span className="field-type-icon"><FileSearch /></span><div><h2>Optional control evidence</h2><p>Add test references only when they are available. These records support review and traceability; they do not change the quantitative result.</p></div></div><details><summary>Add or review control evidence <ChevronDown /></summary><div className="control-grid">{Object.entries(grouped).map(([identity, values]) => <article className="control-card" key={identity}><div><span className="control-icon"><FileSearch /></span><div><h3>{controlNames[identity] ?? "Protective capability"}</h3><p>Record whether this capability was tested and link the supporting evidence.</p></div></div><div className="control-values">{values.filter((field) => !isIdentity(field)).map((field) => <ValueField key={field.key} field={field} item={item} onChange={onChange} compact />)}</div></article>)}</div></details></GlassPanel>;
+  return <GlassPanel className="field-group control-section"><GroupHeading item={item} title="Protective capabilities" subtitle="For each capability, assess its current operating maturity and the proportion of the in-scope environment it covers." />
+    <div className="maturity-guide"><strong>How to assess implementation maturity</strong><p>Choose the level that best reflects how the capability operates today, using available evidence. Select <b>Not Assessed</b> when there is not enough information.</p><div><span><b>Absent</b> Not implemented</span><span><b>Initial</b> Limited or ad hoc</span><span><b>Developing</b> Partly established</span><span><b>Managed</b> Consistently operated</span><span><b>Optimised</b> Continuously improved</span></div></div>
+    <div className="control-grid">{Object.entries(grouped).map(([identity, values]) => <article className="control-card" key={identity}><div><span className="control-icon"><Check /></span><div><h3>{controlNames[identity] ?? "Protective capability"}</h3><p>{controlDescription(controlNames[identity] ?? "This capability")}</p></div></div><div className="control-values">{values.filter((field) => !isIdentity(field)).map((field) => <ValueField key={field.key} field={field} item={item} onChange={onChange} compact />)}</div></article>)}</div></GlassPanel>;
+}
+
+function ImpactRefinementGroup({item, fields, onChange}: Props) {
+  const records = groupByArrayRecord(fields);
+  const scenarioSpecific = item.canonical_path.includes("{id}.{parameter}");
+  return <GlassPanel className="field-group progressive-group"><div className="progressive-summary"><span className="field-type-icon"><SlidersHorizontal /></span><div><h2>{scenarioSpecific ? "Scenario impact assumptions" : "Unit-cost assumptions"}</h2><p>{scenarioSpecific ? "Optionally refine how much of the organisation could be affected in a particular scenario." : "Optionally replace standard unit costs with finance-approved organisation-specific ranges."} The approved model values remain in use unless you enter supported alternatives.</p></div></div><details><summary>{scenarioSpecific ? "Review scenario-specific refinements" : "Review optional unit-cost refinements"} <ChevronDown /></summary><div className="override-list">{Object.values(records).map((values, index) => { const parameter = valueFor(values, "parameter_id"); const scenario = valueFor(values, "scenario_id"); const editable = values.filter((field) => !["parameter_id", "scenario_id"].includes(fieldName(field))); return <details key={index}><summary><span><strong>{impactName(parameter)}</strong><small>{scenarioName(scenario)}</small></span><ChevronDown /></summary><p>Enter a typical (P50) and severe (P99) value only if both are supported by the referenced evidence.</p><div className="field-grid">{editable.map((field) => <ValueField key={field.key} field={field} item={item} onChange={onChange} compact />)}</div></details>;})}</div></details></GlassPanel>;
+}
+
+function FrequencyRefinementGroup({item, fields, onChange}: Props) {
+  const prudenceOnly = item.canonical_path.includes("assessment_adjustments");
+  return <GlassPanel className="field-group progressive-group"><div className="progressive-summary"><span className="field-type-icon"><SlidersHorizontal /></span><div><h2>{prudenceOnly ? "Prudent-basis frequency setting" : "Threat exposure refinements"}</h2><p>{prudenceOnly ? "This governed setting adjusts event frequency on the prudent reporting basis; it does not change severity." : "Only change these relative exposure factors when approved threat intelligence supports a departure from the current assessment."}</p></div></div><details><summary>Review advanced frequency settings <ChevronDown /></summary><div className="multiplier-note"><strong>How these values work</strong><span>1.0 leaves the current assumption unchanged. A value above 1.0 increases frequency; a value below 1.0 reduces frequency.</span></div><div className="field-grid">{fields.filter((field) => !isIdentity(field)).map((field) => <ValueField key={field.key} field={field} item={item} onChange={onChange} />)}</div></details></GlassPanel>;
+}
+
+function EvidenceSummaryGroup({fields}: {fields: ConcreteField[]}) {
+  const records = Object.values(groupByArrayRecord(fields));
+  return <GlassPanel className="field-group evidence-summary"><GroupHeading item={{classification: "EVIDENCE_ONLY"} as FieldInventoryItem} title="Evidence already linked" subtitle="These read-only records show the source material carried into the assessment. They support traceability and do not change the result unless separately reviewed and approved." /><div className="evidence-records">{records.map((values, index) => <article key={index}><FileSearch /><div><strong>{String(valueFor(values, "description") ?? "Supporting evidence")}</strong><p>{evidenceSource(values)}</p></div><span>{String(valueFor(values, "evidence_id") ?? `Evidence ${index + 1}`)}</span></article>)}</div></GlassPanel>;
+}
+
+type Props = {item: FieldInventoryItem; fields: ConcreteField[]; onChange: (path: (string | number)[], value: unknown) => void};
+function GroupHeading({item, title, subtitle}: {item: FieldInventoryItem; title?: string; subtitle?: string}) { return <div className="field-group-head"><span className="field-type-icon">{item.classification === "EVIDENCE_ONLY" ? <FileSearch /> : <Info />}</span><div><h2>{title ?? groupTitle(item)}</h2><p>{subtitle ?? whyItMatters(item)}</p></div></div>; }
+
+function ValueField({field, item, onChange, compact = false}: {field: ConcreteField; item: FieldInventoryItem; onChange: (path: (string | number)[], value: unknown) => void; compact?: boolean}) {
+  const editable = item.frontend.editable && (item.classification === "EVIDENCE_ONLY" || !item.inert) && Boolean(field.path) && !isIdentity(field);
+  if (!editable && isIdentity(field)) return null;
   const inputId = `field-${field.key.replace(/[^a-z0-9]/gi, "-")}`;
-  return <label className={`value-field ${editable ? "" : "is-readonly"}`} htmlFor={inputId}>
-    <span>{field.label}{item.required && <em aria-label="required"> *</em>}</span>
-    {editable ? <Control id={inputId} field={field} item={item} onChange={(value) => onChange(field.path!, value)} /> : <output id={inputId}>{displayValue(field.value)}</output>}
-    <small>{editable ? (item.classification === "PERMITTED_OVERRIDE" ? "Overridden · approval evidence required" : "Entered") : item.classification === "INACTIVE_LEGACY" ? "Inactive" : "Locked / resolved"}</small>
-  </label>;
+  const label = friendlyFieldLabel(field.label);
+  return <label className={`value-field ${compact ? "is-compact" : ""} ${editable ? "" : "is-readonly"}`} htmlFor={inputId}><span>{label}{item.required && <em aria-label="required"> *</em>}</span>{editable ? <Control id={inputId} field={field} onChange={(value) => onChange(field.path!, value)} /> : <output id={inputId}>{displayValue(field.value)}</output>}<small>{fieldGuidance(field, item)}</small></label>;
 }
 
-function Control({id, field, item, onChange}: {id: string; field: ConcreteField; item: FieldInventoryItem; onChange: (value: unknown) => void}) {
-  if (field.allowed?.length) return <select id={id} value={String(field.value)} onChange={(event) => onChange(coerce(event.target.value, field.value))}>{field.allowed.map((option) => <option key={String(option)} value={String(option)}>{String(option)}</option>)}</select>;
-  if (typeof field.value === "boolean") return <select id={id} value={String(field.value)} onChange={(event) => onChange(event.target.value === "true")}><option value="true">Yes</option><option value="false">No</option></select>;
-  if (typeof field.value === "number" || item.datatype.toLowerCase().includes("number")) {
-    const boundedUnit = ["coverage", "coinsurance", "max_acceptable_event_probability"].includes(String(field.path?.at(-1)));
-    return <input id={id} type="number" min="0" max={boundedUnit ? "1" : undefined} step="any" value={field.value == null ? "" : String(field.value)} onChange={(event) => onChange(event.target.value === "" ? null : Number(event.target.value))} />;
-  }
+function Control({id, field, onChange}: {id: string; field: ConcreteField; onChange: (value: unknown) => void}) {
+  const allowed = field.allowed?.map(String);
+  if (allowed?.length && allowed.length <= 4 && allowed.every((value) => ["Yes","No","Unknown","Controlled","None","Segregated","true","false"].includes(value))) return <span className="choice-group">{field.allowed!.map((option) => <button type="button" className={String(field.value) === String(option) ? "selected" : ""} onClick={() => onChange(coerce(String(option), field.value))} key={String(option)}>{String(option) === "true" ? "Yes" : String(option) === "false" ? "No" : String(option)}</button>)}</span>;
+  if (allowed?.length) return <select id={id} value={String(field.value)} onChange={(event) => onChange(coerce(event.target.value, field.value))}>{field.allowed!.map((option) => <option key={String(option)} value={String(option)}>{String(option)}</option>)}</select>;
+  if (typeof field.value === "boolean") return <span className="choice-group"><button type="button" className={field.value ? "selected" : ""} onClick={() => onChange(true)}>Yes</button><button type="button" className={!field.value ? "selected" : ""} onClick={() => onChange(false)}>No</button></span>;
+  if (fieldName(field) === "coverage" && typeof field.value === "number") return <span className="percentage-input"><input id={id} type="number" min="0" max="100" step="1" value={String(Math.round(field.value * 10000) / 100)} onChange={(event) => onChange(event.target.value === "" ? null : Number(event.target.value) / 100)} /><b>%</b></span>;
+  if (typeof field.value === "number") return <input id={id} type="number" min="0" step="any" value={field.value == null ? "" : String(field.value)} onChange={(event) => onChange(event.target.value === "" ? null : Number(event.target.value))} />;
   if (Array.isArray(field.value)) return <input id={id} value={field.value.join(", ")} onChange={(event) => onChange(event.target.value.split(",").map((value) => value.trim()).filter(Boolean))} />;
   return <input id={id} value={field.value == null ? "" : String(field.value)} onChange={(event) => onChange(event.target.value)} />;
 }
 
-function displayValue(value: unknown) {
-  if (value === null || value === undefined || value === "") return "Not provided";
-  if (typeof value === "boolean") return value ? "Yes" : "No";
-  if (typeof value === "number") return new Intl.NumberFormat("en-AE", {maximumFractionDigits: 4}).format(value);
-  if (Array.isArray(value)) return value.length ? value.join(", ") : "None recorded";
-  if (typeof value === "object") return JSON.stringify(value);
-  return String(value);
-}
-
-function coerce(value: string, current: unknown) {
-  if (typeof current === "boolean") return value === "true";
-  if (typeof current === "number") return Number(value);
-  return value;
-}
-
-function titleFor(item: FieldInventoryItem) {
-  const leaf = item.canonical_path.split(".").at(-1) ?? item.canonical_path;
-  return leaf.replace(/[{}[\]_]/g, " ").replace(/\s+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase()).trim();
-}
-
-function whyItMatters(item: FieldInventoryItem) {
-  if (item.inert) return "Retained only for migration traceability; it must not alter results.";
-  if (item.classification === "GOVERNED_PACK_INPUT") return "Provides governed assumptions required to reproduce the model run.";
-  if (item.classification === "EVIDENCE_ONLY") return "Supports confidence and auditability without becoming a numeric model input.";
-  return `Affects ${item.affected_results.slice(0, 3).join(", ") || "assessment validation"}.`;
-}
+function groupByRecord(fields: ConcreteField[]) { const grouped: Record<string, ConcreteField[]> = {}; for (const field of fields) { const identity = String(field.label).split(" · ")[0] || field.key; (grouped[identity] ??= []).push(field); } return grouped; }
+function isIdentity(field: ConcreteField) { return ["route_id","control_id","driver_id","parameter_id","scenario_id","name"].includes(String(field.path?.at(-1) ?? "")); }
+function groupTitle(item: FieldInventoryItem) { const path = item.canonical_path; if (path.startsWith("assessment.")) return "Assessment details"; if (path.includes("financial_exposure")) return "Financial exposure"; if (path.startsWith("risk_appetite")) return "Risk appetite"; if (path.startsWith("insurance")) return "Insurance programme"; if (path === "outside_in.apply") return "Use reviewed external evidence"; if (path.startsWith("outside_in")) return "Supporting evidence"; return plain(path.split(".").at(-1) ?? path); }
+function whyItMatters(item: FieldInventoryItem) { if (item.canonical_path === "outside_in.apply") return "Choose Yes only when reviewed external findings should be applied through an approved assessment adjustment."; if (item.classification === "EVIDENCE_ONLY") return "Optional evidence improves confidence and traceability without changing the result directly."; return `This information supports ${item.affected_results.slice(0, 2).join(" and ") || "assessment readiness"}.`; }
+function friendlyFieldLabel(label: string) { const leaf = label.split(" · ").at(-1) ?? label; const map: Record<string,string> = {"Organisation Applicable":"Is this route relevant to your environment?","Model Feasible":"Could an attacker realistically use this route?","Opportunity Factor":"Exposure adjustment","Impact Factor":"Impact adjustment","S1":"Stage 1 adjustment","S2":"Stage 2 adjustment","S3":"Stage 3 adjustment","S4":"Stage 4 adjustment","S5":"Stage 5 adjustment","Maturity":"Current implementation maturity","Coverage":"Coverage of the in-scope environment","Annual Revenue At Risk":"Annual revenue potentially affected","Annual Payment Value":"Annual value of payment activity","Bi Loss Factor":"Business interruption adjustment","Critical Ot Endpoints":"Critical operational endpoints","Critical Ot Servers":"Critical operational servers","Primary Limit":"Primary policy limit","Aggregate Programme Limit":"Total programme limit","Retention":"Policy retention","Confidence":"Confidence in this assessment","Recommendation Id":"Supporting recommendation reference","Evidence Date":"Evidence date","Evidence Id":"Evidence reference","Rationale":"Evidence or rationale","P50":"Typical impact (P50)","P99":"Severe impact (P99)","Apply":"Apply reviewed evidence to approved adjustments?","Cybercriminal Activity":"Cybercriminal activity exposure","Geography Threat Mult":"Geographic threat exposure","Hacktivist Activity":"Hacktivist activity exposure","Malicious Insider Activity":"Malicious insider exposure","Nation State Activity":"Nation-state activity exposure","Organisation Exposure Mult":"Organisation-specific exposure","Prudence Frequency Factor":"Prudent frequency uplift"}; return map[plain(leaf)] ?? plain(leaf); }
+function fieldName(field: ConcreteField) { return String(field.path?.at(-1) ?? ""); }
+function fieldGuidance(field: ConcreteField, item: FieldInventoryItem) { if (fieldName(field) === "maturity") return "Choose the level supported by current evidence."; if (fieldName(field) === "coverage") return "Enter the percentage where this capability operates effectively."; if (["p50", "p99"].includes(fieldName(field))) return "Use the same currency or unit as the approved assumption."; if (field.key.startsWith("frequency-") || fieldName(field) === "prudence_factor") return "Relative multiplier; 1.0 means no adjustment."; if (item.classification === "EVIDENCE_ONLY") return "Optional supporting evidence"; return item.required ? "Required" : "Optional"; }
+function groupByArrayRecord(fields: ConcreteField[]) { const grouped: Record<string, ConcreteField[]> = {}; for (const field of fields) { const index = field.path?.find((part) => typeof part === "number"); const key = String(index ?? field.key); (grouped[key] ??= []).push(field); } return grouped; }
+function valueFor(fields: ConcreteField[], name: string) { return fields.find((field) => fieldName(field) === name)?.value; }
+function impactName(value: unknown) { const names: Record<string,string> = {NOTIFICATION_PER_RECORD:"Customer notification cost",CREDIT_MONITORING_PER_RECORD:"Credit monitoring cost",FORENSIC_DAILY:"Digital forensics cost per day",EXTERNAL_CYBER_DAILY:"External incident response cost per day",RESTORATION_DAILY:"Restoration cost per day",LEGAL_DAILY:"Legal support cost per day",ENDPOINT_REPAIR:"Endpoint repair cost",SERVER_REPAIR:"Server repair cost",AFFECTED_ENDPOINT_SHARE:"Share of endpoints affected",AFFECTED_RECORD_SHARE:"Share of records affected",AFFECTED_SERVER_SHARE:"Share of servers affected",AFFECTED_SERVICE_SHARE:"Share of services affected",DOWNTIME_DAYS:"Operational downtime",RESTORE_DAYS:"Time to restore"}; return names[String(value)] ?? plain(String(value ?? "Impact range")); }
+function scenarioName(value: unknown) { const names: Record<string,string> = {SC_DISR:"Service disruption scenario",SC_DATA:"Data compromise scenario",SC_INT:"Malicious insider scenario",SC_FRAUD:"Fraud scenario"}; return value == null ? "Applies across relevant scenarios" : names[String(value)] ?? plain(String(value)); }
+function evidenceSource(fields: ConcreteField[]) { const source = valueFor(fields, "source"); const observed = valueFor(fields, "observed_at"); return [source ? `Source: ${source}` : null, observed ? `Observed: ${observed}` : null].filter(Boolean).join(" · ") || "Source details not provided"; }
+function plain(value: string) { return value.replace(/[_.]/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase()); }
+function controlDescription(name: string) { const lower = name.toLowerCase(); if (lower.includes("identity") || lower.includes("authentication") || lower.includes("access")) return "Restricts access to approved users and reduces misuse of credentials."; if (lower.includes("network") || lower.includes("traffic")) return "Limits unwanted connectivity and movement across critical environments."; if (lower.includes("backup") || lower.includes("recovery") || lower.includes("redundancy")) return "Supports reliable restoration and continuity after disruption."; if (lower.includes("monitor") || lower.includes("audit") || lower.includes("scanning") || lower.includes("intelligence")) return "Improves visibility and helps identify harmful activity early."; return "Reduces exposure through consistent preventive and protective practice."; }
+function displayValue(value: unknown) { if (value == null || value === "") return "Not provided"; if (typeof value === "boolean") return value ? "Yes" : "No"; if (typeof value === "number") return new Intl.NumberFormat("en-AE", {maximumFractionDigits: 4}).format(value); if (Array.isArray(value)) return value.length ? value.join(", ") : "None recorded"; if (typeof value === "object") return JSON.stringify(value); return String(value); }
+function coerce(value: string, current: unknown) { if (typeof current === "boolean") return value === "true"; if (typeof current === "number") return Number(value); return value; }

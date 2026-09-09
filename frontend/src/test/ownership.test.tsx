@@ -18,15 +18,14 @@ describe("governed input ownership", () => {
   it("never renders a governed pack field as editable", () => {
     const item = fieldInventory.find((field) => field.classification === "GOVERNED_PACK_INPUT" && !field.frontend.hidden)!;
     const {container} = render(<AssessmentProvider><FieldGroup item={item} /></AssessmentProvider>);
-    expect(screen.getByText(/governed pack input/i)).toBeInTheDocument();
-    expect(screen.getByText(/approved immutable model bundle/i)).toBeInTheDocument();
+    expect(container).toBeEmptyDOMElement();
     expect(container.querySelector("input, select, textarea")).not.toBeInTheDocument();
   });
 
   it("keeps inactive legacy fields read-only", () => {
     const item = fieldInventory.find((field) => field.classification === "INACTIVE_LEGACY" && !field.frontend.hidden)!;
     const {container} = render(<AssessmentProvider><FieldGroup item={item} /></AssessmentProvider>);
-    expect(screen.getByText(/excluded from quantitative execution/i)).toBeInTheDocument();
+    expect(container).toBeEmptyDOMElement();
     expect(container.querySelector("input, select, textarea")).not.toBeInTheDocument();
   });
 

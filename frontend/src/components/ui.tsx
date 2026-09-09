@@ -13,7 +13,7 @@ export function Badge({children, tone = "neutral"}: {children: ReactNode; tone?:
   return <span className={`badge badge--${tone}`}>{children}</span>;
 }
 
-export function LockedBanner({children = "Governed by the approved model bundle"}: {children?: ReactNode}) {
+export function LockedBanner({children = "Managed assessment setting"}: {children?: ReactNode}) {
   return <div className="locked-banner"><LockKeyhole size={15} aria-hidden="true" />{children}</div>;
 }
 

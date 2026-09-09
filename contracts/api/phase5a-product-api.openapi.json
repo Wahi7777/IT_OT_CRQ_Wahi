@@ -25,6 +25,20 @@
           "methodology_version": {"type": ["string", "null"]}, "result_available": {"type": "boolean"},
           "error_code": {"type": ["string", "null"]}, "links": {"type": "object"}
         }
+      },
+      "CopilotQuery": {
+        "type": "object", "additionalProperties": false,
+        "required": ["assessment_id", "current_view", "question"],
+        "properties": {
+          "assessment_id": {"type": "string"}, "run_id": {"type": ["string", "null"]},
+          "current_view": {"type": "string", "pattern": "^(assessment|results)\\.[a-z_]+$"},
+          "selected_entity": {"type": ["object", "null"], "additionalProperties": false, "required": ["entity_type", "entity_id"], "properties": {"entity_type": {"type": "string"}, "entity_id": {"type": "string"}}},
+          "question": {"type": "string", "minLength": 1, "maxLength": 1000}
+        }
+      },
+      "CopilotVerifiedResponse": {
+        "type": "object", "required": ["status", "answer", "supporting_fact_ids"],
+        "properties": {"status": {"enum": ["VERIFIED", "REJECTED"]}, "answer": {"type": ["string", "null"]}, "supporting_fact_ids": {"type": "array", "items": {"type": "string"}}}
       }
     }
   },
@@ -34,6 +48,11 @@
     "/v1/assessments/{assessment_id}": {"get": {"security": [{"CognitoJwt": []}], "parameters": [{"name": "assessment_id", "in": "path", "required": true, "schema": {"type": "string"}}], "responses": {"200": {"description": "Assessment"}, "404": {"description": "Not found in caller tenant"}}}},
     "/v1/assessments/{assessment_id}/run": {"post": {"security": [{"CognitoJwt": []}], "parameters": [{"name": "assessment_id", "in": "path", "required": true, "schema": {"type": "string"}}, {"name": "Idempotency-Key", "in": "header", "required": true, "schema": {"type": "string", "minLength": 16, "maxLength": 128}}], "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/RunSubmission"}}}}, "responses": {"202": {"description": "Queued", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/RunStatus"}}}}}}},
     "/v1/runs/{run_id}": {"get": {"security": [{"CognitoJwt": []}], "parameters": [{"name": "run_id", "in": "path", "required": true, "schema": {"type": "string", "format": "uuid"}}], "responses": {"200": {"description": "Run status", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/RunStatus"}}}}}}},
-    "/v1/runs/{run_id}/result": {"get": {"security": [{"CognitoJwt": []}], "parameters": [{"name": "run_id", "in": "path", "required": true, "schema": {"type": "string", "format": "uuid"}}], "responses": {"200": {"description": "Canonical CRQResult"}, "202": {"description": "Not ready"}, "409": {"description": "Run failed"}}}}
+    "/v1/runs/{run_id}/result": {"get": {"security": [{"CognitoJwt": []}], "parameters": [{"name": "run_id", "in": "path", "required": true, "schema": {"type": "string", "format": "uuid"}}], "responses": {"200": {"description": "Canonical CRQResult"}, "202": {"description": "Not ready"}, "409": {"description": "Run failed"}}}},
+    "/v1/copilot/query": {"post": {"security": [{"CognitoJwt": []}], "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/CopilotQuery"}}}}, "responses": {"200": {"description": "Verified or rejected Copilot response", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/CopilotVerifiedResponse"}}}}, "401": {"description": "Unauthenticated"}, "404": {"description": "Resource not found in caller tenant"}}}},
+    "/v1/runs/{run_id}/narrative": {
+      "post": {"security": [{"CognitoJwt": []}], "parameters": [{"name": "run_id", "in": "path", "required": true, "schema": {"type": "string", "format": "uuid"}}], "responses": {"201": {"description": "Verified executive interpretation"}, "422": {"description": "Generated response rejected"}}},
+      "get": {"security": [{"CognitoJwt": []}], "parameters": [{"name": "run_id", "in": "path", "required": true, "schema": {"type": "string", "format": "uuid"}}], "responses": {"200": {"description": "Persisted verified executive interpretation"}, "404": {"description": "Not generated or not in caller tenant"}}}
+    }
   }
 }

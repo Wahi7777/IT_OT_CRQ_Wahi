@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://crq.local/contracts/view-context-bundle/1.0.0",
+  "title": "ViewContextBundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "context_type", "assessment_id", "run_id", "result_hash", "selected_entity", "facts", "allowed_entities", "suggested_questions"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "context_type": {"type": "string", "pattern": "^(assessment|results)\\.[a-z_]+$"},
+    "assessment_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": ["string", "null"]},
+    "result_hash": {"type": ["string", "null"]},
+    "selected_entity": {
+      "anyOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["entity_type", "entity_id"],
+          "properties": {"entity_type": {"type": "string"}, "entity_id": {"type": "string"}}
+        }
+      ]
+    },
+    "facts": {"type": "array", "items": {"$ref": "#/$defs/fact"}},
+    "allowed_entities": {"type": "array", "items": {"type": "object", "required": ["entity_type", "entity_id", "label"], "properties": {"entity_type": {"type": "string"}, "entity_id": {"type": "string"}, "label": {"type": "string"}}, "additionalProperties": false}},
+    "suggested_questions": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fact_id", "type", "label", "value", "rendered_value", "unit", "source_path"],
+      "properties": {
+        "fact_id": {"type": "string", "pattern": "^vf_[a-f0-9]{16}$"},
+        "type": {"enum": ["numeric", "categorical", "text", "limitation"]},
+        "label": {"type": "string"},
+        "value": {},
+        "rendered_value": {"type": ["string", "null"]},
+        "unit": {"type": ["string", "null"]},
+        "source_path": {"type": "string", "pattern": "^/"}
+      }
+    }
+  }
+}

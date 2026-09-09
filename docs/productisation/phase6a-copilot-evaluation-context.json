@@ -1,0 +1,135 @@
+{
+  "schema_version": "1.0.0",
+  "provider": null,
+  "model_id": null,
+  "region": null,
+  "mode": "CONTEXT_ONLY",
+  "cases": [
+    {
+      "case_id": "it-fs-overview-headlines",
+      "current_view": "results.overview",
+      "context_fact_count": 51,
+      "context_bytes": 11219,
+      "context_generation_ms": 0.266,
+      "required_paths_ok": true,
+      "status": "CONTEXT_ONLY"
+    },
+    {
+      "case_id": "it-fs-risk-drivers",
+      "current_view": "results.risk_drivers",
+      "context_fact_count": 126,
+      "context_bytes": 26742,
+      "context_generation_ms": 0.375,
+      "required_paths_ok": true,
+      "status": "CONTEXT_ONLY"
+    },
+    {
+      "case_id": "it-fs-scenario",
+      "current_view": "results.scenarios",
+      "context_fact_count": 9,
+      "context_bytes": 2671,
+      "context_generation_ms": 0.094,
+      "required_paths_ok": true,
+      "status": "CONTEXT_ONLY"
+    },
+    {
+      "case_id": "it-fs-attack-path",
+      "current_view": "results.attack_paths",
+      "context_fact_count": 156,
+      "context_bytes": 35638,
+      "context_generation_ms": 0.487,
+      "required_paths_ok": true,
+      "status": "CONTEXT_ONLY"
+    },
+    {
+      "case_id": "it-fs-treatment",
+      "current_view": "results.treatment",
+      "context_fact_count": 59,
+      "context_bytes": 12412,
+      "context_generation_ms": 0.21,
+      "required_paths_ok": true,
+      "status": "CONTEXT_ONLY"
+    },
+    {
+      "case_id": "it-fs-evidence",
+      "current_view": "results.evidence",
+      "context_fact_count": 12,
+      "context_bytes": 2709,
+      "context_generation_ms": 0.046,
+      "required_paths_ok": true,
+      "status": "CONTEXT_ONLY"
+    },
+    {
+      "case_id": "ot-pg-overview-tail",
+      "current_view": "results.overview",
+      "context_fact_count": 79,
+      "context_bytes": 16815,
+      "context_generation_ms": 0.278,
+      "required_paths_ok": true,
+      "status": "CONTEXT_ONLY"
+    },
+    {
+      "case_id": "ot-pg-scenario",
+      "current_view": "results.scenarios",
+      "context_fact_count": 183,
+      "context_bytes": 39401,
+      "context_generation_ms": 0.575,
+      "required_paths_ok": true,
+      "status": "CONTEXT_ONLY"
+    },
+    {
+      "case_id": "ot-pg-attack-path",
+      "current_view": "results.attack_paths",
+      "context_fact_count": 160,
+      "context_bytes": 34525,
+      "context_generation_ms": 0.538,
+      "required_paths_ok": true,
+      "status": "CONTEXT_ONLY"
+    },
+    {
+      "case_id": "ot-pg-business-impact",
+      "current_view": "results.business_impact",
+      "context_fact_count": 73,
+      "context_bytes": 14090,
+      "context_generation_ms": 0.296,
+      "required_paths_ok": true,
+      "status": "CONTEXT_ONLY"
+    },
+    {
+      "case_id": "ot-pg-treatment",
+      "current_view": "results.treatment",
+      "context_fact_count": 81,
+      "context_bytes": 15541,
+      "context_generation_ms": 0.344,
+      "required_paths_ok": true,
+      "status": "CONTEXT_ONLY"
+    },
+    {
+      "case_id": "ot-pg-evidence",
+      "current_view": "results.evidence",
+      "context_fact_count": 52,
+      "context_bytes": 10989,
+      "context_generation_ms": 0.204,
+      "required_paths_ok": true,
+      "status": "CONTEXT_ONLY"
+    },
+    {
+      "case_id": "it-fs-organization-freeform",
+      "current_view": "assessment.organization",
+      "context_fact_count": 17,
+      "context_bytes": 3519,
+      "context_generation_ms": 0.078,
+      "required_paths_ok": true,
+      "status": "CONTEXT_ONLY"
+    },
+    {
+      "case_id": "ot-pg-organization-freeform",
+      "current_view": "assessment.organization",
+      "context_fact_count": 15,
+      "context_bytes": 3121,
+      "context_generation_ms": 0.075,
+      "required_paths_ok": true,
+      "status": "CONTEXT_ONLY"
+    }
+  ]
+}

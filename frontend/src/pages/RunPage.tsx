@@ -10,7 +10,7 @@ import {useAssessment} from "../features/assessment/AssessmentContext";
 export function RunPage() {
   const {runId = ""} = useParams();
   const [params] = useSearchParams();
-  const {dataMode, setDomain, request} = useAssessment();
+  const {dataMode, setDomain} = useAssessment();
   const [status, setStatus] = useState<ClientRunState>("QUEUED");
   const [detail, setDetail] = useState<RunStatus | null>(null);
   const [transportError, setTransportError] = useState<string | null>(null);
@@ -49,8 +49,8 @@ export function RunPage() {
 
   const phases = [
     {state: "QUEUED", label: "Request accepted", icon: Clock3},
-    {state: "RUNNING", label: "Quantitative engine", icon: Cpu},
-    {state: "COMPLETED", label: "Canonical result", icon: Database}
+    {state: "RUNNING", label: "Risk analysis", icon: Cpu},
+    {state: "COMPLETED", label: "Result prepared", icon: Database}
   ];
   const order = status === "QUEUED" ? 0 : status === "RUNNING" ? 1 : status === "COMPLETED" ? 2 : -1;
   return <div className="run-page">
@@ -58,7 +58,7 @@ export function RunPage() {
     <GlassPanel className={`run-focus ${status === "FAILED" ? "run-focus--failed" : ""}`}>
       <div className={`run-orbit ${["QUEUED", "RUNNING"].includes(status) ? "pulse" : ""}`}>{status === "FAILED" ? <AlertTriangle /> : status === "COMPLETED" ? <Check /> : <Cpu />}</div>
       <Badge tone={status === "FAILED" ? "red" : status === "COMPLETED" ? "green" : status === "QUEUED" ? "amber" : "indigo"}>{status}</Badge>
-      <h2>{statusCopy[status].title}</h2><p>{detail?.phase ? `${detail.phase.toLowerCase().replace("_", " ")} · ` : ""}{status === "RUNNING" ? `The unchanged CRQ engine is processing ${request.run_config.simulation_count.toLocaleString()} simulation years.` : statusCopy[status].body}</p>
+      <h2>{statusCopy[status].title}</h2><p>{detail?.phase ? `${detail.phase.toLowerCase().replace("_", " ")} · ` : ""}{statusCopy[status].body}</p>
       <code>{runId}</code>
       {transportError && <div className="error-banner" role="alert">{transportError}</div>}
       {detail?.failure && <div className="failure-card"><strong>{detail.failure.code}</strong><p>{detail.failure.message}</p><small>Correlation ID · {detail.failure.correlation_id}</small></div>}
@@ -66,15 +66,15 @@ export function RunPage() {
     <div className="run-timeline">
       {phases.map((phase, index) => <div className={`run-phase ${index < order ? "complete" : index === order ? "active" : ""}`} key={phase.state}><span><phase.icon /></span><div><small>0{index + 1}</small><strong>{phase.label}</strong><em>{index < order ? "Complete" : index === order ? status : "Pending"}</em></div></div>)}
     </div>
-    <GlassPanel className="run-note"><RotateCw /><div><strong>Status refreshes automatically</strong><p>Polling the governed status endpoint every 2.5 seconds. No completion percentage is inferred.</p></div></GlassPanel>
+    <GlassPanel className="run-note"><RotateCw /><div><strong>Status refreshes automatically</strong><p>You can safely leave this page and return while the assessment runs.</p></div></GlassPanel>
     {status === "FAILED" && <Button onClick={() => window.location.reload()}>Retry status check</Button>}
   </div>;
 }
 
 const statusCopy: Record<ClientRunState, {title: string; body: string}> = {
   SUBMITTING: {title: "Submitting assessment", body: "Validating the request envelope."},
-  QUEUED: {title: "Run queued", body: "The assessment is durably accepted and awaiting immediate worker capacity."},
-  RUNNING: {title: "Model executing", body: "The unchanged CRQ engine is processing the governed simulation count."},
-  COMPLETED: {title: "Quantitative result complete", body: "The canonical result passed validation and is ready."},
+  QUEUED: {title: "Your assessment is queued", body: "We’ll begin the analysis as soon as processing capacity is available."},
+  RUNNING: {title: "Running your cyber risk assessment", body: "Analysing scenarios and loss distributions. No progress percentage is inferred."},
+  COMPLETED: {title: "Your result is ready", body: "The assessment completed successfully and is ready to explore."},
   FAILED: {title: "Run could not complete", body: "The assessment remains available. Use the safe reference below when requesting support."}
 };

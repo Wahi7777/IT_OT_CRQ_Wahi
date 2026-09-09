@@ -1,45 +1,18 @@
-import {ArrowRight, Clock3, Factory, FilePlus2, Landmark, MoreHorizontal, RefreshCw, Search} from "lucide-react";
+import {ArrowRight, Building2, Factory, FilePlus2, Landmark, Search} from "lucide-react";
 import {Link} from "react-router-dom";
-import {useEffect, useState} from "react";
 import {PageHeader} from "../components/PageHeader";
 import {Badge, Button, GlassPanel} from "../components/ui";
-import {approvedRequests, loadApprovedResult, outputMappings} from "../contracts/governedData";
-import type {CRQResult, Domain} from "../contracts/types";
 
-const definitions = [
-  {name: "Financial Services · Group", domain: "IT" as Domain, icon: Landmark, status: "Completed", tone: "green" as const, updated: "Approved baseline", currency: approvedRequests.IT.assessment.assessment.currency, href: "/results/demo/overview"},
-  {name: "Power Generation · Facility 01", domain: "OT" as Domain, icon: Factory, status: "Ready to review", tone: "amber" as const, updated: "Approved baseline", currency: approvedRequests.OT.assessment.assessment.currency, href: "/assessments/demo/setup?domain=OT"}
+const assessments = [
+  {name: "Financial Services Group", scope: "Enterprise technology", domain: "IT", icon: Landmark, status: "Complete", progress: 100, action: "View results", href: "/results/demo/overview", tone: "green" as const},
+  {name: "Power Generation · Facility 01", scope: "Critical production environment", domain: "OT", icon: Factory, status: "In progress", progress: 68, action: "Continue", href: "/assessments/demo/ot-architecture-topology?domain=OT", tone: "indigo" as const}
 ];
 
 export function DashboardPage() {
-  const [results, setResults] = useState<Partial<Record<Domain, CRQResult>>>({});
-  useEffect(() => { let active = true; Promise.all([loadApprovedResult("IT"), loadApprovedResult("OT")]).then(([IT, OT]) => { if (active) setResults({IT, OT}); }); return () => {active = false;}; }, []);
-  return <>
-    <PageHeader title="Assessment portfolio" description="Governed risk assessments, readiness and current results." actions={<Link to="/assessments/new"><Button><FilePlus2 />New assessment</Button></Link>} />
-    <div className="portfolio-strip">
-      <GlassPanel><span>Approved examples</span><strong>{definitions.length}</strong><small>IT and OT contract artifacts</small></GlassPanel>
-      <GlassPanel><span>Simulation scale</span><strong>{results.IT ? Number(results.IT.run.simulation_count).toLocaleString() : "Loading"}</strong><small>Trials per approved result</small></GlassPanel>
-      <GlassPanel><span>Canonical coverage</span><strong>{outputMappings.length}</strong><small>Mapped result families</small></GlassPanel>
-      <GlassPanel><span>Governance status</span><strong className="green-text">Current</strong><small>Approved model bundles</small></GlassPanel>
-    </div>
-    <GlassPanel className="table-panel">
-      <div className="table-toolbar"><div><h2>Assessments</h2><p>Results shown from repository-approved artifacts.</p></div><label className="search"><Search /><span className="sr-only">Search assessments</span><input placeholder="Search assessments" /></label></div>
-      <div className="assessment-list" role="list">
-        {definitions.map(({name, domain, icon: Icon, status, tone, updated, currency, href}) => { const result = results[domain]; return <article className="assessment-row" role="listitem" key={name}>
-          <div className={`assessment-domain assessment-domain--${domain.toLowerCase()}`}><Icon /></div>
-          <div className="assessment-name"><strong>{name}</strong><span>{domain} · {result?.provenance.sector_pack_id ?? "Loading approved result"}</span></div>
-          <div className="assessment-meta"><span>Status</span><Badge tone={tone}>{status}</Badge></div>
-          <div className="assessment-meta"><span>Prudent AAL</span><strong>{result ? money(result.summary.prudent.aal, currency) : "—"}</strong></div>
-          <div className="assessment-meta"><span>Updated</span><small><Clock3 />{updated}</small></div>
-          <Link className="row-link" to={href} aria-label={`Open ${name}`}><ArrowRight /></Link>
-          <button className="icon-button" aria-label={`More actions for ${name}`}><MoreHorizontal /></button>
-        </article>;})}
-      </div>
-      <div className="table-footer"><span><RefreshCw />Demo data is pinned to approved examples</span><span>{definitions.length} assessments</span></div>
-    </GlassPanel>
-  </>;
-}
-
-function money(value: number, currency?: string | null) {
-  return currency ? new Intl.NumberFormat("en-AE", {style: "currency", currency, notation: "compact", maximumFractionDigits: 2}).format(value) : `${new Intl.NumberFormat("en-AE", {notation: "compact", maximumFractionDigits: 2}).format(value)} units`;
+  return <div className="portfolio-page">
+    <PageHeader eyebrow="Risk workspace" title="Your assessments" description="Continue an assessment or review completed cyber risk results." actions={<Link to="/assessments/new"><Button><FilePlus2 />New assessment</Button></Link>} />
+    <div className="portfolio-overview"><GlassPanel><span className="overview-icon"><Building2 /></span><div><strong>2</strong><span>Active assessments</span></div></GlassPanel><GlassPanel><strong>1</strong><span>Ready for decision</span></GlassPanel><GlassPanel><strong>68%</strong><span>Average evidence coverage</span></GlassPanel></div>
+    <div className="assessment-toolbar"><div><h2>Assessment portfolio</h2><p>Clear status and next actions across your current work.</p></div><label className="search"><Search /><span className="sr-only">Search assessments</span><input placeholder="Search assessments" /></label></div>
+    <div className="assessment-cards">{assessments.map(({name, scope, domain, icon: Icon, status, progress, action, href, tone}) => <GlassPanel as="article" className="assessment-card" key={name}><div className="assessment-card-top"><span className={`assessment-domain assessment-domain--${domain.toLowerCase()}`}><Icon /></span><Badge tone={tone}>{status}</Badge></div><div><span className="assessment-type">{domain} assessment</span><h2>{name}</h2><p>{scope}</p></div><div className="completion-line"><div><span>Completion</span><strong>{progress}%</strong></div><div><i style={{width: `${progress}%`}} /></div></div><div className="assessment-card-foot"><span>Latest activity · Today</span><Link to={href}>{action}<ArrowRight /></Link></div></GlassPanel>)}</div>
+  </div>;
 }

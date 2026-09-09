@@ -1,0 +1,356 @@
+{
+  "schema_version": "1.0.0",
+  "provider": "amazon-bedrock",
+  "model_id": "amazon.nova-pro-v1:0",
+  "region": "us-east-1",
+  "mode": "BEDROCK",
+  "cases": [
+    {
+      "case_id": "it-fs-overview-headlines",
+      "current_view": "results.overview",
+      "context_fact_count": 51,
+      "context_bytes": 11219,
+      "context_generation_ms": 0.267,
+      "required_paths_ok": true,
+      "status": "VERIFIED",
+      "answer": "Expected annual loss (AAL) is $1.16M, while severe-loss outcomes are larger in absolute terms: VaR99 is $23.33M and TVaR99 is $49.65M. This means expected annual loss is smaller than the losses represented in the tail of the distribution. The modelled probability of at least one material event during the year, P(Material Event), is 12.76%.",
+      "key_points": [],
+      "caveats": [],
+      "supporting_fact_ids": [
+        "vf_b0fbdfd5f463c301",
+        "vf_c7c9f11bac909057",
+        "vf_f8a1ca2abf4f13ca",
+        "vf_6b3bc1b4c3d2c356",
+        "vf_d4a0b92a343d4ba1",
+        "vf_c505bf5cefe35d8d"
+      ],
+      "verification_reasons": [],
+      "bedrock_calls": 0,
+      "bedrock_latency_ms": 0,
+      "total_response_ms": 0.176,
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    {
+      "case_id": "it-fs-risk-drivers",
+      "current_view": "results.risk_drivers",
+      "context_fact_count": 126,
+      "context_bytes": 26742,
+      "context_generation_ms": 0.377,
+      "required_paths_ok": true,
+      "status": "VERIFIED",
+      "answer": "The dominant actor is Cybercriminal, the dominant scenario is Critical business-service disruption, and the largest AAL loss driver is Business downtime costs.",
+      "key_points": [],
+      "caveats": [],
+      "supporting_fact_ids": [
+        "vf_8ddc0deaa051da1b",
+        "vf_a49e51e03163078b",
+        "vf_c4c7a4117a342c7c"
+      ],
+      "verification_reasons": [],
+      "bedrock_calls": 0,
+      "bedrock_latency_ms": 0,
+      "total_response_ms": 0.375,
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    {
+      "case_id": "it-fs-scenario",
+      "current_view": "results.scenarios",
+      "context_fact_count": 9,
+      "context_bytes": 2671,
+      "context_generation_ms": 0.094,
+      "required_paths_ok": true,
+      "status": "VERIFIED",
+      "answer": "Critical business-service disruption is the leading scenario in the returned ordering. It contributes $7.38M to TVaR95 and $21.10M to TVaR99, while its selected AAL contribution is $419.03K. Both tail-loss contributions are greater than its selected AAL contribution.",
+      "key_points": [],
+      "caveats": [],
+      "supporting_fact_ids": [
+        "vf_bd9cdc3f429d3e34",
+        "vf_dccd8b7fa410a342",
+        "vf_404a0be34b271c00",
+        "vf_6b4033929f20e82f",
+        "vf_ac52ee168df4bb37",
+        "vf_9e849361d7a3bc5e"
+      ],
+      "verification_reasons": [],
+      "bedrock_calls": 0,
+      "bedrock_latency_ms": 0,
+      "total_response_ms": 0.086,
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    {
+      "case_id": "it-fs-attack-path",
+      "current_view": "results.attack_paths",
+      "context_fact_count": 156,
+      "context_bytes": 35638,
+      "context_generation_ms": 0.504,
+      "required_paths_ok": true,
+      "status": "VERIFIED",
+      "answer": "The current result does not contain a governed path-state value for Identity and credential compromise, so I cannot determine whether it is OPEN or CLOSED. I can still explain its returned probability facts, but this result provides no architecture-gate, barrier or control-state facts that explain a path state.",
+      "key_points": [],
+      "caveats": [
+        "No path state has been inferred."
+      ],
+      "supporting_fact_ids": [
+        "vf_4e2ecd77d18e2c8c"
+      ],
+      "verification_reasons": [],
+      "bedrock_calls": 0,
+      "bedrock_latency_ms": 0,
+      "total_response_ms": 0.512,
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    {
+      "case_id": "it-fs-treatment",
+      "current_view": "results.treatment",
+      "context_fact_count": 59,
+      "context_bytes": 12412,
+      "context_generation_ms": 0.219,
+      "required_paths_ok": true,
+      "status": "VERIFIED",
+      "answer": "The modelled AAL reduction for Asset and vulnerability management is $0.00. On that basis, the current result does not support prioritising this treatment for AAL reduction.",
+      "key_points": [],
+      "caveats": [
+        "No implementation cost, return on investment or practical priority has been inferred."
+      ],
+      "supporting_fact_ids": [
+        "vf_3f8b940d2d6e918c",
+        "vf_051bee0f4ba95236"
+      ],
+      "verification_reasons": [],
+      "bedrock_calls": 0,
+      "bedrock_latency_ms": 0,
+      "total_response_ms": 0.206,
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    {
+      "case_id": "it-fs-evidence",
+      "current_view": "results.evidence",
+      "context_fact_count": 12,
+      "context_bytes": 2709,
+      "context_generation_ms": 0.048,
+      "required_paths_ok": true,
+      "status": "VERIFIED",
+      "answer": "The current result does not contain an explicit governed evidence-quality ranking, so I cannot identify a weakest evidence area.",
+      "key_points": [],
+      "caveats": [
+        "The Evidence view can still show the returned records without assigning an unsupported priority."
+      ],
+      "supporting_fact_ids": [
+        "vf_91ec757511d60469"
+      ],
+      "verification_reasons": [],
+      "bedrock_calls": 0,
+      "bedrock_latency_ms": 0,
+      "total_response_ms": 0.046,
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    {
+      "case_id": "ot-pg-overview-tail",
+      "current_view": "results.overview",
+      "context_fact_count": 79,
+      "context_bytes": 16815,
+      "context_generation_ms": 0.261,
+      "required_paths_ok": true,
+      "status": "VERIFIED",
+      "answer": "Expected annual loss (AAL) is $1.94M, while severe-loss outcomes are larger in absolute terms: VaR99 is $50.17M and TVaR99 is $128.23M. This means expected annual loss is smaller than the losses represented in the tail of the distribution. The modelled probability of at least one material event during the year, P(Material Event), is 5.05%.",
+      "key_points": [],
+      "caveats": [],
+      "supporting_fact_ids": [
+        "vf_b0fbdfd5f463c301",
+        "vf_c7c9f11bac909057",
+        "vf_f8a1ca2abf4f13ca",
+        "vf_6b3bc1b4c3d2c356",
+        "vf_d4a0b92a343d4ba1",
+        "vf_c505bf5cefe35d8d"
+      ],
+      "verification_reasons": [],
+      "bedrock_calls": 0,
+      "bedrock_latency_ms": 0,
+      "total_response_ms": 0.236,
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    {
+      "case_id": "ot-pg-scenario",
+      "current_view": "results.scenarios",
+      "context_fact_count": 183,
+      "context_bytes": 39401,
+      "context_generation_ms": 0.583,
+      "required_paths_ok": true,
+      "status": "VERIFIED",
+      "answer": "Destructive or Integrity Attack is the leading scenario in the returned ordering. It contributes $12.26M to TVaR95 and $55.21M to TVaR99, while its selected AAL contribution is $613.05K. Both tail-loss contributions are greater than its selected AAL contribution.",
+      "key_points": [],
+      "caveats": [],
+      "supporting_fact_ids": [
+        "vf_bd9cdc3f429d3e34",
+        "vf_dccd8b7fa410a342",
+        "vf_404a0be34b271c00",
+        "vf_6b4033929f20e82f",
+        "vf_ac52ee168df4bb37",
+        "vf_9e849361d7a3bc5e"
+      ],
+      "verification_reasons": [],
+      "bedrock_calls": 0,
+      "bedrock_latency_ms": 0,
+      "total_response_ms": 0.545,
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    {
+      "case_id": "ot-pg-attack-path",
+      "current_view": "results.attack_paths",
+      "context_fact_count": 160,
+      "context_bytes": 34525,
+      "context_generation_ms": 0.512,
+      "required_paths_ok": true,
+      "status": "VERIFIED",
+      "answer": "The current result does not contain a governed path-state value for this path, so I cannot determine whether it is OPEN or CLOSED. I can still explain its returned probability facts, but this result provides no architecture-gate, barrier or control-state facts that explain a path state.",
+      "key_points": [],
+      "caveats": [
+        "No path state has been inferred."
+      ],
+      "supporting_fact_ids": [
+        "vf_86a3d7364752c785"
+      ],
+      "verification_reasons": [],
+      "bedrock_calls": 0,
+      "bedrock_latency_ms": 0,
+      "total_response_ms": 0.512,
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    {
+      "case_id": "ot-pg-business-impact",
+      "current_view": "results.business_impact",
+      "context_fact_count": 73,
+      "context_bytes": 14090,
+      "context_generation_ms": 0.247,
+      "required_paths_ok": true,
+      "status": "VERIFIED",
+      "answer": "Business Interruption costs is the largest modelled loss category, contributing $924.04K to AAL. Within the underlying loss drivers, OT and digital forensic investigation is the largest individual contributor within Incident response costs.",
+      "key_points": [],
+      "caveats": [],
+      "supporting_fact_ids": [
+        "vf_9cef294b0adc5389",
+        "vf_8df34bb02cbc7aad",
+        "vf_272ed01bf5e73f9e",
+        "vf_e88ef09105fcc4d6"
+      ],
+      "verification_reasons": [],
+      "bedrock_calls": 0,
+      "bedrock_latency_ms": 0,
+      "total_response_ms": 0.238,
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    {
+      "case_id": "ot-pg-treatment",
+      "current_view": "results.treatment",
+      "context_fact_count": 81,
+      "context_bytes": 15541,
+      "context_generation_ms": 0.331,
+      "required_paths_ok": true,
+      "status": "VERIFIED",
+      "answer": "The modelled AAL reduction for Access Management is $0.00. On that basis, the current result does not support prioritising this treatment for AAL reduction.",
+      "key_points": [],
+      "caveats": [
+        "No implementation cost, return on investment or practical priority has been inferred."
+      ],
+      "supporting_fact_ids": [
+        "vf_3f8b940d2d6e918c",
+        "vf_051bee0f4ba95236"
+      ],
+      "verification_reasons": [],
+      "bedrock_calls": 0,
+      "bedrock_latency_ms": 0,
+      "total_response_ms": 0.276,
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    {
+      "case_id": "ot-pg-evidence",
+      "current_view": "results.evidence",
+      "context_fact_count": 52,
+      "context_bytes": 10989,
+      "context_generation_ms": 0.19,
+      "required_paths_ok": true,
+      "status": "VERIFIED",
+      "answer": "The current result does not contain an explicit governed evidence-quality ranking, so I cannot identify a weakest evidence area.",
+      "key_points": [],
+      "caveats": [
+        "The Evidence view can still show the returned records without assigning an unsupported priority."
+      ],
+      "supporting_fact_ids": [
+        "vf_91ec757511d60469"
+      ],
+      "verification_reasons": [],
+      "bedrock_calls": 0,
+      "bedrock_latency_ms": 0,
+      "total_response_ms": 0.166,
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    {
+      "case_id": "it-fs-organization-freeform",
+      "current_view": "assessment.organization",
+      "context_fact_count": 17,
+      "context_bytes": 3519,
+      "context_generation_ms": 0.071,
+      "required_paths_ok": true,
+      "status": "VERIFIED",
+      "answer": "The assessment domain is IT.",
+      "key_points": [
+        "The assessment domain is IT.",
+        "The assessment is for Example Financial Institution in the Financial Services sector.",
+        "The assessment covers the UAE / GCC region."
+      ],
+      "caveats": [],
+      "supporting_fact_ids": [
+        "vf_8b2837473d3b0342",
+        "vf_f6ad30c3d1ef250a",
+        "vf_fe9182d66ee53fd5",
+        "vf_bba413a686186de5"
+      ],
+      "verification_reasons": [],
+      "bedrock_calls": 1,
+      "bedrock_latency_ms": 2264.864,
+      "total_response_ms": 2267.155,
+      "input_tokens": 2290,
+      "output_tokens": 164
+    },
+    {
+      "case_id": "ot-pg-organization-freeform",
+      "current_view": "assessment.organization",
+      "context_fact_count": 15,
+      "context_bytes": 3121,
+      "context_generation_ms": 0.236,
+      "required_paths_ok": true,
+      "status": "VERIFIED",
+      "answer": "The assessment domain is OT.",
+      "key_points": [
+        "The assessment domain is OT.",
+        "The asset type is CCGT.",
+        "The critical process is power generation and dispatch."
+      ],
+      "caveats": [],
+      "supporting_fact_ids": [
+        "vf_8b2837473d3b0342",
+        "vf_7a3e2568ab39ab83",
+        "vf_427dbd4b0535055a",
+        "vf_fe9182d66ee53fd5"
+      ],
+      "verification_reasons": [],
+      "bedrock_calls": 1,
+      "bedrock_latency_ms": 1768.509,
+      "total_response_ms": 1769.097,
+      "input_tokens": 2112,
+      "output_tokens": 143
+    }
+  ]
+}

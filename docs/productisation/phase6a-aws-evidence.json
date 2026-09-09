@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0.0",
+  "captured_at": "2026-09-09T10:15:17Z",
+  "environment": {
+    "aws_profile": "aiengineer",
+    "aws_region": "us-east-1",
+    "account_id": "826971436811",
+    "principal_arn": "arn:aws:iam::826971436811:user/aiengineer",
+    "classification": "controlled-non-production"
+  },
+  "deployment": {
+    "api_endpoint": "https://vwr5b8xfig.execute-api.us-east-1.amazonaws.com",
+    "api_lambda": "crq-phase5a-dev-api",
+    "worker_lambda": "crq-phase5a-dev-worker",
+    "runtime": "python3.12",
+    "architecture": "arm64",
+    "model_id": "amazon.nova-pro-v1:0",
+    "artifact_path": "_work/lambda/phase6a-crq-lambda-python312-arm64.zip",
+    "lambda_code_base64sha256": "5xEya2QB5vOHuLjp5+FWoeAIeFRXtzRDUrsEO9NgYac=",
+    "terraform_plan": {"add": 0, "change": 1, "destroy": 0, "only_change": "API Lambda code"},
+    "terraform_apply": {"add": 0, "change": 1, "destroy": 0},
+    "final_terraform_plan": {"add": 0, "change": 0, "destroy": 0},
+    "quantitative_worker_changed": false
+  },
+  "governed_evaluation": {
+    "source": "phase6a-copilot-evaluation-bedrock.json",
+    "cases": 12,
+    "verified": 12,
+    "rejected": 0,
+    "bedrock_calls": 9,
+    "repair_cases": 3,
+    "input_tokens": 74031,
+    "output_tokens": 2303,
+    "mean_context_generation_ms": 0.560,
+    "mean_bedrock_latency_per_call_ms": 2690.572,
+    "mean_total_latency_all_cases_ms": 2019.027,
+    "max_total_latency_ms": 7091.174,
+    "max_context_bytes": 38764,
+    "max_context_fact_count": 181
+  },
+  "cost_estimate_usd": {
+    "basis": "observed evaluation tokens multiplied by public on-demand token rates captured for the controlled estimate",
+    "input_rate_per_million_tokens": 0.80,
+    "output_rate_per_million_tokens": 3.20,
+    "input_cost": 0.0592248,
+    "output_cost": 0.0073696,
+    "total_for_evaluation": 0.0665944,
+    "mean_per_bedrock_call": 0.0073994,
+    "mean_per_evaluation_case_including_deterministic_responses": 0.0055495,
+    "pricing_source": "https://aws.amazon.com/bedrock/pricing/",
+    "caveat": "Estimate excludes taxes, free-tier effects and future pricing changes."
+  },
+  "live_api_validation": {
+    "authentication": "Cognito USER_PASSWORD_AUTH token issued for controlled test identity",
+    "unauthenticated_query": {"http_status": 401, "latency_ms": 653.685},
+    "overview_query": {"http_status": 200, "status": "VERIFIED", "latency_ms": 3961.482, "supporting_fact_count": 7},
+    "attack_path_query": {"http_status": 200, "status": "VERIFIED", "latency_ms": 3085.775, "supporting_fact_count": 20},
+    "treatment_query": {"http_status": 200, "status": "VERIFIED", "latency_ms": 6129.165, "supporting_fact_count": 92},
+    "ot_business_impact_query": {"http_status": 200, "status": "VERIFIED", "latency_ms": 5602.399, "supporting_fact_count": 4},
+    "executive_narrative_generation": {"http_status": 201, "status": "VERIFIED", "latency_ms": 10571.0},
+    "executive_narrative_idempotent_post": {"http_status": 200, "status": "VERIFIED", "latency_ms": 792.0},
+    "executive_narrative_get": {"http_status": 200, "status": "VERIFIED", "latency_ms": 777.637, "supporting_fact_count": 15}
+  },
+  "narrative_persistence": {
+    "key": "runs/tenant-a/4f51e4ac-055f-58c4-8095-0eeaf15b7b22/narrative.json",
+    "content_length": 1884,
+    "server_side_encryption": "AES256",
+    "bucket_versioning": "Enabled",
+    "public_access_block": true,
+    "get_response_matches_persisted_response": true
+  },
+  "safe_logging_validation": {
+    "cloudwatch_log_group": "/aws/lambda/crq-phase5a-dev-api",
+    "events_scanned": 26,
+    "jwt_or_bearer_matches": 0,
+    "prompt_or_context_bundle_matches": 0,
+    "copilot_response_payload_matches": 0,
+    "financial_value_matches": 0
+  },
+  "model_selection": {
+    "selected": "amazon.nova-pro-v1:0",
+    "reason": "AWS-native model available to the controlled dev account; passed the governed evaluation with forced tool-use schema and independent verification.",
+    "rejected_candidate": "anthropic.claude-haiku-4-5-20251001-v1:0",
+    "rejection_reason": "The controlled AWS account could not perform the AWS Marketplace subscription actions required for invocation."
+  },
+  "human_review": {
+    "artifact": "PHASE6A_HUMAN_REVIEW.md",
+    "status": "PENDING_PRODUCT_OWNER_REVIEW"
+  }
+}

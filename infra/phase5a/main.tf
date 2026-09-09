@@ -177,6 +177,12 @@ resource "aws_cloudwatch_log_group" "worker" {
 
 data "aws_iam_policy_document" "api" {
   statement {
+    sid       = "InvokeGovernedCopilotModel"
+    effect    = "Allow"
+    actions   = ["bedrock:InvokeModel"]
+    resources = ["arn:aws:bedrock:${var.aws_region}::foundation-model/${var.bedrock_model_id}"]
+  }
+  statement {
     sid       = "ProductObjects"
     effect    = "Allow"
     actions   = ["s3:GetObject", "s3:PutObject"]
@@ -236,16 +242,19 @@ resource "aws_lambda_function" "api" {
   runtime          = "python3.12"
   architectures    = ["arm64"]
   handler          = "crq.product.api_lambda.handler"
-  filename         = var.lambda_package_path
-  source_code_hash = var.lambda_package_base64sha256
+  filename         = coalesce(var.api_lambda_package_path, var.lambda_package_path)
+  source_code_hash = coalesce(var.api_lambda_package_base64sha256, var.lambda_package_base64sha256)
   memory_size      = 1024
   timeout          = 30
   environment {
     variables = {
-      PYTHONPATH            = "/var/task/src"
-      CRQ_BUCKET            = aws_s3_bucket.product.id
-      CRQ_QUEUE_URL         = aws_sqs_queue.jobs.id
-      CRQ_DEFAULT_TENANT_ID = var.default_tenant_id
+      PYTHONPATH              = "/var/task/src"
+      CRQ_BUCKET              = aws_s3_bucket.product.id
+      CRQ_QUEUE_URL           = aws_sqs_queue.jobs.id
+      CRQ_DEFAULT_TENANT_ID   = var.default_tenant_id
+      CRQ_BEDROCK_MODEL_ID    = var.bedrock_model_id
+      CRQ_COPILOT_MAX_TOKENS  = "700"
+      CRQ_COPILOT_TEMPERATURE = "0"
     }
   }
   depends_on = [aws_cloudwatch_log_group.api, aws_iam_role_policy.api]
@@ -318,6 +327,9 @@ locals {
     "POST /v1/assessments/{assessment_id}/run",
     "GET /v1/runs/{run_id}",
     "GET /v1/runs/{run_id}/result",
+    "POST /v1/copilot/query",
+    "POST /v1/runs/{run_id}/narrative",
+    "GET /v1/runs/{run_id}/narrative",
   ])
 }
 

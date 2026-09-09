@@ -20,6 +20,18 @@ variable "lambda_package_base64sha256" {
   type        = string
 }
 
+variable "api_lambda_package_path" {
+  description = "Optional API-only package path, allowing an interpretation release without replacing the quantitative worker package."
+  type        = string
+  default     = null
+}
+
+variable "api_lambda_package_base64sha256" {
+  description = "Base64 SHA-256 for the optional API-only package."
+  type        = string
+  default     = null
+}
+
 variable "cors_allowed_origins" {
   description = "Explicit development frontend origins."
   type        = list(string)
@@ -48,4 +60,10 @@ variable "log_retention_days" {
   description = "Retention for safe operational logs."
   type        = number
   default     = 30
+}
+
+variable "bedrock_model_id" {
+  description = "Bedrock model used only for verified Phase 6A Copilot interpretation."
+  type        = string
+  default     = "amazon.nova-pro-v1:0"
 }

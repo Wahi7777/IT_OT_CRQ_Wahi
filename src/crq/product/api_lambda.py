@@ -22,6 +22,7 @@ from crq.application.errors import ApplicationError
 from crq.application.request_adapter import assessment_from_public_payload, public_assessment_payload
 from crq.application.serialization import dumps, loads
 from crq.application.service import AssessmentRunRequest
+from crq.copilot.service import CopilotService, bedrock_service
 from crq.product.contracts import ProductJob, assessment_key, run_key, safe_identifier
 from crq.product.records import metadata_record, utc_now
 from crq.product.storage import JobQueue, ObjectConflict, ObjectNotFound, ObjectStore, S3ObjectStore, SQSJobQueue
@@ -34,11 +35,13 @@ _ASSESSMENT_ROUTE = re.compile(r"^/v1/assessments/([^/]+)$")
 _RUN_SUBMIT_ROUTE = re.compile(r"^/v1/assessments/([^/]+)/run$")
 _RUN_ROUTE = re.compile(r"^/v1/runs/([^/]+)$")
 _RESULT_ROUTE = re.compile(r"^/v1/runs/([^/]+)/result$")
+_NARRATIVE_ROUTE = re.compile(r"^/v1/runs/([^/]+)/narrative$")
 _CONTENT_HEADERS = {"content-type": "application/json", "cache-control": "no-store"}
 _LOGGER = logging.getLogger("crq.product.api")
 _LOGGER.setLevel(logging.INFO)
 _STORE: ObjectStore | None = None
 _QUEUE: JobQueue | None = None
+_COPILOT: CopilotService | None = None
 
 
 @dataclass(frozen=True)
@@ -64,6 +67,12 @@ def handler(event: Mapping[str, Any], context: Any) -> dict[str, Any]:
             response = _submit_run(match.group(1), event, principal, store, queue)
         elif method == "GET" and (match := _RESULT_ROUTE.fullmatch(path)):
             response = _get_result(match.group(1), principal, store)
+        elif method == "POST" and path == "/v1/copilot/query":
+            response = _copilot_query(event, principal, store)
+        elif method == "POST" and (match := _NARRATIVE_ROUTE.fullmatch(path)):
+            response = _create_narrative(match.group(1), principal, store)
+        elif method == "GET" and (match := _NARRATIVE_ROUTE.fullmatch(path)):
+            response = _get_narrative(match.group(1), principal, store)
         elif method == "GET" and (match := _RUN_ROUTE.fullmatch(path)):
             response = _get_run(match.group(1), principal, store)
         else:
@@ -217,6 +226,102 @@ def _get_result(run_id: str, principal: Principal, store: ObjectStore) -> dict[s
     result_record = store.get(run_key(principal.tenant_id, run_id, "result.json")).value
     _assert_owner(result_record, principal, run_id=run_id)
     return _respond(200, result_record["result"])
+
+
+def _copilot_query(event: Mapping[str, Any], principal: Principal, store: ObjectStore) -> dict[str, Any]:
+    body = _json_body(event)
+    allowed = {"assessment_id", "run_id", "current_view", "selected_entity", "question"}
+    if set(body) - allowed or not isinstance(body.get("question"), str) or not 1 <= len(body["question"].strip()) <= 1000:
+        raise ValueError("invalid Copilot query")
+    assessment_id = safe_identifier(body.get("assessment_id"), "assessment_id")
+    current_view = str(body.get("current_view") or "")
+    selected = _selected_entity(body.get("selected_entity"))
+    assessment_record = store.get(assessment_key(principal.tenant_id, assessment_id, "input.json")).value
+    _assert_owner(assessment_record, principal, assessment_id=assessment_id)
+    result = None
+    result_hash = None
+    run_id = body.get("run_id")
+    if current_view.startswith("results."):
+        run_id = safe_identifier(run_id, "run_id")
+        result_record = store.get(run_key(principal.tenant_id, run_id, "result.json")).value
+        _assert_owner(result_record, principal, run_id=run_id, assessment_id=assessment_id)
+        result = result_record["result"]
+        result_hash = result_record.get("result_hash") or (result.get("run") or {}).get("result_hash")
+    elif run_id is not None:
+        raise ValueError("run_id is not accepted for assessment context")
+    answer = _copilot().query(
+        current_view=current_view,
+        question=body["question"].strip(),
+        assessment=assessment_record["assessment"],
+        result=result,
+        run_id=run_id,
+        result_hash=result_hash,
+        selected_entity=selected,
+    )
+    return _respond(200, answer)
+
+
+def _create_narrative(run_id: str, principal: Principal, store: ObjectStore) -> dict[str, Any]:
+    run_id = safe_identifier(run_id, "run_id")
+    result_record = store.get(run_key(principal.tenant_id, run_id, "result.json")).value
+    _assert_owner(result_record, principal, run_id=run_id)
+    request_record = store.get(run_key(principal.tenant_id, run_id, "request.json")).value
+    _assert_owner(request_record, principal, run_id=run_id)
+    result_hash = result_record.get("result_hash") or (result_record.get("result", {}).get("run") or {}).get("result_hash")
+    narrative_key = run_key(principal.tenant_id, run_id, "narrative.json")
+    try:
+        existing = store.get(narrative_key).value
+        _assert_owner(existing, principal, run_id=run_id)
+        if existing.get("result_hash") == result_hash:
+            return _respond(200, existing["narrative"])
+    except ObjectNotFound:
+        pass
+    narrative = _copilot().query(
+        current_view="results.executive",
+        question="Generate the executive interpretation sections from the supplied governed facts.",
+        assessment=request_record["request"]["assessment"],
+        result=result_record["result"],
+        run_id=run_id,
+        result_hash=result_hash,
+    )
+    if narrative["status"] != "VERIFIED":
+        return _respond(422, narrative)
+    record = {key: result_record.get(key) for key in ("tenant_id", "user_id", "assessment_id", "assessment_version", "run_id", "domain", "bundle_id", "engine_version", "methodology_version")}
+    record.update({"created_at": utc_now(), "updated_at": utc_now(), "result_hash": result_hash, "narrative": narrative})
+    try:
+        store.put(narrative_key, record, if_none_match=True)
+    except ObjectConflict:
+        existing = store.get(narrative_key).value
+        if existing.get("result_hash") != result_hash:
+            return _problem(409, "NARRATIVE_RESULT_CONFLICT", "A narrative exists for a different result version.", None)
+        narrative = existing["narrative"]
+    return _respond(201, narrative)
+
+
+def _get_narrative(run_id: str, principal: Principal, store: ObjectStore) -> dict[str, Any]:
+    run_id = safe_identifier(run_id, "run_id")
+    value = store.get(run_key(principal.tenant_id, run_id, "narrative.json")).value
+    _assert_owner(value, principal, run_id=run_id)
+    return _respond(200, value["narrative"])
+
+
+def _selected_entity(value: Any) -> dict[str, str] | None:
+    if value is None:
+        return None
+    if not isinstance(value, dict) or set(value) != {"entity_type", "entity_id"}:
+        raise ValueError("invalid selected_entity")
+    entity_type = safe_identifier(value["entity_type"], "entity_type")
+    entity_id = value["entity_id"]
+    if not isinstance(entity_id, str) or not 1 <= len(entity_id) <= 200 or any(ord(character) < 32 for character in entity_id):
+        raise ValueError("entity_id is invalid")
+    return {"entity_type": entity_type, "entity_id": entity_id}
+
+
+def _copilot() -> CopilotService:
+    global _COPILOT
+    if _COPILOT is None:
+        _COPILOT = bedrock_service()
+    return _COPILOT
 
 
 def _principal(event: Mapping[str, Any]) -> Principal:

@@ -52,12 +52,18 @@ export function expandField(item: FieldInventoryItem, request: AssessmentRunRequ
     return entries.map(([key, value]) => field(key, humanize(key), [...a, "domain_inputs", "financial_exposure", key], value));
   }
   if (canonical === "domain_inputs.exposure_model_enabled") return [field("exposure_model_enabled", "Use exposure model", [...a, "domain_inputs", "exposure_model_enabled"], domainInputs.exposure_model_enabled, [true, false])];
-  if (canonical.startsWith("domain_inputs.routes")) return flattenArray("route", domainInputs.routes ?? [], [...a, "domain_inputs", "routes"], ["route_id", ...(item.parameter_keys ?? [])], item.item_keys, "route_id");
+  if (canonical.startsWith("domain_inputs.routes")) return flattenArray("route", domainInputs.routes ?? [], [...a, "domain_inputs", "routes"], ["route_id", ...(item.parameter_keys ?? [])], item.item_keys, "route_id").map((routeField) => {
+    const fieldName = String(routeField.path?.at(-1) ?? "");
+    return ["organisation_applicable", "model_feasible"].includes(fieldName) ? {...routeField, allowed: ["Yes", "No", "Unknown"]} : routeField;
+  });
   if (canonical.startsWith("domain_inputs.controls")) {
     const keys = ["control_id", ...(item.parameter_keys ?? [])];
-    return flattenArray("control", domainInputs.controls ?? [], [...a, "domain_inputs", "controls"], keys, item.item_keys, "control_id");
+    return flattenArray("control", domainInputs.controls ?? [], [...a, "domain_inputs", "controls"], keys, item.item_keys, "control_id").map((controlField) => {
+      const fieldName = String(controlField.path?.at(-1) ?? "");
+      return fieldName === "maturity" ? {...controlField, allowed: ["Absent", "Initial", "Developing", "Managed", "Optimised", "Not Assessed"]} : controlField;
+    });
   }
-  if (canonical.startsWith("domain_inputs.impact_overrides")) return flattenArray("override", domainInputs.impact_overrides ?? [], [...a, "domain_inputs", "impact_overrides"]);
+  if (canonical.startsWith("domain_inputs.impact_overrides")) return flattenArray("override", domainInputs.impact_overrides ?? [], [...a, "domain_inputs", "impact_overrides"], undefined, undefined, undefined, (value) => (!item.parameter_keys || item.parameter_keys.includes(String(value.parameter_id))) && (!item.item_keys || item.item_keys.includes(String(value.scenario_id))));
   if (canonical === "domain_inputs.frequency_adjustments.{parameter}") return objectFields("frequency", domainInputs.frequency_adjustments ?? {}, [...a, "domain_inputs", "frequency_adjustments"], item.parameter_keys);
   if (canonical === "domain_inputs.topology.{parameter}") return objectFields("topology", domainInputs.topology ?? {}, [...a, "domain_inputs", "topology"], item.parameter_keys, allowedMap(item.allowed_values));
   if (canonical.startsWith("domain_inputs.impact_drivers")) return flattenArray("driver", domainInputs.impact_drivers ?? [], [...a, "domain_inputs", "impact_drivers"], ["driver_id", ...(item.parameter_keys ?? [])], item.item_keys, "driver_id");
@@ -78,8 +84,8 @@ function allowedMap(value: FieldInventoryItem["allowed_values"]): Record<string,
   return value && typeof value === "object" && !Array.isArray(value) ? value : undefined;
 }
 
-function flattenArray(prefix: string, values: Record<string, any>[], path: (string | number)[], allowedKeys?: string[], allowedIds?: string[], idKey?: string): ConcreteField[] {
-  return values.flatMap((value, index) => allowedIds && idKey && !allowedIds.includes(String(value[idKey])) ? [] : Object.entries(value)
+function flattenArray(prefix: string, values: Record<string, any>[], path: (string | number)[], allowedKeys?: string[], allowedIds?: string[], idKey?: string, include?: (value: Record<string, any>) => boolean): ConcreteField[] {
+  return values.flatMap((value, index) => (allowedIds && idKey && !allowedIds.includes(String(value[idKey]))) || (include && !include(value)) ? [] : Object.entries(value)
     .filter(([key]) => !allowedKeys || allowedKeys.includes(key))
     .flatMap(([key, nested]) => {
       const identity = value.route_id ?? value.control_id ?? value.driver_id ?? value.parameter_id ?? value.name ?? index + 1;

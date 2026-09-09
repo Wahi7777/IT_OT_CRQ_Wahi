@@ -1,40 +1,43 @@
-import {Check, ChevronRight, Circle, PanelLeftClose} from "lucide-react";
+import {Check} from "lucide-react";
 import {useEffect, type ReactNode} from "react";
-import {NavLink, useLocation, useSearchParams} from "react-router-dom";
-import {Badge, GlassPanel} from "../../components/ui";
-import {routeLabels} from "../../contracts/governedData";
+import {Link, useLocation, useSearchParams} from "react-router-dom";
 import {useAssessment} from "./AssessmentContext";
+import {CopilotPanel} from "./CopilotPanel";
 
-const steps = {
+const routes = {
   IT: ["assessment-setup", "organisation-exposure", "it-architecture", "it-controls", "it-business-impact", "outside-in-evidence", "it-assumptions-overrides", "risk-appetite-insurance", "review-run"],
   OT: ["assessment-setup", "facility", "ot-architecture-topology", "ot-controls", "ot-business-impact", "ot-loss-driver-assumptions", "outside-in-evidence", "ot-assumptions-overrides", "risk-appetite-insurance", "review-run"]
 };
+const journey = {
+  IT: [
+    {label: "Organization", route: "organisation-exposure", members: ["assessment-setup", "organisation-exposure"]},
+    {label: "Architecture", route: "it-architecture", members: ["it-architecture"]},
+    {label: "Controls", route: "it-controls", members: ["it-controls"]},
+    {label: "Business Impact", route: "it-business-impact", members: ["it-business-impact", "outside-in-evidence", "it-assumptions-overrides"]},
+    {label: "Risk Appetite & Insurance", route: "risk-appetite-insurance", members: ["risk-appetite-insurance"]},
+    {label: "Review & Run", route: "review-run", members: ["review-run"]}
+  ],
+  OT: [
+    {label: "Organization", route: "facility", members: ["assessment-setup", "facility"]},
+    {label: "Architecture", route: "ot-architecture-topology", members: ["ot-architecture-topology"]},
+    {label: "Controls", route: "ot-controls", members: ["ot-controls"]},
+    {label: "Business Impact", route: "ot-business-impact", members: ["ot-business-impact", "ot-loss-driver-assumptions", "outside-in-evidence", "ot-assumptions-overrides"]},
+    {label: "Risk Appetite & Insurance", route: "risk-appetite-insurance", members: ["risk-appetite-insurance"]},
+    {label: "Review & Run", route: "review-run", members: ["review-run"]}
+  ]
+};
 
 export function AssessmentShell({children}: {children: ReactNode}) {
-  const {domain, setDomain, request} = useAssessment();
+  const {domain, setDomain} = useAssessment();
   const [params] = useSearchParams();
   const location = useLocation();
-  useEffect(() => {
-    const requested = params.get("domain");
-    if (requested === "IT" || requested === "OT") setDomain(requested);
-  }, [params, setDomain]);
-  const current = location.pathname.split("/").at(-1) ?? "assessment-setup";
-  const currentIndex = steps[domain].indexOf(current);
-  return <div className="workspace-layout">
-    <GlassPanel as="aside" className="stepper">
-      <div className="stepper-head"><div><span>{domain} assessment</span><strong>{request.assessment.assessment.organisation || request.assessment.scope?.facility || "Approved example"}</strong></div><PanelLeftClose /></div>
-      <ol>
-        {steps[domain].map((step, index) => <li key={step} className={index === currentIndex ? "current" : index < currentIndex ? "complete" : ""}>
-          <NavLink to={`/assessments/demo/${step}?domain=${domain}`}>
-            <span className="step-state">{index < currentIndex ? <Check /> : index === currentIndex ? <Circle fill="currentColor" /> : index + 1}</span>
-            <span>{routeLabels[step]}</span><ChevronRight />
-          </NavLink>
-        </li>)}
-      </ol>
-      <div className="stepper-foot"><Badge tone="green">Governed</Badge><span>{request.model_bundle_reference.bundle_id}</span></div>
-    </GlassPanel>
-    <div className="workspace-main">{children}</div>
-  </div>;
+  useEffect(() => { const requested = params.get("domain"); if (requested === "IT" || requested === "OT") setDomain(requested); }, [params, setDomain]);
+  const screenId = location.pathname.split("/").at(-1) ?? "assessment-setup";
+  const currentJourney = journey[domain];
+  const activeIndex = Math.max(0, currentJourney.findIndex((step) => step.members.includes(screenId)));
+  return <div className="assessment-experience"><CopilotPanel screenId={screenId} /><section className="guided-workspace">
+    <nav className="journey-stepper" aria-label="Assessment progress"><ol>{currentJourney.map((step, index) => <li key={step.label} className={index < activeIndex ? "complete" : index === activeIndex ? "current" : ""}><Link to={`/assessments/demo/${step.route}?domain=${domain}`}><span>{index < activeIndex ? <Check /> : index + 1}</span><strong>{step.label}</strong></Link></li>)}</ol></nav>
+    <div className="guided-content">{children}</div>
+  </section></div>;
 }
-
-export function getSteps(domain: "IT" | "OT") { return steps[domain]; }
+export function getSteps(domain: "IT" | "OT") { return routes[domain]; }

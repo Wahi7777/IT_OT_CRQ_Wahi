@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://crq.local/contracts/copilot-response/1.0.0",
+  "title": "CopilotResponse",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "context_type", "answer", "key_points", "caveats", "supporting_fact_ids", "related_entities", "status"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "context_type": {"type": "string"},
+    "answer": {"type": "string", "maxLength": 1800},
+    "key_points": {"type": "array", "maxItems": 5, "items": {"type": "string", "maxLength": 500}},
+    "caveats": {"type": "array", "maxItems": 3, "items": {"type": "string", "maxLength": 500}},
+    "supporting_fact_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "related_entities": {"type": "array", "items": {"type": "object", "required": ["entity_type", "entity_id"], "properties": {"entity_type": {"type": "string"}, "entity_id": {"type": "string"}}, "additionalProperties": false}},
+    "status": {"enum": ["READY", "REJECTED"]}
+  }
+}

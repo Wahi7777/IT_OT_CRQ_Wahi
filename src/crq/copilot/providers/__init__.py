@@ -1,0 +1,1 @@
+"""Copilot provider adapters."""
