@@ -1,4 +1,5 @@
 import {clearSession, getIdToken} from "../auth/CognitoAuth";
+import {saveAssessmentDraft} from "./AssessmentApi";
 
 export type CopilotState = "IDLE" | "THINKING" | "VERIFIED" | "FAILED" | "REJECTED";
 export interface CopilotQuery {
@@ -17,16 +18,17 @@ export interface CopilotReply {
   error_code?: string;
 }
 
-interface CopilotApi { query(request: CopilotQuery): Promise<CopilotReply>; }
+interface CopilotApi { query(request: CopilotQuery, assessment?: Record<string, any>): Promise<CopilotReply>; }
 
 class HttpCopilotApi implements CopilotApi {
   constructor(private baseUrl: string, private tokenProvider: () => string | null = getIdToken) {}
-  async query(request: CopilotQuery): Promise<CopilotReply> {
+  async query(request: CopilotQuery, assessment?: Record<string, any>): Promise<CopilotReply> {
     const token = this.tokenProvider();
     if (!token) {
       window.location.assign("/login?expired=1");
       throw new Error("An authenticated session is required.");
     }
+    if (!request.current_view.startsWith("results.") && assessment) await saveAssessmentDraft(this.baseUrl, token, assessment as any);
     const response = await fetch(`${this.baseUrl.replace(/\/$/, "")}/v1/copilot/query`, {
       method: "POST",
       cache: "no-store",

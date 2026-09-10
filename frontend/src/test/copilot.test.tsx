@@ -19,6 +19,7 @@ describe("view-specific CRQ Copilot", () => {
     fireEvent.click(within(view.container).getByRole("button", {name: "Why are we asking this?"}));
     await waitFor(() => expect(query).toHaveBeenCalled());
     expect(query.mock.calls[0][0]).toMatchObject({current_view: "assessment.architecture", run_id: null, question: "Why are we asking this?"});
+    expect(query.mock.calls[0][1]).toMatchObject({assessment: {assessment_id: expect.any(String)}});
     expect(await within(view.container).findByText("Verified page-specific interpretation.")).toBeInTheDocument();
   });
 
@@ -30,6 +31,7 @@ describe("view-specific CRQ Copilot", () => {
     fireEvent.submit(input.closest("form")!);
     await waitFor(() => expect(query).toHaveBeenCalled());
     expect(query.mock.calls[0][0]).toMatchObject({current_view: "results.attack_paths", run_id: "run-123", selected_entity: selected});
+    expect(query.mock.calls[0][1]).toBeUndefined();
   });
 
   it("never displays a rejected generated answer", async () => {

@@ -65,6 +65,24 @@ def test_create_read_and_tenant_isolation(services):
     assert other["statusCode"] == 404
 
 
+def test_changed_assessment_can_be_saved_with_an_incremented_version(services):
+    create(services)
+    changed = copy.deepcopy(ASSESSMENT["assessment"])
+    changed["assessment"]["assessment_version"] = 2
+    changed["assessment"]["organisation"] = "Updated approved test organisation"
+
+    saved = api.handler(event("POST", "/v1/assessments", changed), CONTEXT)
+    assert saved["statusCode"] == 200
+    loaded = api.handler(event("GET", "/v1/assessments/IT-CRQ-001"), CONTEXT)
+    assert parsed(loaded)["assessment"]["assessment"]["assessment_version"] == 2
+    assert parsed(loaded)["assessment"]["assessment"]["organisation"] == "Updated approved test organisation"
+
+    stale = copy.deepcopy(changed)
+    stale["assessment"]["organisation"] = "Stale update"
+    conflict = api.handler(event("POST", "/v1/assessments", stale), CONTEXT)
+    assert conflict["statusCode"] == 409
+
+
 def test_caller_cannot_inject_paths_or_governed_assumptions(services):
     injected = copy.deepcopy(ASSESSMENT["assessment"])
     injected["s3_key"] = "runs/tenant-b/secret/result.json"

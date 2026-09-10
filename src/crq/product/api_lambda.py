@@ -125,11 +125,28 @@ def _create_assessment(event: Mapping[str, Any], principal: Principal, store: Ob
         store.put(metadata_key, metadata, if_none_match=True)
         status = 201
     except ObjectConflict:
-        existing = store.get(input_key).value
-        if existing.get("assessment_hash") != metadata["assessment_hash"] or existing.get("assessment_version") != metadata["assessment_version"]:
+        existing_object = store.get(input_key)
+        existing = existing_object.value
+        if existing.get("assessment_hash") == metadata["assessment_hash"] and existing.get("assessment_version") == metadata["assessment_version"]:
+            status = 200
+            metadata = {key: existing.get(key) for key in metadata}
+            return _respond(status, {"metadata": metadata, "assessment": public})
+        if identity["assessment_version"] <= int(existing.get("assessment_version") or 0):
             return _problem(409, "ASSESSMENT_VERSION_CONFLICT", "Increment assessment_version before replacing an existing assessment.", None)
+        metadata["created_at"] = existing.get("created_at") or now
+        metadata["created_by"] = existing.get("created_by") or existing.get("user_id") or principal.user_id
+        metadata["updated_at"] = now
+        input_record = {**metadata, "assessment": public}
+        try:
+            store.put(input_key, input_record, if_match=existing_object.etag)
+            try:
+                metadata_object = store.get(metadata_key)
+                store.put(metadata_key, metadata, if_match=metadata_object.etag)
+            except ObjectNotFound:
+                store.put(metadata_key, metadata, if_none_match=True)
+        except ObjectConflict:
+            return _problem(409, "ASSESSMENT_VERSION_CONFLICT", "The assessment changed while it was being saved. Reload it and try again.", None)
         status = 200
-        metadata = {key: existing.get(key) for key in metadata}
     return _respond(status, {"metadata": metadata, "assessment": public})
 
 

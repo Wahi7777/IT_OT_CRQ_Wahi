@@ -77,7 +77,7 @@ export function ResultsPage() {
     result.provenance?.sector_pack_id?.startsWith("OT-")
       ? "OT"
       : domain;
-  const currency = request.assessment.assessment.currency;
+  const currency = request.assessment.assessment.currency ?? (resultDomain === "OT" ? "USD" : null);
   return (
     <ResultsShell
       result={result}
@@ -845,7 +845,7 @@ function Evidence({ result }: { result: CRQResult }) {
   }));
   const visibleRecord = Object.entries(result.provenance).filter(
     ([key]) =>
-      !["hash", "engine", "methodology", "bundle", "pack", "version"].some(
+      !["hash", "engine", "methodology", "bundle", "pack", "version", "workbook", "spreadsheet", "source_path"].some(
         (term) => key.includes(term),
       ),
   );
@@ -861,7 +861,7 @@ function Evidence({ result }: { result: CRQResult }) {
             {visibleRecord.map(([key, value]) => (
               <div key={key}>
                 <dt>{human(key)}</dt>
-                <dd>{String(value)}</dd>
+                <dd>{userFacingText(value)}</dd>
               </div>
             ))}
           </dl>
@@ -891,10 +891,10 @@ function Evidence({ result }: { result: CRQResult }) {
             <article key={item.evidence_id ?? index}>
               <FileSearch />
               <div>
-                <strong>{item.description || "Supporting evidence"}</strong>
+                <strong>{userFacingText(item.description || "Supporting evidence")}</strong>
                 <p>
                   {item.source
-                    ? `Source: ${item.source}`
+                    ? `Source: ${userFacingEvidenceSource(item.source)}`
                     : "Source not specified"}
                 </p>
               </div>
@@ -954,10 +954,10 @@ function CanonicalFamily({ title, value }: { title: string; value: unknown }) {
 
 function digest(value: unknown) {
   if (value == null) return "Not returned";
-  if (typeof value !== "object") return String(value);
+  if (typeof value !== "object") return userFacingText(value);
   if (Array.isArray(value)) return `${value.length} values`;
   const record = value as Record<string, unknown>;
-  return String(
+  return userFacingText(
     record.name ??
       record.id ??
       record.route_id ??
@@ -967,9 +967,18 @@ function digest(value: unknown) {
 }
 
 function human(value: string) {
+  if (/workbook|spreadsheet|xlsx/i.test(value)) return "Assessment source";
   return value
     .replaceAll("_", " ")
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+function userFacingEvidenceSource(value: unknown) {
+  const source = String(value);
+  return /workbook|spreadsheet|xlsx/i.test(source) ? "Assessment evidence" : source;
+}
+function userFacingText(value: unknown) {
+  const text = String(value);
+  return /workbook|spreadsheet|\.xlsx\b/i.test(text) ? "Assessment evidence" : text;
 }
 function unique(values: string[]) {
   return [...new Set(values.filter(Boolean))].sort((a, b) =>

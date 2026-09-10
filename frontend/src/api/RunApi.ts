@@ -1,4 +1,5 @@
 import {clearSession, getIdToken} from "../auth/CognitoAuth";
+import {saveAssessmentDraft} from "./AssessmentApi";
 import {approvedRequests, loadApprovedResult} from "../contracts/governedData";
 import type {AssessmentRunRequest, CRQResult, Domain, RunAccepted, RunApi, RunStatus} from "../contracts/types";
 
@@ -55,11 +56,9 @@ export class HttpRunApi implements RunApi {
 
   async submit(request: AssessmentRunRequest, idempotencyKey: string) {
     const assessmentId = encodeURIComponent(request.assessment.assessment.assessment_id);
-    await this.request(`/v1/assessments`, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(request.assessment)
-    });
+    const token = this.tokenProvider();
+    if (!token) { window.location.assign("/login?expired=1"); throw new Error("An authenticated session is required."); }
+    await saveAssessmentDraft(this.baseUrl, token, request.assessment);
     return this.request<RunAccepted>(`/v1/assessments/${assessmentId}/run`, {
       method: "POST",
       headers: {"Content-Type": "application/json", "Idempotency-Key": idempotencyKey},

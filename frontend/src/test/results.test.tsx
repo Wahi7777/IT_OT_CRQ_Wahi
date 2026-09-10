@@ -159,6 +159,7 @@ describe("canonical result presentation", () => {
             entity_id: selectedRoute,
           },
         }),
+        undefined,
       );
     });
   });

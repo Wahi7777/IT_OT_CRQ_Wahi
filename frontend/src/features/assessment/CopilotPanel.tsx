@@ -63,7 +63,7 @@ export function CopilotPanel({screenId, subtitle = "Your cyber risk guide", runI
     setState("THINKING");
     setAnswer(null);
     try {
-      const reply = await getCopilotApi(dataMode).query({assessment_id: request.assessment.assessment.assessment_id, run_id: currentView.startsWith("results.") ? runId : null, current_view: currentView, selected_entity: selectedEntity, question: clean});
+      const reply = await getCopilotApi(dataMode).query({assessment_id: request.assessment.assessment.assessment_id, run_id: currentView.startsWith("results.") ? runId : null, current_view: currentView, selected_entity: selectedEntity, question: clean}, currentView.startsWith("results.") ? undefined : request.assessment);
       if (reply.status === "VERIFIED" && reply.answer) { setAnswer(reply.answer); setState("VERIFIED"); }
       else { setState("REJECTED"); }
     } catch { setState("FAILED"); }
