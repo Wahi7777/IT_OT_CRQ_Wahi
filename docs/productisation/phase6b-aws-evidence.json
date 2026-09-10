@@ -1,7 +1,7 @@
 {
   "evidence_schema_version": "1.0.0",
   "phase": "6B",
-  "captured_at": "2026-09-09T19:26:41Z",
+  "captured_at": "2026-09-10T02:24:38Z",
   "deployment": {
     "profile": "aiengineer",
     "region": "us-east-1",
@@ -12,8 +12,10 @@
     "amplify_app_id": "d2226knnvh46il",
     "branch": "main",
     "frontend_url": "https://main.d2226knnvh46il.amplifyapp.com",
-    "deployment_job_id": "1",
+    "deployment_job_id": "2",
     "deployment_job_status": "SUCCEED",
+    "amplify_verification_status": "SUCCEED",
+    "amplify_verification_screenshot_count": 5,
     "api_endpoint": "https://vwr5b8xfig.execute-api.us-east-1.amazonaws.com",
     "cognito_user_pool_id": "us-east-1_ZBVh3Kka0",
     "cognito_user_pool_client_id": "5bkosmtrcdn6ft1q2qeltnlm22",
@@ -21,7 +23,17 @@
   },
   "hosting_controls": {
     "https": "PASS",
-    "spa_rewrite": "/<*> -> /index.html (200)",
+    "spa_rewrite": "extensionless client routes -> /index.html (200); static asset extensions excluded",
+    "javascript_asset": {
+      "http_status": 200,
+      "content_type": "text/javascript",
+      "bytes": 963516
+    },
+    "stylesheet_asset": {
+      "http_status": 200,
+      "content_type": "text/css",
+      "bytes": 73868
+    },
     "direct_routes": {
       "/": 200,
       "/login": 200,

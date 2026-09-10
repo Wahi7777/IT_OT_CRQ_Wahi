@@ -5,7 +5,7 @@ resource "aws_amplify_app" "frontend" {
   enable_branch_auto_build = false
 
   custom_rule {
-    source = "/<*>"
+    source = "</^[^.]+$|\\.(?!(css|gif|ico|jpg|jpeg|js|map|png|svg|ttf|txt|webp|woff|woff2)$)([^.]+$)/>"
     target = "/index.html"
     status = "200"
   }

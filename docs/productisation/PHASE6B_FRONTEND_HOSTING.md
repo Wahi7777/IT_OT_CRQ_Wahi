@@ -35,7 +35,7 @@ The Cognito app client retains authorization-code flow with PKCE and no client s
 
 ## SPA navigation
 
-Amplify rewrites `/<*>` to `/index.html` with HTTP 200. Direct navigation and browser refresh therefore return the React application for `/assessments`, assessment routes, run routes, results routes, and `/auth/callback`.
+Amplify rewrites extensionless client routes to `/index.html` with HTTP 200 while leaving static file extensions such as `.js` and `.css` untouched. Direct navigation and browser refresh therefore return the React application for `/assessments`, assessment routes, run routes, results routes, and `/auth/callback`, while application assets retain their correct content types.
 
 ## Deployment and rollback
 
@@ -67,6 +67,7 @@ Amplify Hosting has no continuously running instance for this static application
 ## Validation outcome
 
 - HTTPS root and direct SPA routes returned the deployed React entry point with HTTP 200.
+- A post-deployment defect was corrected after Safari exposed a blank page: the original catch-all SPA rule also rewrote `.js` and `.css` requests to `index.html`. The rule now excludes static asset extensions; the deployed JavaScript and stylesheet return their correct content types, and Amplify deployment job 2 completed with five successful verification screenshots.
 - Cognito issued a token for an ephemeral invite-only test identity; unauthenticated API access returned HTTP 401; the identity was removed after validation.
 - IT Financial Services and OT Power Generation assessments were created, reloaded, submitted, observed through asynchronous states, completed, and retrieved through the real AWS API.
 - The prudent headline summaries returned by both hosted-path runs matched their approved contract examples exactly.
