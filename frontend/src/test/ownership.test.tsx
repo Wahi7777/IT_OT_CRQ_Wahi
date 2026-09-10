@@ -1,4 +1,4 @@
-import {render, screen} from "@testing-library/react";
+import {fireEvent, render, screen} from "@testing-library/react";
 import {describe, expect, it} from "vitest";
 import {approvedRequests, fieldInventory, inputScreens, inventoryForScreen} from "../contracts/governedData";
 import {AssessmentProvider} from "../features/assessment/AssessmentContext";
@@ -49,5 +49,15 @@ describe("governed input ownership", () => {
     const item = fieldInventory.find((field) => field.canonical_path.startsWith("insurance.layers"))!;
     render(<AssessmentProvider><FieldGroup item={item} /></AssessmentProvider>);
     expect(screen.getByRole("button", {name: /add insurance layer/i})).toBeInTheDocument();
+  });
+
+  it("keeps governed numeric inputs numeric after they are cleared and re-entered", () => {
+    const item = fieldInventory.find((field) => field.domain === "IT" && field.canonical_path === "domain_inputs.financial_exposure.{parameter}" && field.classification === "USER_INPUT")!;
+    render(<AssessmentProvider><FieldGroup item={item} /></AssessmentProvider>);
+    const input = screen.getByLabelText(/annual revenue potentially affected/i);
+    fireEvent.change(input, {target: {value: ""}});
+    expect(input).toHaveAttribute("type", "number");
+    fireEvent.change(input, {target: {value: "125000000"}});
+    expect(input).toHaveValue(125000000);
   });
 });

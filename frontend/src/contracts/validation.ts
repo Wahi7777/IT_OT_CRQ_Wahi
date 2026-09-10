@@ -9,6 +9,9 @@ ajv.addFormat("date", /^\d{4}-\d{2}-\d{2}$/);
 ajv.addFormat("date-time", {type: "string", validate: (value: string) => !Number.isNaN(Date.parse(value))});
 ajv.addSchema(assessmentSchema);
 const validate = ajv.compile<AssessmentRunRequest>(runRequestSchema);
+const assessmentSchemaId = "https://crq.local/contracts/crq-assessment/1.0.0-draft";
+const validateItInputs = ajv.compile({$ref: `${assessmentSchemaId}#/$defs/itInputs`});
+const validateOtInputs = ajv.compile({$ref: `${assessmentSchemaId}#/$defs/otInputs`});
 
 export interface ContractValidationIssue {
   path: string;
@@ -26,7 +29,17 @@ function issueFrom(error: ErrorObject): ContractValidationIssue {
 
 /** Validate only against the governed request contract; this never calculates model values. */
 export function validateRunRequest(request: AssessmentRunRequest): ContractValidationIssue[] {
-  const issues = validate(request) ? [] : (validate.errors ?? []).map(issueFrom);
+  const valid = validate(request);
+  const issues = valid ? [] : (validate.errors ?? [])
+    .filter((error) => !error.instancePath.startsWith("/assessment/domain_inputs"))
+    .map(issueFrom);
+  const validateDomainInputs = request.assessment.assessment.domain === "OT" ? validateOtInputs : validateItInputs;
+  if (!validateDomainInputs(request.assessment.domain_inputs)) {
+    issues.push(...(validateDomainInputs.errors ?? []).map((error) => ({
+      ...issueFrom(error),
+      path: `/assessment/domain_inputs${error.instancePath}`
+    })));
+  }
   const identity = request.assessment.assessment;
   const pack = sectorPacks.find((candidate) => candidate.domain === identity.domain && candidate.sector === identity.sector);
   if (!pack || pack.pack_id !== request.model_bundle_reference.bundle_id) {
