@@ -150,6 +150,19 @@ def test_previously_accepted_ot_business_impact_response_is_stable():
     assert provider.calls == 0
 
 
+def test_assessment_evidence_optionality_is_answered_without_model_invention():
+    provider = Provider({})
+    reply = CopilotService(provider).query(
+        current_view="assessment.business_impact",
+        question="Is supporting evidence optional?",
+        assessment=OT_REQUEST,
+    )
+    assert reply["status"] == "VERIFIED"
+    assert reply["answer"].startswith("Yes. Supporting evidence is optional")
+    assert reply["supporting_fact_ids"]
+    assert provider.calls == 0
+
+
 def test_scenario_standard_prompt_interprets_tail_contributions_without_qualitative_magnitude():
     provider = Provider({})
     scenario = OT_RESULT["decomposition"]["scenarios"][0]

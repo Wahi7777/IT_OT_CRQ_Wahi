@@ -1,6 +1,6 @@
 import {AlertTriangle, ArrowLeft, ArrowRight, Check, FileCheck2, ShieldCheck} from "lucide-react";
 import type {CSSProperties} from "react";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {Link, Navigate, useLocation, useNavigate} from "react-router-dom";
 import {PageHeader} from "../components/PageHeader";
 import {Button, GlassPanel} from "../components/ui";
 import {inventoryForScreen, routeLabels} from "../contracts/governedData";
@@ -13,6 +13,7 @@ export function AssessmentSectionPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const screenId = location.pathname.split("/").at(-1) ?? "assessment-setup";
+  if (screenId === "ot-loss-driver-assumptions") return <Navigate replace to={`/assessments/demo/outside-in-evidence?domain=${domain}`} />;
   const fields = inventoryForScreen(screenId, domain);
   const steps = getSteps(domain);
   const index = steps.indexOf(screenId);

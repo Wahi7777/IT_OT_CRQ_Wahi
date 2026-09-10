@@ -44,6 +44,9 @@ class CopilotService:
         business_impact_answer = _business_impact_answer(context, question)
         if business_impact_answer:
             return business_impact_answer
+        assessment_evidence_answer = _assessment_evidence_answer(context, question)
+        if assessment_evidence_answer:
+            return assessment_evidence_answer
         system, user = build_prompts(context, question)
         reasons: tuple[str, ...] = ("response_schema",)
         for attempt in range(2):
@@ -117,6 +120,24 @@ def _fact(context: Any, *, path: str | None = None, label: str | None = None) ->
         ),
         None,
     )
+
+
+def _assessment_evidence_answer(context: Any, question: str) -> dict[str, Any] | None:
+    if context.context_type != "assessment.business_impact" or "evidence" not in question.casefold():
+        return None
+    count = _fact(context, path="/evidence/meaningful_count")
+    if count is None:
+        return None
+    text = question.casefold()
+    if any(term in text for term in ("continue without", "evidence optional", "is supporting evidence optional")):
+        answer = "Yes. Supporting evidence is optional, so you can continue without adding it. Add evidence when it helps a reviewer verify an input or understand why an assumption was changed."
+    elif any(term in text for term in ("what evidence", "evidence would", "evidence helps", "improve confidence")):
+        answer = "Useful supporting evidence includes current policies, architecture diagrams, control test reports, business-impact analyses and finance-approved estimates. Add only sources that directly support the assessment input or adjustment."
+    elif any(term in text for term in ("do i have", "supporting evidence", "evidence provided", "evidence attached")):
+        answer = f"This assessment currently has {count.rendered_value} of supporting evidence. Placeholder records are not counted."
+    else:
+        return None
+    return _standard_response(context, answer, [count])
 
 
 def _overview_answer(context: Any, question: str) -> dict[str, Any] | None:

@@ -48,6 +48,18 @@ def test_assessment_views_are_supported(view):
     assert context.suggested_questions
 
 
+def test_business_impact_context_counts_only_meaningful_evidence():
+    assessment = dict(OT_REQUEST["assessment"])
+    assessment["evidence"] = [
+        {"description": "n/a", "source": "workbook", "hash": None, "observed_at": None},
+        {"description": "Approved BIA", "source": "Finance", "hash": None, "observed_at": None},
+    ]
+    context = build_view_context(current_view="assessment.business_impact", assessment=assessment)
+    fact = next(item for item in context.facts if item.source_path == "/evidence/meaningful_count")
+    assert fact.value == 1
+    assert fact.rendered_value == "1 record"
+
+
 def test_overview_does_not_leak_raw_monte_carlo_or_unrelated_insurance():
     context = build_view_context(current_view="results.overview", assessment=IT_REQUEST["assessment"], result=IT_RESULT)
     paths = {fact.source_path for fact in context.facts}

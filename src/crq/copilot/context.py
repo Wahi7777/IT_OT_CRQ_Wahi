@@ -82,6 +82,8 @@ def build_view_context(*, current_view: str, assessment: Mapping[str, Any], resu
         facts.extend(_overview_comparison_facts(current_view, source))
     if current_view == "results.scenarios":
         facts.extend(_scenario_comparison_facts(current_view, source, selected_entity))
+    if current_view == "assessment.business_impact":
+        facts.append(_assessment_evidence_count_fact(current_view, assessment))
     return ViewContextBundle(
         context_type=current_view,
         assessment_id=assessment_id,
@@ -92,6 +94,22 @@ def build_view_context(*, current_view: str, assessment: Mapping[str, Any], resu
         allowed_entities=tuple(entities[key] for key in sorted(entities)),
         suggested_questions=SUGGESTED_QUESTIONS[current_view],
     )
+
+
+def _assessment_evidence_count_fact(context_type: str, assessment: Mapping[str, Any]) -> ViewFact:
+    records = assessment.get("evidence")
+    meaningful = [record for record in records if isinstance(record, Mapping) and _is_meaningful_evidence(record)] if isinstance(records, list) else []
+    count = len(meaningful)
+    path = "/evidence/meaningful_count"
+    return ViewFact(_fact_id(context_type, path), "numeric", "Supporting evidence records", count, f"{count} record{'s' if count != 1 else ''}", "records", path)
+
+
+def _is_meaningful_evidence(record: Mapping[str, Any]) -> bool:
+    description = str(record.get("description") or "").strip().casefold()
+    source = str(record.get("source") or "").strip().casefold()
+    placeholder = not description or description in {"n/a", "na", "not provided", "no exposure-model recommendation loaded."}
+    generated_source = not source or any(term in source for term in ("workbook", "spreadsheet", "xlsx"))
+    return not placeholder or not generated_source or bool(record.get("hash") or record.get("observed_at"))
 
 
 def _pointer(value: Mapping[str, Any], path: str) -> Any:

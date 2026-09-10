@@ -23,6 +23,17 @@ describe("view-specific CRQ Copilot", () => {
     expect(await within(view.container).findByText("Verified page-specific interpretation.")).toBeInTheDocument();
   });
 
+  it("uses evidence-specific guidance and prompts on the supporting-evidence page", async () => {
+    const view = render(<AssessmentProvider><CopilotPanel screenId="outside-in-evidence" /></AssessmentProvider>);
+    expect(within(view.container).getByText("Add evidence where it strengthens the assessment.")).toBeInTheDocument();
+    fireEvent.click(within(view.container).getByRole("button", {name: "Is supporting evidence optional?"}));
+    await waitFor(() => expect(query).toHaveBeenCalled());
+    expect(query.mock.calls[0][0]).toMatchObject({
+      current_view: "assessment.business_impact",
+      question: "Is supporting evidence optional?",
+    });
+  });
+
   it("attaches run and selected-entity context on a result question", async () => {
     const selected = {entity_type: "route", entity_id: "Insider or trusted access"};
     const view = render(<AssessmentProvider><CopilotPanel screenId="results-attack-paths" runId="run-123" selectedEntity={selected} /></AssessmentProvider>);

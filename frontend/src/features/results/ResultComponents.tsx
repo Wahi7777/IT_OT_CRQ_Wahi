@@ -221,7 +221,7 @@ export function LossExceedanceCurve({
         <Badge tone={canonicalSeries ? "green" : "indigo"}>
           {canonicalSeries
             ? "Canonical AEP series"
-            : "Governed headline anchors"}
+            : "Tail-loss anchors"}
         </Badge>
       </div>
       <div
@@ -316,7 +316,7 @@ export function LossExceedanceCurve({
         Move across the curve to inspect returned values.{" "}
         {canonicalSeries
           ? "Every point comes from the canonical AEP result."
-          : "This demo result does not contain a full AEP series, so only exact returned headline anchors are shown."}
+          : "The model returned headline loss thresholds rather than a full AEP series. Only those governed anchors are shown; no intermediate values are inferred."}
       </p>
     </div>
   );

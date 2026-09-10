@@ -145,6 +145,7 @@ function Overview({
 }) {
   const prudent = result.summary.prudent;
   const best = result.summary.best_estimate;
+  const evidenceCount = meaningfulEvidenceRecords(result.architecture.evidence_status ?? []).length;
   return (
     <>
       <div className="metric-grid">
@@ -191,10 +192,11 @@ function Overview({
         />
         <MetricCard
           label="Evidence confidence"
-          value="Not scored"
-          comparison={`${result.architecture.evidence_status?.length ?? 0} evidence records`}
+          value={evidenceCount ? "Evidence provided" : "Not provided"}
+          comparison={evidenceCount ? `${evidenceCount} supporting evidence records` : "Optional evidence can be added during assessment"}
         />
       </div>
+      {Number(prudent.aal) > Number(prudent.var95) && <GlassPanel className="metric-explanation"><Info /><div><strong>Why expected loss is above VaR95</strong><p>This assessment models infrequent but severe events. When at least 95% of simulated years have little or no loss, the average can be higher than the 95th-percentile threshold because the small number of severe years materially increases the mean.</p></div></GlassPanel>}
       <div className="overview-grid">
         <GlassPanel className="chart-panel">
           <div className="panel-title-row">
@@ -534,7 +536,7 @@ function BusinessImpact({
     .map((item: any) => ({ name: item.name, value: item[lossView] }));
   const impacts =
     domain === "OT"
-      ? (result.impact.ot_downtime ?? result.impact.ot_capacity)
+      ? Object.fromEntries(Object.entries(result.impact.ot_downtime ?? result.impact.ot_capacity ?? {}).filter(([key, value]) => /^(capacity|downtime)_p(50|95|99)$/.test(key) && typeof value === "number"))
       : {
           ...result.impact.it_affected_records,
           ...result.impact.it_affected_endpoints,
@@ -581,7 +583,7 @@ function BusinessImpact({
         <GlassPanel>
           <h2>
             {domain === "OT"
-              ? "Downtime & capacity"
+              ? "Operational impact"
               : "Affected digital estate"}
           </h2>
           <dl className="fact-list">
@@ -591,9 +593,11 @@ function BusinessImpact({
                 <div key={key}>
                   <dt>{human(key)}</dt>
                   <dd>
-                    {key.includes("capacity") || key.startsWith("p_")
+                    {key.includes("capacity")
                       ? percent(value)
-                      : number(value)}
+                      : key.includes("downtime")
+                        ? `${number(value)} days`
+                        : number(value)}
                   </dd>
                 </div>
               ))}
@@ -834,7 +838,7 @@ function Insurance({
 }
 
 function Evidence({ result }: { result: CRQResult }) {
-  const evidence = result.architecture.evidence_status ?? [];
+  const evidence = meaningfulEvidenceRecords(result.architecture.evidence_status ?? []);
   const placement = resultScreens.map((screen) => ({
     screen: screen.screen_id,
     count: outputMappings.filter((mapping: any) =>
@@ -903,6 +907,7 @@ function Evidence({ result }: { result: CRQResult }) {
               </Badge>
             </article>
           ))}
+          {!evidence.length && <div className="inline-note">No supporting evidence was attached to this assessment. Placeholder model records are not shown.</div>}
         </div>
       </GlassPanel>
     </>
@@ -979,6 +984,15 @@ function userFacingEvidenceSource(value: unknown) {
 function userFacingText(value: unknown) {
   const text = String(value);
   return /workbook|spreadsheet|\.xlsx\b/i.test(text) ? "Assessment evidence" : text;
+}
+function meaningfulEvidenceRecords(records: Record<string, any>[]) {
+  return records.filter((record) => {
+    const description = String(record.description ?? "").trim().toLowerCase();
+    const source = String(record.source ?? "").trim().toLowerCase();
+    const placeholder = !description || ["n/a", "na", "not provided", "no exposure-model recommendation loaded."].includes(description);
+    const generatedSource = !source || /workbook|spreadsheet|xlsx/.test(source);
+    return !placeholder || !generatedSource || Boolean(record.hash || record.observed_at);
+  });
 }
 function unique(values: string[]) {
   return [...new Set(values.filter(Boolean))].sort((a, b) =>

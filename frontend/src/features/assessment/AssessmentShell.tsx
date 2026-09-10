@@ -6,7 +6,7 @@ import {CopilotPanel} from "./CopilotPanel";
 
 const routes = {
   IT: ["assessment-setup", "organisation-exposure", "it-architecture", "it-controls", "it-business-impact", "outside-in-evidence", "it-assumptions-overrides", "risk-appetite-insurance", "review-run"],
-  OT: ["assessment-setup", "facility", "ot-architecture-topology", "ot-controls", "ot-business-impact", "ot-loss-driver-assumptions", "outside-in-evidence", "ot-assumptions-overrides", "risk-appetite-insurance", "review-run"]
+  OT: ["assessment-setup", "facility", "ot-architecture-topology", "ot-controls", "ot-business-impact", "outside-in-evidence", "ot-assumptions-overrides", "risk-appetite-insurance", "review-run"]
 };
 const journey = {
   IT: [
@@ -21,7 +21,7 @@ const journey = {
     {label: "Organization", route: "facility", members: ["assessment-setup", "facility"]},
     {label: "Architecture", route: "ot-architecture-topology", members: ["ot-architecture-topology"]},
     {label: "Controls", route: "ot-controls", members: ["ot-controls"]},
-    {label: "Business Impact", route: "ot-business-impact", members: ["ot-business-impact", "ot-loss-driver-assumptions", "outside-in-evidence", "ot-assumptions-overrides"]},
+    {label: "Business Impact", route: "ot-business-impact", members: ["ot-business-impact", "outside-in-evidence", "ot-assumptions-overrides"]},
     {label: "Risk Appetite & Insurance", route: "risk-appetite-insurance", members: ["risk-appetite-insurance"]},
     {label: "Review & Run", route: "review-run", members: ["review-run"]}
   ]

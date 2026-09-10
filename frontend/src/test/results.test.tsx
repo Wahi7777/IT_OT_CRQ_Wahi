@@ -60,6 +60,8 @@ describe("canonical result presentation", () => {
     expect(
       screen.queryByRole("link", { name: "Uncertainty" }),
     ).not.toBeInTheDocument();
+    expect(screen.getByText("Tail-loss anchors")).toBeInTheDocument();
+    expect(screen.getByText(/no intermediate values are inferred/i)).toBeInTheDocument();
   });
 
   it("does not invent a treatment benefit absent from the approved result", async () => {
